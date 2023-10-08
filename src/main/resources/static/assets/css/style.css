@@ -1,0 +1,49 @@
+
+
+/*--------------------------------------------------------------
+# General
+--------------------------------------------------------------*/
+body {
+  font-family: "Open Sans", sans-serif;
+  color: #444444;
+}
+
+a {
+  color: #47b2e4;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #73c5eb;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Jost", sans-serif;
+}
+
+/*--------------------------------------------------------------
+# Custom
+--------------------------------------------------------------*/
+
+.footer {
+    position: absolute;
+    bottom: 1px;
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    z-index: -20;
+}
+
+.text-secondary {
+    color: #6c757d!important;
+}
+
+.text-muted {
+    color: #6c757d!important;
+}

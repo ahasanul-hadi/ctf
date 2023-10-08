@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="header">
+	<!-- NAVBAR -->
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+		<div class="container text-center">
+
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#base-navbars"
+					aria-controls="base-navbars" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="base-navbars">
+				<ul class="navbar-nav mr-auto">
+
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/rules}">Rules</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/registration}">Registration</a>
+					</li>
+
+
+
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/users}">Users</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/teams}">Teams</a>
+					</li>
+
+
+
+
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/scoreboard}">Scoreboard</a>
+					</li>
+
+
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/challenges}">Challenges</a>
+					</li>
+				</ul>
+
+				<hr class="d-sm-flex d-md-flex d-lg-none">
+
+				<ul class="navbar-nav ml-md-auto d-block d-sm-flex d-md-flex">
+
+
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/login}">
+                            <span class="d-block" data-toggle="tooltip" data-placement="bottom" title="Login">
+                                <i class="fas fa-sign-in-alt d-none d-md-block d-lg-none"></i>
+                            </span>
+							<span class="d-sm-block d-md-none d-lg-block">
+                                <i class="fas fa-sign-in-alt pr-1"></i>Login
+                            </span>
+						</a>
+					</li>
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+		<!-- END NAVBAR -->
+</div>
