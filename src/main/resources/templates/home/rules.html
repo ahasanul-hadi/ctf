@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="en">
+
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/static/favicon.ico}" />
+    <title> CTF Rules </title>
+    <link th:href="@{/assets/img/favicon.png}" rel="icon">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet">
+</head>
+
+<body class="bg-body-tertiary">
+
+
+    <div th:replace="~{fragments/header :: header}"> </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="container payload">
+        <div class="container">
+            <h1>Rule of Engagement</h1>
+            <ol>
+                <li>All Financial Institution &amp; Critical Information Infrastructure (CII) shall register in our
+                    platform
+                    using the registration guideline (<a
+                        href="https://www.cirt.gov.bd/CII&amp;financial-institutions-cyber-drill-2023/">https://www.cirt.gov.bd/financial-cii-cyber-drill-2023/</a>)
+                    and <a href="https://cyberdrill.cirt.gov.bd/">https://cyberdrill.cirt.gov.bd/reg-guide</a>.</li>
+                <li>Each organization register one team containing 3 to 5 members.</li>
+                <li>Registration fee is 10,000 (Ten Thousand only) Taka per team.</li>
+                <li>All members can submit the flag and be carful about limited submission attempt.</li>
+                <li>All communication conducted through this particular email address (<a
+                        href="mailto:cyberrange@cirt.gov.bd">cyberrange@cirt.gov.bd</a>). You are requested to allow
+                    email
+                    communication from this email address for the test date and drill date. We are also using Discord as
+                    instant
+                    messaging during drill day for general discussion. Please follow the naming convention in Discord
+                    channel.
+                    <strong>Naming convention in discord: “TeamName_PersonName”.</strong>
+                </li>
+                <li>It is not allowed to engage people from outside of the organization.</li>
+                <li>Participants have the freedom to use any tool including those available on the internet.</li>
+                <li>Any sort of <strong>Denial of Service</strong> or any other unwanted action against the servers or
+                    associated infrastructures are prohibited.</li>
+                <li>Do not perform any unwanted actions against other teams.</li>
+                <li><strong>Do not try to exchange flags/write-ups/hints of the challenges during the competition with
+                        other
+                        teams participating or other external entities.</strong></li>
+                <li>Violation of organizer’s terms will terminate the team from the competition.</li>
+                <li>Top 30 teams will participate in the on-premises cyber drill, which will held in MIST on 21 October
+                    2023.
+                    Top 3 teams will be provided crest &amp; prizes.</li>
+                <li><strong>All right reserved to BGD e-GOV CIRT for any changes.</strong></li>
+            </ol>
+
+        </div>
+    </main>
+    <!-- END MAIN CONTENT -->
+
+
+    <!-- BEGIN FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}">Footer</div>
+    <!-- END FOOTER -->
+
+
+
+    <script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
+    <!-- Template Main JS File -->
+    <script th:src="@{/assets/js/main.js}"></script>
+    <script type="text/javascript">
+    </script>
+
+</body>
+
+</html>

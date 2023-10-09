@@ -11,4 +11,9 @@ public class IndexController {
     String getIndex(Model model){
         return "index";
     }
+
+    @GetMapping(value="/rules")
+    String getRules(Model model) {
+        return "home/rules";
+    }
 }
