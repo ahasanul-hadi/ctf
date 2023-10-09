@@ -1,6 +1,9 @@
 package com.cirt.ctf.user;
 
 
+import com.cirt.ctf.document.DocumentEntity;
+import com.cirt.ctf.document.DocumentService;
+import com.cirt.ctf.enums.Role;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -22,21 +25,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
-    private static final String CONTEXT_PATH="/boithok";
-
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-
-
+    private final DocumentService documentService;
 
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
-    }
-
-    public Optional<User> findUserByPersonalMeetingID(String meetingID) {
-        return userRepository.findByPersonalMeetingID(meetingID);
     }
 
     @Override
@@ -45,6 +40,27 @@ public class UserService implements UserDetailsService {
         Optional<User> userOptional = userRepository.findByEmail(usernameOrEmail);
         return userOptional.orElseThrow(()->new UsernameNotFoundException("Invalid email. User not Found!"));
 
+    }
+
+    public User saveUser(UserDTO userDTO, MultipartFile file){
+
+        User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getMobile(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getRole());
+        user.setDesignation(userDTO.getDesignation());
+        user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
+        user.setCredentialsNonExpired(true);
+        user.setEnabled(false);
+
+        if(file!=null){
+            try{
+                DocumentEntity doc= documentService.saveDocument(file);
+                user.setAvatarID(doc.getId());
+            }catch (Exception ignored){}
+        }
+
+        user= userRepository.save(user);
+
+        return user;
     }
 
 

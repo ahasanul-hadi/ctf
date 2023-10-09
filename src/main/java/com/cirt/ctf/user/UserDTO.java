@@ -1,6 +1,7 @@
 package com.cirt.ctf.user;
 
 import com.cirt.ctf.enums.Role;
+import com.cirt.ctf.team.TeamEntity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -27,22 +28,16 @@ public class UserDTO {
 
     @NotEmpty(message = "Please enter valid password.")
     private String password;
+    private String rePassword;
 
     private Role role;
 
-    private String avatar;
-    private String personalMeetingID;
-    private String passCode;
-    private String invitationLink;
+    private TeamEntity team;
 
+    private String avatar;
     private String education;
-    private String organization;
     private String address;
     private String personalInfo;
     private String designation;
-
-    private String jwt;
-
-
 
 }

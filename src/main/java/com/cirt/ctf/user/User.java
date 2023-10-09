@@ -1,6 +1,7 @@
 package com.cirt.ctf.user;
 
 import com.cirt.ctf.enums.Role;
+import com.cirt.ctf.team.TeamEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,9 +41,6 @@ public class User implements UserDetails, CredentialsContainer {
     @Column(name = "education")
     private String education;
 
-    @Column(name="organization")
-    private String organization;
-
     @Column(name="address")
     private String address;
 
@@ -55,11 +53,9 @@ public class User implements UserDetails, CredentialsContainer {
     @Column(name="avatar_id")
     private Long avatarID;
 
-    @Column(name="personal_meeting_id", unique = true)
-    private String personalMeetingID;
-
-    @Column(name="meeting_passcode")
-    private String passCode;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "team_id", referencedColumnName = "id")
+    private TeamEntity team;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,name = "role")
@@ -100,5 +96,9 @@ public class User implements UserDetails, CredentialsContainer {
         this.mobile= mobile;
         this.password = password;
         this.role = role;
+    }
+
+    public void assignTeam(TeamEntity team){
+        this.team=team;
     }
 }
