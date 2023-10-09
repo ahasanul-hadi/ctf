@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -45,23 +46,41 @@ public class UserService implements UserDetailsService {
     public User saveUser(UserDTO userDTO, MultipartFile file){
 
         User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getMobile(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getRole());
+        user.setTeam(userDTO.getTeam());
         user.setDesignation(userDTO.getDesignation());
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
         user.setEnabled(false);
 
-        if(file!=null){
+        if(file!=null && file.getSize()>0){
             try{
                 DocumentEntity doc= documentService.saveDocument(file);
                 user.setAvatarID(doc.getId());
             }catch (Exception ignored){}
         }
-
-        user= userRepository.save(user);
+        try {
+            user = userRepository.save(user);
+        }catch (Exception e) {
+            throw e;
+        }
 
         return user;
     }
 
+    public void update(User user){
+        userRepository.save(user);
+    }
 
+    public List<User> findAll(){
+        return userRepository.findAll();
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
+
+    public void deleteUser(User user) {
+        userRepository.deleteById(user.getId());
+    }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 public class TeamEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "team_name", nullable = false)
@@ -27,8 +27,7 @@ public class TeamEntity {
     @Column(name = "payment_email", nullable = false)
     private String paymentEmail;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "team_id")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "team")
     List<User> members;
 
     public void addMember(User member) {

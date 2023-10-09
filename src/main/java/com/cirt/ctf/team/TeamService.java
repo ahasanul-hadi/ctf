@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Service
@@ -25,46 +26,59 @@ public class TeamService {
     private final MailService emailer;
 
     @Transactional
-    public TeamEntity addTeam(TeamDTO teamDTO, TeamLeader leader, Member1 member1, Member2 member2, Member3 member3, Member4 member4, Member5 member5) {
+    public String addTeam(TeamRegistration teamDTO) {
         TeamEntity team = modelMapper.map(teamDTO, TeamEntity.class);
         team = teamRepository.save(team);
 
 
         //Team Leader
-        leader.setPassword(Utils.getRandomPassword(6));
-        UserDTO teamLeader = UserDTO.builder().team(team).role(Role.TEAM_LEAD).email(leader.getEmail()).name(leader.getName()).mobile(leader.getMobile()).password(leader.getPassword()).designation(leader.getDesignation()).build();
-        userService.saveUser(teamLeader, leader.getFile());
+        teamDTO.setPassword(Utils.getRandomPassword(6));
+        UserDTO teamLeader = UserDTO.builder().team(team).role(Role.TEAM_LEAD).email(teamDTO.getEmail()).name(teamDTO.getName()).mobile(teamDTO.getMobile()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation()).build();
+        try {
+            userService.saveUser(teamLeader, teamDTO.getFile());
+        }catch (Exception e){
+            return teamLeader.getEmail()+" is already used!";
+        }
 
 
         //member1
-        member1.setPassword(Utils.getRandomPassword(6));
-        UserDTO user1 = UserDTO.builder().team(team).role(Role.USER).email(member1.getEmail1()).name(member1.getName1()).mobile(member1.getMobile1()).password(member1.getPassword()).designation(member1.getDesignation1()).build();
-        userService.saveUser(user1, member1.getFile1());
-
+        teamDTO.setPassword1(Utils.getRandomPassword(6));
+        UserDTO user1 = UserDTO.builder().team(team).role(Role.USER).email(teamDTO.getEmail1()).name(teamDTO.getName1()).mobile(teamDTO.getMobile1()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation1()).build();
+        try {
+            userService.saveUser(user1, teamDTO.getFile1());
+        }catch (Exception e){
+            return user1.getEmail()+" is already used!";
+        }
         //member2
-        member2.setPassword(Utils.getRandomPassword(6));
-        UserDTO user2 = UserDTO.builder().team(team).role(Role.USER).email(member2.getEmail2()).name(member2.getName2()).mobile(member2.getMobile2()).password(member2.getPassword()).designation(member2.getDesignation2()).build();
-        userService.saveUser(user2, member2.getFile2());
-
+        teamDTO.setPassword2(Utils.getRandomPassword(6));
+        UserDTO user2 = UserDTO.builder().team(team).role(Role.USER).email(teamDTO.getEmail2()).name(teamDTO.getName2()).mobile(teamDTO.getMobile2()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation2()).build();
+        try {
+            userService.saveUser(user2, teamDTO.getFile2());
+        }catch (Exception e){
+            return user2.getEmail()+" is already used!";
+        }
 
         //member3
-        member3.setPassword(Utils.getRandomPassword(6));
-        UserDTO user3 = UserDTO.builder().team(team).role(Role.USER).email(member3.getEmail3()).name(member3.getName3()).mobile(member3.getMobile3()).password(member3.getPassword()).designation(member3.getDesignation3()).build();
-        userService.saveUser(user3, member3.getFile3());
-
+        teamDTO.setPassword3(Utils.getRandomPassword(6));
+        UserDTO user3 = UserDTO.builder().team(team).role(Role.USER).email(teamDTO.getEmail3()).name(teamDTO.getName3()).mobile(teamDTO.getMobile3()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation3()).build();
+        try {
+            userService.saveUser(user3, teamDTO.getFile3());
+        }catch (Exception e){
+            return user3.getEmail()+" is already used!";
+        }
 
         //member4
-        if (member4.getEmail4() != null && !member4.getEmail4().isEmpty()) {
-            member4.setPassword(Utils.getRandomPassword(6));
-            UserDTO user4 = UserDTO.builder().team(team).role(Role.USER).email(member4.getEmail4()).name(member4.getName4()).mobile(member4.getMobile4()).password(member4.getPassword()).designation(member4.getDesignation4()).build();
-            userService.saveUser(user4, member4.getFile4());
+        if (teamDTO.getEmail4() != null && !teamDTO.getEmail4().isEmpty()) {
+            teamDTO.setPassword4(Utils.getRandomPassword(6));
+            UserDTO user4 = UserDTO.builder().team(team).role(Role.USER).email(teamDTO.getEmail4()).name(teamDTO.getName4()).mobile(teamDTO.getMobile4()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation4()).build();
+            userService.saveUser(user4, teamDTO.getFile4());
         }
 
         //member5
-        if (member5.getEmail5() != null && !member5.getEmail5().isEmpty()) {
-            member5.setPassword(Utils.getRandomPassword(6));
-            UserDTO user5 = UserDTO.builder().team(team).role(Role.USER).email(member5.getEmail5()).name(member5.getName5()).mobile(member5.getMobile5()).password(member5.getPassword()).designation(member5.getDesignation5()).build();
-            userService.saveUser(user5, member5.getFile5());
+        if (teamDTO.getEmail5() != null && !teamDTO.getEmail5().isEmpty()) {
+            teamDTO.setPassword5(Utils.getRandomPassword(6));
+            UserDTO user5 = UserDTO.builder().team(team).role(Role.USER).email(teamDTO.getEmail5()).name(teamDTO.getName5()).mobile(teamDTO.getMobile5()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation5()).build();
+            userService.saveUser(user5, teamDTO.getFile5());
         }
 
         MailDTO mailDTO= MailDTO.builder().from("CIRT CTF").subject("User Registration").build();
@@ -73,7 +87,7 @@ public class TeamService {
 
         team = teamRepository.findById(team.getId()).orElse(null);
 
-        return team;
+        return null;
     }
 
 
@@ -82,4 +96,12 @@ public class TeamService {
     }
 
 
+    public void approve(Long id) {
+        TeamEntity team= teamRepository.findById(id).orElseThrow();
+        team.members.forEach(user->{
+            user.setEnabled(true);
+            userService.update(user);
+        });
+
+    }
 }

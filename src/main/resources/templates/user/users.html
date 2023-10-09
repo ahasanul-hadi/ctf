@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  lang="en">
+
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/static/favicon.ico}" />
+    <title>Teams </title>
+    <link th:href="@{/assets/img/favicon.png}" rel="icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <!-- Template Main CSS File -->
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-body-tertiary">
+
+
+<div th:replace="~{fragments/header :: header}"> </div>
+
+<!-- MAIN CONTENT -->
+<main class="container payload">
+    <div class="text-center">
+        <h3>Users</h3><br/><br/>
+    </div>
+
+    <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
+
+    <table id="example" class="table table-striped" style="width:100%">
+        <thead>
+        <tr>
+            <th>SL</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Designation</th>
+            <th>Score</th>
+
+            <th sec:authorize="hasRole('ROLE_ADMIN')">Update</th>
+            <th sec:authorize="hasRole('ROLE_ADMIN')">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user,iterator: ${users}">
+            <td th:text="${iterator.index+1}" />
+            <td th:text="${user.name}" />
+            <td th:text="${user.email}" />
+            <td th:text="${user.designation}" />
+            <td th:text="${'-'}" />
+
+            <td sec:authorize="hasRole('ROLE_ADMIN')">
+                <a th:href="@{'/users/update/'+${user.id}}" class="btn btn-success" role="button">Update</a>
+            </td>
+            <td sec:authorize="hasRole('ROLE_ADMIN')">
+                <a th:href="@{'/users/delete/'+${user.id}}" class="btn btn-danger" role="button">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</main>
+
+<!-- END MAIN CONTENT -->
+
+
+<!-- BEGIN FOOTER -->
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
+<!-- END FOOTER -->
+
+
+
+<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
+<!-- Template Main JS File -->
+<script th:src="@{/assets/js/main.js}"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://github.com/makeusabrew/bootbox/releases/download/v6.0.0/bootbox.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#example').DataTable();
+
+         $('a.accept').click(function(e){
+        	 e.preventDefault();
+        	 var href=$(this).attr('href');
+        	 bootbox.confirm("Are you sure?", function(result) {
+                 if (result) {
+                     window.location=href;
+                 }
+             });
+
+        })
+
+    } );
+</script>
+
+</body>
+</html>

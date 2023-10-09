@@ -27,4 +27,16 @@ public class TeamDTO {
 
     @JsonIgnore
     private List<User> members;
+
+    public int getCount(){
+        return members.size();
+    }
+
+    public boolean isApproved(){
+        for(User u: members){
+            if(!u.isEnabled())
+                return false;
+        }
+        return true;
+    }
 }

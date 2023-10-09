@@ -18,7 +18,6 @@ public class SecurityConfig {
                 .formLogin(form->form.loginPage("/login").defaultSuccessUrl("/", true).permitAll())
                 .sessionManagement(se->se.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).maximumSessions(1).expiredUrl("/login?expired"))
                 .requestCache(c->c.disable())
-                .exceptionHandling(ex->ex.accessDeniedPage("/error"))
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests( authorize -> authorize
                         .requestMatchers("/**").permitAll()

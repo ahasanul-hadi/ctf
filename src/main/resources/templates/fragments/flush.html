@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div  th:fragment="flushMessage">
+    <div th:if="${message!= null && type=='success'}" class="alert alert-success alert-dismissable text-center">
+   		<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+   		<strong>Success!</strong>  <span th:text="${message}">message</span>
+   	</div>
+   	<div th:if="${message!= null && type=='error'}" class="alert alert-danger alert-dismissable text-center">
+   		<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+   		<strong></strong>  <div th:text="'Error!!! '+ ${message}">message</div>
+   	</div>
+ 	<div th:if="${message!= null && type=='warning'}" class="alert alert-warning alert-dismissable text-center">
+   		<button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+   		<strong></strong>  <div th:text="'Warning!!! '+ ${message}">message</div>
+   	</div>
+</div>

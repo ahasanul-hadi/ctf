@@ -53,7 +53,7 @@ public class User implements UserDetails, CredentialsContainer {
     @Column(name="avatar_id")
     private Long avatarID;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     private TeamEntity team;
 

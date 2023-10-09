@@ -26,39 +26,300 @@
 <body class="bg-body-tertiary">
 
 
-<div th:replace="fragments/header :: header"> </div>
+<div th:replace="~{fragments/header :: header}"> </div>
 
 <!-- MAIN CONTENT -->
 <main class="container">
 
-    <form>
-        <div class="row mb-3">
-            <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Email</label>
-            <div class="col-sm-10">
-                <input type="email" class="form-control form-control-sm" id="colFormLabelSm" placeholder="col-form-label-sm">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label for="colFormLabel" class="col-sm-2 col-form-label">Email</label>
-            <div class="col-sm-10">
-                <input type="email" class="form-control" id="colFormLabel" placeholder="col-form-label">
-            </div>
-        </div>
-        <div class="row">
-            <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Email</label>
-            <div class="col-sm-10">
-                <input type="email" class="form-control form-control-lg" id="colFormLabelLg" placeholder="col-form-label-lg">
-            </div>
-        </div>
-    </form>
 
+        <div class="mt-6 text-center">
+            <br/><br/><br/>
+            <h2>Team Registration</h2>
+            <br/>
+        </div>
+        <hr/>
+    <div class="row">
+        <div class="col-md-2"></div>
+
+        <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
+
+
+        <div class="col-md-8">
+            <form  th:action="@{/teams/reg}" method="post" enctype="multipart/form-data" th:object="${team}">
+                <div class="text-center mb-3"><h5>Payment Information<span class="text-danger required">*</span></h5></div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Order ID <span class="text-danger required">*</span> </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  th:field="*{orderID}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('orderID')}" th:errors="*{orderID}"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Email Used in Payment <span class="text-danger required">*</span></label>
+                    <div class="col-md-6">
+                        <input type="email" class="form-control"  placeholder=""  th:field="*{paymentEmail}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('paymentEmail')}" th:errors="*{paymentEmail}"></div>
+                    </div>
+                </div>
+                <hr/>
+
+                <div class="text-center mb-3"><h5>Team Information<span class="text-danger required">*</span></h5></div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Team Name <span class="text-danger required">*</span></label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" placeholder="" th:field="*{teamName}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('teamName')}" th:errors="*{teamName}"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Organization Name <span class="text-danger required">*</span></label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{teamOrganization}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('teamOrganization')}" th:errors="*{teamOrganization}"></div>
+                    </div>
+                </div>
+                <hr/>
+
+
+
+                <div class="text-center mb-3"><h5>Team Leader Information<span class="text-danger required">*</span></h5></div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Name</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{name}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Email</label>
+                    <div class="col-md-6">
+                        <input type="email" class="form-control"  placeholder=""  th:field="*{email}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Mobile</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{mobile}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Designation</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" placeholder="" th:field="*{designation}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Image</label>
+                    <div class="col-md-6">
+                        <input class="form-control" type="file" th:field="*{file}">
+                    </div>
+                </div>
+                <hr/>
+
+
+
+                <div class="text-center mb-3"><h5>Team Player1 Information<span class="text-danger required">*</span></h5></div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Name</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{name1}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('name1')}" th:errors="*{name1}"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Email</label>
+                    <div class="col-md-6">
+                        <input type="email" class="form-control"  placeholder="" th:field="*{email1}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('email1')}" th:errors="*{email1}"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Mobile</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{mobile1}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Designation</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{designation1}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Image</label>
+                    <div class="col-md-6">
+                        <input class="form-control" type="file" th:field="*{file1}">
+                    </div>
+                </div>
+                <hr/>
+
+
+                <div class="text-center mb-3"><h5>Team Player2 Information<span class="text-danger required">*</span></h5></div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Name</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{name2}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('name2')}" th:errors="*{name2}"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Email</label>
+                    <div class="col-md-6">
+                        <input type="email" class="form-control"  placeholder="" th:field="*{email2}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('email2')}" th:errors="*{email2}"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Mobile</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{mobile2}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Designation</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{designation2}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Image</label>
+                    <div class="col-md-6">
+                        <input class="form-control" type="file" th:field="*{file2}">
+                    </div>
+                </div>
+                <hr/>
+
+
+                <div class="text-center mb-3"><h5>Team Player3 Information<span class="text-danger required">*</span></h5></div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Name</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{name3}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('name3')}" th:errors="*{name3}"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Email</label>
+                    <div class="col-md-6">
+                        <input type="email" class="form-control"  placeholder="" th:field="*{email3}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('email3')}" th:errors="*{email3}"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Mobile</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{mobile3}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Designation</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{designation3}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Image</label>
+                    <div class="col-md-6">
+                        <input class="form-control" type="file" th:field="*{file3}" >
+                    </div>
+                </div>
+                <hr/>
+
+
+                <div class="text-center mb-3"><h5>Team Player4 Information</h5></div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Name</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{name4}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Email</label>
+                    <div class="col-md-6">
+                        <input type="email" class="form-control"  placeholder="" th:field="*{email4}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Mobile</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{mobile4}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Designation</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{designation4}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Image</label>
+                    <div class="col-md-6">
+                        <input class="form-control" type="file" th:field="*{file4}">
+                    </div>
+                </div>
+                <hr/>
+
+
+                <div class="text-center mb-3"><h5>Team Player5 Information</h5></div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Name</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{name5}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Email</label>
+                    <div class="col-md-6">
+                        <input type="email" class="form-control"  placeholder="" th:field="*{email5}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Mobile</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{mobile5}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Designation</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{designation5}">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Image</label>
+                    <div class="col-md-6">
+                        <input class="form-control" type="file" th:field="*{file5}">
+                    </div>
+                </div>
+                <hr/>
+
+
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label"></label>
+                    <div class="col-md-6 text-center">
+                        <input class="btn btn-primary " type="submit" value="Submit">
+                        <br/><br/><br/>
+
+                    </div>
+                </div>
+
+
+
+
+            </form>
+        </div>
+
+        <div class="col-md-2"></div>
+</div>
 </main>
 
 <!-- END MAIN CONTENT -->
 
 
 <!-- BEGIN FOOTER -->
-<div th:replace="fragments/footer :: footer">Footer</div>
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
 <!-- END FOOTER -->
 
 
