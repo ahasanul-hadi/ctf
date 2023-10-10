@@ -49,7 +49,10 @@ public class ChallengeEntity {
 
     @Column(name="deadline", nullable = false)
     private Instant deadline;
-    
+
+    @Column(name = "is_visible", nullable = false)
+    private boolean isVisible;
+
     @CreationTimestamp(source = SourceType.DB)
     private Instant createdAt;
 
