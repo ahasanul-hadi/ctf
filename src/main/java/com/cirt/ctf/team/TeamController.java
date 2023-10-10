@@ -1,11 +1,14 @@
 package com.cirt.ctf.team;
 
+import com.cirt.ctf.email.MailService;
 import com.cirt.ctf.payload.*;
+import com.cirt.ctf.user.User;
 import com.cirt.ctf.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -25,8 +28,9 @@ public class TeamController {
     private final TeamRepository teamRepository;
     private final TeamService teamService;
     private final UserService userService;
+    private final MailService mailService;
 
-    @PostMapping("/reg")
+    @PostMapping("/registration")
     public String addTeam(@Valid @ModelAttribute("team") TeamRegistration team, BindingResult result, Model model){
 
         model.addAttribute("team",team);
@@ -41,6 +45,7 @@ public class TeamController {
             model.addAttribute("message", reason);
             return "team/registration";
         }
+        mailService.sendRegistrationMail(team);
         return "redirect:/teams";
     }
 
@@ -50,6 +55,13 @@ public class TeamController {
         List<TeamDTO> teams= teamService.getTeams();
         model.addAttribute("teams", teams);
         return "team/teams";
+    }
+
+    @GetMapping("/{id}")
+    public String getTeamMembers( @PathVariable("id") Long id,  ModelMap model){
+        TeamDTO teamDTO = teamService.findById(id);
+        model.addAttribute("team", teamDTO);
+        return "team/teamMembers";
     }
 
     @GetMapping("/registration")
@@ -63,6 +75,20 @@ public class TeamController {
        teamService.approve(id);
         redirectAttributes.addFlashAttribute("type", "success");
         redirectAttributes.addFlashAttribute("message", "Team Has Been Approved!");
+        return "redirect:/teams";
+    }
+
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/delete/{id}")
+    public String deleteTeam(@PathVariable("id") Long id, Model model, Principal principal, final RedirectAttributes redirectAttributes){
+
+        TeamDTO dto = teamService.findById(id);
+        teamService.deleteById(id);
+
+        redirectAttributes.addFlashAttribute("type", "success");
+        redirectAttributes.addFlashAttribute("message", "Team has been deleted!");
+
         return "redirect:/teams";
     }
 

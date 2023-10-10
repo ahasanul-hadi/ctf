@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/static/favicon.ico}" />
+    <title>User </title>
+    <link th:href="@{/assets/img/favicon.png}" rel="icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet">
+</head>
+
+<body class="bg-body-tertiary">
+
+
+<div th:replace="~{fragments/header :: header}"> </div>
+
+<!-- MAIN CONTENT -->
+<main class="container payload">
+
+
+    <div class="row mt-6 text-center">
+        <h2>Update User</h2>
+        <br/>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-6"></div>
+
+        <div class="mb-3 image d-flex flex-column justify-content-center align-items-center"> <button class="btn btn-secondary">
+            <img th:if="${userDTO.avatar!=null}" th:src="@{'/api/document/preview/'+${userDTO.avatar}}"  height="100" width="100" />
+            <img th:unless="${userDTO.avatar!=null}" src="https://i.imgur.com/wvxPV9S.png"  height="100" width="100" />
+            </button>
+        </div>
+
+
+
+        <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
+
+        <div class="justify-content-center align-items-center">
+            <form  th:action="@{/users/update}" method="post" enctype="multipart/form-data" th:object="${userDTO}">
+                <input type="hidden" th:field="*{id}">
+                <input type="hidden" th:field="*{email}">
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Name <span class="text-danger required">*</span> </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  th:field="*{name}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Mobile <span class="text-danger required">*</span></label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" placeholder="" th:field="*{mobile}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('mobile')}" th:errors="*{mobile}"></div>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="mt-3 mb-3 text-center text-danger italic"> Leave this section if you don't want to change password<br/></div>
+
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Current Password</label>
+                    <div class="col-md-6">
+                        <input type="password" class="form-control"  placeholder="" th:field="*{currentPassword}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">New Password</label>
+                    <div class="col-md-6">
+                        <input type="password" class="form-control"  placeholder="" th:field="*{password}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Retype New Password</label>
+                    <div class="col-md-6">
+                        <input type="password" class="form-control"  placeholder="" th:field="*{rePassword}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('rePassword')}" th:errors="*{rePassword}"></div>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Designation</label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control"  placeholder="" th:field="*{designation}">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}"></div>
+                    </div>
+                </div>
+
+
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Image</label>
+                    <div class="col-md-6">
+                        <input class="form-control" type="file" th:field="*{file}" accept="image/*">
+                    </div>
+                </div>
+
+
+
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label"></label>
+                    <div class="col-md-6 text-center">
+                        <input class="btn btn-primary " type="submit" value="Submit">
+                        <br/><br/><br/>
+
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</main>
+
+<!-- END MAIN CONTENT -->
+
+
+<!-- BEGIN FOOTER -->
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
+<!-- END FOOTER -->
+
+
+
+<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
+<!-- Template Main JS File -->
+<script th:src="@{/assets/js/main.js}"></script>
+<script type="text/javascript">
+</script>
+
+</body>
+</html>

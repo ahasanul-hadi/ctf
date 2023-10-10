@@ -13,6 +13,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
+    <!-- Vendor CSS Files -->
     <!-- Template Main CSS File -->
     <link th:href="@{/assets/css/style.css}" rel="stylesheet">
 
@@ -27,44 +28,36 @@
 
 <!-- MAIN CONTENT -->
 <main class="container payload">
-    <div class="text-center">
-        <h3>Users</h3><br/><br/>
+    <div class="text-center" style="background: #F0F0F0;margin-top:100px;margin-bottom:30px;width:100%">
+        <h4 class="text-center bold mt-3" th:text="${'Team: '+team.teamName}">  </h4>
+        <h4 class="text-center bold" th:text="${'Organization: '+team.teamOrganization}">  </h4>
+        <h4 class="text-center bold mb-3" th:text="${'Score: '+team.getScore()}">  </h4>
     </div>
 
-    <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
 
-    <table id="example" class="table table-striped" style="width:100%">
+    <table class="table table-striped mt-12" style="width:100%">
         <thead>
         <tr>
             <th>SL</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Role</th>
             <th>Mobile</th>
+            <th>Role</th>
             <th>Designation</th>
             <th>Score</th>
 
-            <th sec:authorize="hasAuthority('ADMIN')">Update</th>
-            <th sec:authorize="hasAuthority('ADMIN')">Delete</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user,iterator: ${users}">
-            <td th:text="${iterator.index+1}" />
-            <td th:text="${user.name}" />
-            <td th:text="${user.email}" />
-            <td th:text="${user.role}" />
-            <td th:text="${user.mobile}" />
-            <td th:text="${user.designation}" />
-            <td th:text="${user.getScore()+''}" />
-
-            <td sec:authorize="hasAuthority('ADMIN')">
-                <a th:href="@{'/users/update/'+${user.id}}" class="btn btn-success" role="button">Update</a>
-            </td>
-            <td sec:authorize="hasAuthority('ADMIN')">
-                <a th:href="@{'/users/delete/'+${user.id}}" class="btn btn-danger delete" role="button">Delete</a>
-            </td>
-        </tr>
+            <tr th:each="member, iterator: ${team.members}">
+                <td th:text="${iterator.index+1}" />
+                <td th:text="${member.name}" />
+                <td th:text="${member.email}" />
+                <td th:text="${member.mobile}" />
+                <td th:text="${member.role}" />
+                <td th:text="${member.designation}" />
+                <td th:text="${member.getScore()}" />
+            </tr>
         </tbody>
     </table>
 
@@ -92,30 +85,6 @@
 <script src="https://github.com/makeusabrew/bootbox/releases/download/v6.0.0/bootbox.js"></script>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#example').DataTable();
-
-         $('a.accept').click(function(e){
-        	 e.preventDefault();
-        	 var href=$(this).attr('href');
-        	 bootbox.confirm("Are you sure?", function(result) {
-                 if (result) {
-                     window.location=href;
-                 }
-             });
-        })
-
-        $('a.delete').click(function(e){
-        	 e.preventDefault();
-        	 var href=$(this).attr('href');
-        	 bootbox.confirm("Are you sure you want to delete?", function(result) {
-                 if (result) {
-                     window.location=href;
-                 }
-             });
-        })
-
-    } );
 </script>
 
 </body>

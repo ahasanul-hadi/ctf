@@ -1,5 +1,6 @@
 package com.cirt.ctf.email;
 
+import com.cirt.ctf.payload.TeamRegistration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -81,6 +82,27 @@ public class MailService{
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
+
+	}
+
+	public void sendRegistrationMail(TeamRegistration team){
+
+		//Team Lead
+		MailDTO mailDTO= MailDTO.builder().subject("CTF Account").to(team.getEmail()).build();
+		String content= """
+       			Dear %s<br/><br/>
+    			Your account has created for CIRT Cyber Drill.
+    			<br/> Use following credentials to login.<br/><br/>
+    			username: <b>%s</b>
+    			password: <b>%s</b>
+    			<br/><br/>
+    			Thank you
+				""";
+		content = String.format(content, team.getName(), team.getEmail(),team.getPassword());
+		System.out.println("content:"+content);
+		mailDTO.setContent(content);
+		send(mailDTO);
+		//
 
 	}
 	

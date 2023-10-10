@@ -43,7 +43,10 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public User saveUser(UserDTO userDTO, MultipartFile file){
+    public User saveUser(UserDTO userDTO, MultipartFile file) throws RuntimeException{
+
+        if(findUserByEmail(userDTO.getEmail()).isPresent())
+            throw new RuntimeException("User Already present");
 
         User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getMobile(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getRole());
         user.setTeam(userDTO.getTeam());
@@ -69,6 +72,23 @@ public class UserService implements UserDetailsService {
     }
 
     public void update(User user){
+        userRepository.save(user);
+    }
+
+    public void updateUser(UserDTO userDTO){
+        User user= findById(userDTO.getId());
+        user.setName(userDTO.getName());
+        user.setMobile(userDTO.getMobile());
+        user.setDesignation(userDTO.getDesignation());
+        if(userDTO.getPassword()!=null && !userDTO.getPassword().isEmpty())
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+        if(userDTO.getFile()!=null && userDTO.getFile().getSize()>0){
+            try{
+                DocumentEntity doc= documentService.saveDocument(userDTO.getFile());
+                user.setAvatarID(doc.getId());
+            }catch (Exception ignored){}
+        }
         userRepository.save(user);
     }
 
