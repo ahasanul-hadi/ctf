@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -26,7 +27,7 @@ public class UserDTO {
     @NotEmpty(message = "Please enter valid mobile.")
     private String mobile;
 
-    @NotEmpty(message = "Please enter valid password.")
+    private String currentPassword;
     private String password;
     private String rePassword;
 
@@ -39,5 +40,9 @@ public class UserDTO {
     private String address;
     private String personalInfo;
     private String designation;
+
+    private MultipartFile file;
+
+    private int score;
 
 }

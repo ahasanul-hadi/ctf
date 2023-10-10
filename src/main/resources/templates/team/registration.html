@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  lang="en">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 
 <head>
@@ -39,13 +38,12 @@
         </div>
         <hr/>
     <div class="row">
-        <div class="col-md-2"></div>
 
         <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
 
 
-        <div class="col-md-8">
-            <form  th:action="@{/teams/reg}" method="post" enctype="multipart/form-data" th:object="${team}">
+        <div class="ustify-content-center align-items-center">
+            <form  th:action="@{/teams/registration}" method="post" enctype="multipart/form-data" th:object="${team}">
                 <div class="text-center mb-3"><h5>Payment Information<span class="text-danger required">*</span></h5></div>
                 <div class="row mb-3">
                     <label  class="col-md-3 col-form-label">Order ID <span class="text-danger required">*</span> </label>
@@ -113,7 +111,7 @@
                 <div class="row mb-3">
                     <label  class="col-md-3 col-form-label">Image</label>
                     <div class="col-md-6">
-                        <input class="form-control" type="file" th:field="*{file}">
+                        <input class="form-control" type="file" th:field="*{file}" accept="image/*">
                     </div>
                 </div>
                 <hr/>
@@ -150,7 +148,7 @@
                 <div class="row mb-3">
                     <label  class="col-md-3 col-form-label">Image</label>
                     <div class="col-md-6">
-                        <input class="form-control" type="file" th:field="*{file1}">
+                        <input class="form-control" type="file" th:field="*{file1}" accept="image/*">
                     </div>
                 </div>
                 <hr/>
@@ -186,7 +184,7 @@
                 <div class="row mb-3">
                     <label  class="col-md-3 col-form-label">Image</label>
                     <div class="col-md-6">
-                        <input class="form-control" type="file" th:field="*{file2}">
+                        <input class="form-control" type="file" th:field="*{file2}" accept="image/*">
                     </div>
                 </div>
                 <hr/>
@@ -222,7 +220,7 @@
                 <div class="row mb-3">
                     <label  class="col-md-3 col-form-label">Image</label>
                     <div class="col-md-6">
-                        <input class="form-control" type="file" th:field="*{file3}" >
+                        <input class="form-control" type="file" th:field="*{file3}" accept="image/*">
                     </div>
                 </div>
                 <hr/>
@@ -256,7 +254,7 @@
                 <div class="row mb-3">
                     <label  class="col-md-3 col-form-label">Image</label>
                     <div class="col-md-6">
-                        <input class="form-control" type="file" th:field="*{file4}">
+                        <input class="form-control" type="file" th:field="*{file4}" accept="image/*">
                     </div>
                 </div>
                 <hr/>
@@ -290,7 +288,7 @@
                 <div class="row mb-3">
                     <label  class="col-md-3 col-form-label">Image</label>
                     <div class="col-md-6">
-                        <input class="form-control" type="file" th:field="*{file5}">
+                        <input class="form-control" type="file" th:field="*{file5}" accept="image/*">
                     </div>
                 </div>
                 <hr/>

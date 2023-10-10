@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  lang="en">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 
 <head>
@@ -16,6 +15,7 @@
 
     <!-- Vendor CSS Files -->
     <!-- Template Main CSS File -->
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -42,24 +42,30 @@
             <th>Organization</th>
             <th>Members</th>
 
-            <th sec:authorize="hasRole('ROLE_ADMIN')">Order ID</th>
-            <th sec:authorize="hasRole('ROLE_ADMIN')">Payment Email</th>
-            <th sec:authorize="hasRole('ROLE_ADMIN')">Action</th>
+            <th sec:authorize="hasAuthority('ADMIN')">Order ID</th>
+            <th sec:authorize="hasAuthority('ADMIN')">Payment Email</th>
+            <th sec:authorize="hasAuthority('ADMIN')">Status</th>
+            <th sec:authorize="hasAuthority('ADMIN')">Action</th>
         </tr>
         </thead>
         <tbody>
             <tr th:each="team, iterator: ${teams}">
                 <td th:text="${iterator.index+1}" />
-                <td th:text="${team.teamName}" />
+                <td>
+                    <a th:href="@{'/teams/'+${team.id}}"><span th:text="${team.teamName}"></span></a>
+                </td>
                 <td th:text="${team.teamOrganization}" />
                 <td th:text="${team.count}" />
 
-                <td sec:authorize="hasRole('ROLE_ADMIN')" th:text="${team.orderID}" />
-                <td sec:authorize="hasRole('ROLE_ADMIN')" th:text="${team.paymentEmail}" />
+                <td sec:authorize="hasAuthority('ADMIN')" th:text="${team.orderID}" />
+                <td sec:authorize="hasAuthority('ADMIN')" th:text="${team.paymentEmail}" />
 
-                <td sec:authorize="hasRole('ROLE_ADMIN')" th:if="${team.isApproved()}" class="text-primary bold" th:text="${'APPROVED'}"/>
-                <td sec:authorize="hasRole('ROLE_ADMIN')" th:unless="${team.isApproved()}">
+                <td sec:authorize="hasAuthority('ADMIN')" th:if="${team.isApproved()}" class="text-primary bold" th:text="${'APPROVED'}"/>
+                <td sec:authorize="hasAuthority('ADMIN')" th:unless="${team.isApproved()}">
                     <a th:href="@{'/teams/approve/'+${team.id}}" class="btn btn-success accept" role="button">APPROVE</a>
+                </td>
+                <td sec:authorize="hasAuthority('ADMIN')">
+                    <a th:href="@{'/teams/delete/'+${team.id}}" class="btn btn-danger delete" role="button">Delete</a>
                 </td>
             </tr>
         </tbody>
@@ -100,7 +106,16 @@
                      window.location=href;
                  }
              });
+        })
 
+        $('a.delete').click(function(e){
+        	 e.preventDefault();
+        	 var href=$(this).attr('href');
+        	 bootbox.confirm("Are you sure you want to delete?", function(result) {
+                 if (result) {
+                     window.location=href;
+                 }
+             });
         })
 
     } );

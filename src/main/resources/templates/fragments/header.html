@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-	xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div th:fragment="header">
 	<!-- NAVBAR -->
@@ -48,7 +48,18 @@
 				<ul class="navbar-nav ml-md-auto d-block d-sm-flex d-md-flex">
 
 
-					<li class="nav-item">
+					<li sec:authorize="isAuthenticated()" class="nav-item">
+						<a class="nav-link" th:href="@{/logout}">
+                            <span class="d-block" data-toggle="tooltip" data-placement="bottom" title="Login">
+                                <i class="fas fa-sign-in-alt d-none d-md-block d-lg-none"></i>
+                            </span>
+							<span class="d-sm-block d-md-none d-lg-block">
+                                <i class="fas fa-sign-in-alt pr-1"></i>Logout
+                            </span>
+						</a>
+					</li>
+
+					<li sec:authorize="!isAuthenticated()" class="nav-item">
 						<a class="nav-link" th:href="@{/login}">
                             <span class="d-block" data-toggle="tooltip" data-placement="bottom" title="Login">
                                 <i class="fas fa-sign-in-alt d-none d-md-block d-lg-none"></i>

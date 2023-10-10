@@ -101,4 +101,10 @@ public class User implements UserDetails, CredentialsContainer {
     public void assignTeam(TeamEntity team){
         this.team=team;
     }
+
+    @Transient
+    private int score;
+    public int getScore(){
+        return 10;
+    }
 }

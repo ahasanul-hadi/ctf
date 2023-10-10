@@ -39,4 +39,9 @@ public class TeamDTO {
         }
         return true;
     }
+
+    public String getScore(){
+        int score= members.stream().mapToInt(User::getScore).sum();
+        return score<=0?"-":String.valueOf(score);
+    }
 }
