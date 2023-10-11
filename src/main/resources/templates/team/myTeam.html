@@ -70,6 +70,7 @@
             <tr>
                 <th>SL</th>
                 <th>Challenge</th>
+                <th>Category</th>
                 <th>Submitter</th>
                 <!--<th>submission Link</th>-->
                 <th>Submission Time</th>
@@ -80,6 +81,7 @@
             <tr th:each="submission, iterator: ${team?.submissions}">
                 <td th:text="${iterator.index+1}" />
                 <td th:text="${submission?.challenge?.title}" />
+                <td th:text="${submission?.challenge?.category}" />
                 <td th:text="${submission?.solver?.name}" />
                 <!--<td th:text="${submission.file_path}" />-->
                 <td th:text="${submission?.submissionTime}" />

@@ -5,6 +5,7 @@ import com.cirt.ctf.marking.ResultEntity;
 import com.cirt.ctf.team.TeamEntity;
 import com.cirt.ctf.user.User;
 import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "submissions")
+@Data
 public class SubmissionEntity {
 
     @Id
@@ -38,7 +40,7 @@ public class SubmissionEntity {
     private TeamEntity team;
 
     @OneToOne(mappedBy = "submission", orphanRemoval = true)
-    public ResultEntity result;
+    private ResultEntity result;
 
 
 }

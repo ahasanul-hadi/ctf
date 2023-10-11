@@ -4,16 +4,17 @@ import com.cirt.ctf.email.MailDTO;
 import com.cirt.ctf.email.MailService;
 import com.cirt.ctf.enums.Role;
 import com.cirt.ctf.payload.*;
+import com.cirt.ctf.user.User;
 import com.cirt.ctf.user.UserDTO;
 import com.cirt.ctf.user.UserService;
 import com.cirt.ctf.util.Utils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,7 +24,11 @@ public class TeamService {
     private final ModelMapper modelMapper;
     private final TeamRepository teamRepository;
     private final UserService userService;
-    private final MailService emailer;
+
+
+    public List<TeamDTO> findAll(){
+        return teamRepository.findAll().stream().map(entity->modelMapper.map(entity,TeamDTO.class)).toList();
+    }
 
     @Transactional
     public String addTeam(TeamRegistration teamDTO) {
@@ -100,8 +105,13 @@ public class TeamService {
     }
 
 
-    public void approve(Long id) {
+    public void approve(Long id, User admin) {
         TeamEntity team= teamRepository.findById(id).orElseThrow();
+        team.setApprovedBy(admin);
+        team.setApproveDate(LocalDateTime.now());
+        teamRepository.save(team);
+
+
         team.getMembers().forEach(user->{
             user.setEnabled(true);
             userService.update(user);

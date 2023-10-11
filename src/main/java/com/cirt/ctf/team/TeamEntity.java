@@ -5,6 +5,7 @@ import com.cirt.ctf.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -30,6 +31,14 @@ public class TeamEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "team")
     private List<User> members;
+
+    @ManyToOne
+    @JoinColumn(name = "approver_id")
+    private User approvedBy;
+
+
+    @Column(name = "approve_date")
+    private LocalDateTime approveDate;
 
     @OneToMany(mappedBy = "team")
     private List<SubmissionEntity> submissions;
