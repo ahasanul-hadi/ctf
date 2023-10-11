@@ -28,8 +28,12 @@ public class TeamService {
     @Transactional
     public String addTeam(TeamRegistration teamDTO) {
         TeamEntity team = modelMapper.map(teamDTO, TeamEntity.class);
-        team = teamRepository.save(team);
-
+        try {
+            team = teamRepository.save(team);
+        }catch (Exception ee){
+            System.out.println("inside main exp"+ee);
+            return "Please provide unique payment email and order id";
+        }
 
         //Team Leader
         teamDTO.setPassword(Utils.getRandomPassword(6));
@@ -98,7 +102,7 @@ public class TeamService {
 
     public void approve(Long id) {
         TeamEntity team= teamRepository.findById(id).orElseThrow();
-        team.members.forEach(user->{
+        team.getMembers().forEach(user->{
             user.setEnabled(true);
             userService.update(user);
         });

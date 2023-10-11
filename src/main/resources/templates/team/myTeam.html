@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/static/favicon.ico}" />
+    <title>Teams </title>
+    <link th:href="@{/assets/img/favicon.png}" rel="icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <!-- Template Main CSS File -->
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-body-tertiary">
+
+
+<div th:replace="~{fragments/header :: header}"> </div>
+
+<!-- MAIN CONTENT -->
+<main class="container payload">
+    <div class="text-center" style="background: #F0F0F0;margin-top:100px;margin-bottom:30px;width:100%">
+        <h4 class="text-center bold mt-3" th:text="${'Team: '+team?.teamName}">  </h4>
+        <h4 class="text-center bold" th:text="${'Organization: '+team?.teamOrganization}">  </h4>
+        <h4 class="text-center bold mb-3" th:text="${'Score: '+team?.getScore()}">  </h4>
+    </div>
+
+
+    <div>
+        <table class="table table-striped mt-12" style="width:100%">
+            <thead>
+            <tr>
+                <th>SL</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Role</th>
+                <th>Designation</th>
+                <th>Score</th>
+
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="member, iterator: ${team?.members}">
+                    <td th:text="${iterator.index+1}" />
+                    <td th:text="${member.name}" />
+                    <td th:text="${member.email}" />
+                    <td th:text="${member.mobile}" />
+                    <td th:text="${member.role}" />
+                    <td th:text="${member.designation}" />
+                    <td th:text="${member.getScore()}" />
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top:50px;">
+        <div class="text-center mb-3"><h5>Attempted Challenges</h5></div>
+        <table class="table table-striped mt-12" style="width:100%">
+            <thead>
+            <tr>
+                <th>SL</th>
+                <th>Challenge</th>
+                <th>Submitter</th>
+                <!--<th>submission Link</th>-->
+                <th>Submission Time</th>
+                <th>Score</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="submission, iterator: ${team?.submissions}">
+                <td th:text="${iterator.index+1}" />
+                <td th:text="${submission?.challenge?.title}" />
+                <td th:text="${submission?.solver?.name}" />
+                <!--<td th:text="${submission.file_path}" />-->
+                <td th:text="${submission?.submissionTime}" />
+                <td th:text="${submission?.result?.score}" />
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</main>
+
+<!-- END MAIN CONTENT -->
+
+
+<!-- BEGIN FOOTER -->
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
+<!-- END FOOTER -->
+
+
+
+<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
+<!-- Template Main JS File -->
+<script th:src="@{/assets/js/main.js}"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://github.com/makeusabrew/bootbox/releases/download/v6.0.0/bootbox.js"></script>
+
+<script type="text/javascript">
+</script>
+
+</body>
+</html>

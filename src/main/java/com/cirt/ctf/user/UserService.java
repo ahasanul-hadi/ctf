@@ -75,7 +75,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void updateUser(UserDTO userDTO){
+    public User updateUser(UserDTO userDTO){
         User user= findById(userDTO.getId());
         user.setName(userDTO.getName());
         user.setMobile(userDTO.getMobile());
@@ -89,7 +89,7 @@ public class UserService implements UserDetailsService {
                 user.setAvatarID(doc.getId());
             }catch (Exception ignored){}
         }
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public List<User> findAll(){

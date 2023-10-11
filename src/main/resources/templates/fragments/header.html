@@ -30,8 +30,9 @@
 						<a class="nav-link" th:href="@{/teams}">Teams</a>
 					</li>
 
-
-
+					<li sec:authorize="hasAnyAuthority('TEAM_LEAD', 'MEMBER')" class="nav-item">
+						<a class="nav-link" th:href="@{/teams/my-team}">My Team</a>
+					</li>
 
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{/scoreboard}">Scoreboard</a>
@@ -44,6 +45,11 @@
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{/settings}">Settings</a>
 					</li>
+
+					<li sec:authorize="isAuthenticated()" class="nav-item">
+						<a class="nav-link" th:href="@{/users/my-profile}">My Profile</a>
+					</li>
+
 				</ul>
 
 				<hr class="d-sm-flex d-md-flex d-lg-none">

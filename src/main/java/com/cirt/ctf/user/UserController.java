@@ -60,13 +60,38 @@ public class UserController {
 
     }
 
+    @GetMapping("/my-profile")
+    public String myProfile( Model model, Principal principal){
+
+        User user= userService.findUserByEmail(principal.getName()).orElseThrow();
+        UserDTO dto= modelMapper.map(user, UserDTO.class);
+        model.addAttribute("userDTO",dto);
+
+        return "user/userUpdate";
+
+    }
+
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/rest-pass/{id}")
+    public String reset( @PathVariable("id") Long id,  Model model, Principal principal){
+
+        User user= userService.findById(id);
+        UserDTO dto= modelMapper.map(user, UserDTO.class);
+        model.addAttribute("userDTO",dto);
+
+        return "user/resetPassword";
+
+    }
+
+
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/new")
     public String createNewUser(Model model, Principal principal){
         model.addAttribute("userDTO",new UserDTO());
         return "user/userNew";
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/new")
     public String createUser(@Valid UserDTO userDTO, BindingResult result, Model model, final RedirectAttributes redirectAttributes){
 
@@ -91,9 +116,16 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public String updateUser(@ModelAttribute("userDTO") @Valid UserDTO userDTO, BindingResult result, Model model, final RedirectAttributes redirectAttributes){
+    public String updateUser(@ModelAttribute("userDTO") @Valid UserDTO userDTO, BindingResult result, Model model, Principal principal){
+
+        //check necessary permission
+        User admin= userService.findUserByEmail(principal.getName()).orElseThrow();
+        if(admin.getRole()!=Role.ADMIN && admin.getId()!=userDTO.getId()){
+            return "redirect:/login?logout";
+        }
 
         User user= userService.findById(userDTO.getId());
+        userDTO.setAvatarID(user.getAvatarID());
 
         if(userDTO.getPassword()!=null && !userDTO.getPassword().isEmpty()){
             if(!passwordEncoder.matches(userDTO.getCurrentPassword(),user.getPassword())){
@@ -107,17 +139,55 @@ public class UserController {
         }
 
         if(result.hasErrors()){
+            System.out.println("has error.."+result.getAllErrors().toString());
             model.addAttribute("userDTO", userDTO);
             return "user/userUpdate";
         }
 
-        System.out.println("going to update....");
-       userService.updateUser(userDTO);
+        User updatedUser= userService.updateUser(userDTO);
+        UserDTO dto= modelMapper.map(updatedUser, UserDTO.class);
 
-        redirectAttributes.addFlashAttribute("type", "success");
-        redirectAttributes.addFlashAttribute("message", "User has been updated!");
+        model.addAttribute("userDTO", dto);
+        model.addAttribute("type", "success");
+        model.addAttribute("message", "User has been updated!");
 
-        return "redirect:/users";
+        return "user/userUpdate";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/reset/password")
+    public String resetPassword(@ModelAttribute("userDTO") UserDTO userDTO, BindingResult result, Model model, Principal principal){
+
+        //check necessary permission
+        User admin= userService.findUserByEmail(principal.getName()).orElseThrow();
+        if(admin.getRole()!=Role.ADMIN && admin.getId()!=userDTO.getId()){
+            return "redirect:/login?logout";
+        }
+
+        User user= userService.findById(userDTO.getId());
+        userDTO.setAvatarID(user.getAvatarID());
+
+        if(userDTO.getPassword()!=null && !userDTO.getPassword().isEmpty()){
+
+            if(!userDTO.getPassword().equals(userDTO.getRePassword())){
+                FieldError fe = new FieldError("userDTO", "rePassword", "password and rePassword does not Match!");
+                result.addError(fe);
+            }
+        }
+
+        if(result.hasErrors()){
+            model.addAttribute("userDTO", userDTO);
+            return "user/resetPassword";
+        }
+
+        User updatedUser= userService.updateUser(userDTO);
+        UserDTO dto= modelMapper.map(updatedUser, UserDTO.class);
+
+        model.addAttribute("userDTO", dto);
+        model.addAttribute("type", "success");
+        model.addAttribute("message", "User has been updated!");
+
+        return "user/userUpdate";
     }
 
 

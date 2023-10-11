@@ -39,7 +39,14 @@ public class TeamController {
             return "team/registration";
         }
 
-        String reason = teamService.addTeam(team);
+        String reason=null;
+        try{
+           reason= teamService.addTeam(team);
+        }
+        catch (Exception ee){
+            System.out.println("exp:"+ee.getLocalizedMessage()+" \n"+ee.getMessage());
+           reason="Use unique email and order id.";
+        }
         if(reason!=null){
             model.addAttribute("type", "error");
             model.addAttribute("message", reason);
@@ -62,6 +69,15 @@ public class TeamController {
         TeamDTO teamDTO = teamService.findById(id);
         model.addAttribute("team", teamDTO);
         return "team/teamMembers";
+    }
+
+    @PreAuthorize("hasAnyAuthority('TEAM_LEAD', 'MEMBER')")
+    @GetMapping("/my-team")
+    public String getMyTeam( ModelMap model, Principal principal){
+        User user= userService.findUserByEmail(principal.getName()).orElseThrow();
+
+        model.addAttribute("team", user.getTeam());
+        return "team/myTeam";
     }
 
     @GetMapping("/registration")

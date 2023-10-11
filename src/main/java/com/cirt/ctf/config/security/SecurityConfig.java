@@ -27,6 +27,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests( authorize -> authorize
                         .requestMatchers("/assets/**").permitAll()
                         .requestMatchers("/teams/registration").permitAll()
+                        .requestMatchers("/users/**").permitAll()
                         .requestMatchers("/","/index").permitAll()
                         .anyRequest().authenticated()
                 )
