@@ -17,7 +17,7 @@
     <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
     <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet">
-
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <!-- Template Main CSS File -->
     <link th:href="@{/assets/css/style.css}" rel="stylesheet">
 </head>
@@ -34,16 +34,41 @@
             <a class="btn btn-primary btn-lg" href="/challenges/add"> + Add new challenge</a>
         </div>
         <hr/>
-    <div class="row">
-
+    
         <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
-
-
-        <div class="ustify-content-center align-items-center">
-            
-        </div>
-
-        <div class="col-md-2"></div>
+    
+        <table id="example" class="table table-striped" style="width:100%">
+            <thead>
+            <tr>
+                <th>SL</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Total</th>
+                <th>Visibility</th>
+                <th>Action</th>
+    
+                <!-- <th sec:authorize="hasAuthority('ADMIN')">Update</th>
+                <th sec:authorize="hasAuthority('ADMIN')">Delete</th> -->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="challenge,iterator: ${challenges}">
+                <td th:text="${iterator.index+1}" />
+                <td th:text="${challenge.title}" />
+                <td th:text="${challenge.category}" />
+                <td th:text="${challenge.totalMark}" />
+                <td th:text="${challenge.visibility}" />
+                <td th:text="sample" />
+    
+                <td sec:authorize="hasAuthority('ADMIN')">
+                    <a th:href="@{'/users/update/'+${user.id}}" class="btn btn-success" role="button">Update</a>
+                </td>
+                <td sec:authorize="hasAuthority('ADMIN')">
+                    <a th:href="@{'/users/delete/'+${user.id}}" class="btn btn-danger delete" role="button">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 </div>
 </main>
 

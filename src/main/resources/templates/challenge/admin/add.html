@@ -11,6 +11,7 @@
     <link th:href="@{/assets/img/favicon.png}" rel="icon">
     <!-- Richtext editor -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
@@ -37,17 +38,17 @@
     <div class="row">
 
         <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
-        <form th:action="@{/}" id="commonForm">
+        <form th:action="@{/challenges}" method="post" th:object="${challenge}" id="commonForm">
             <div class="form-group row">
                 <label for="title" class="col-md-3 col-form-label"><strong>Title</strong></label>
                 <div class="col-md-6">
-                    <input class="col-md-6 form-control" type="text" name="title" id="title" required value="Challenge "></input>
+                    <input class="col-md-6 form-control" type="text" th:field="*{title}" id="title" required value="Challenge "></input>
                 </div>
             </div><br/>
             <div class="form-group row">
                 <label for="category" class="col-md-3 col-form-label"><strong>Category</strong></label>
                 <div class="col-md-6">
-                    <select class="col-md-6 form-control"  id="category" required >
+                    <select class="col-md-6 form-control"  id="category" required th:field="*{category}">
                         <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
                     </select>
                 </div>
@@ -61,47 +62,47 @@
             <div class="form-group row">
                 <label for="totalMark" class="col-md-3 col-form-label"><strong>Total Mark</strong></label>
                 <div class="col-md-6">
-                    <input class="col-md-6 form-control" type="number" value="150" name="totalMark" id="totalMark" required ></input>
+                    <input class="col-md-6 form-control" type="number" value="150" th:field="*{totalMark}" id="totalMark" required></input>
                 </div>
             </div><br/>
             <div class="form-group row">
                 <label for="deadline" class="col-md-3 col-form-label"><strong>Submission Deadline</strong></label>
                 <div class="col-md-6">
-                    <input class="col-md-6 form-control" type="datetime-local" name="deadline" id="deadline" required ></input>
+                    <input class="col-md-6 form-control" type="datetime-local" th:field="*{deadline}" id="deadline" required ></input>
                 </div>
             </div><br/>
             <div class="form-group row">
-                <label for="isVisible" class="col-md-3 col-form-label"><strong>Visibility</strong></label>
+                <label for="visibility" class="col-md-3 col-form-label"><strong>Visibility</strong></label>
                 <div class="col-md-6">
-                    <select class="col-md-6 form-control" name="isVisible" id="isVisible" required >
-                        <option value="hidden">Hidden</option>
-                        <option value="public">Public</option> 
+                    <select class="col-md-6 form-control" th:field="*{visibility}" id="visibility" required th:value="hidden">
+                        <option th:value="hidden">Hidden</option>
+                        <option th:value="public">Public</option> 
                     </select>
                 </div>
             </div><br/>
-            <div class="form-group row">
-                <label for="isManual" class="col-md-3 col-form-label"><strong>Marking Type</strong></label>
+            <div class="form-group row" hidden>
+                <label for="markingType" class="col-md-3 col-form-label"><strong>Marking Type</strong></label>
                 <div class="col-md-6">
-                    <select class="col-md-6 form-control" name="isManual" id="isManual" required disabled>
-                        <option value="manual">Manual</option>
-                        <option value="auto">Auto</option> 
+                    <select class="col-md-6 form-control" th:field="*{markingType}" id="markingType" required th:value="manual">
+                        <option th:value="manual">Manual</option>
+                        <option th:value="auto">Auto</option> 
                     </select>
                 </div>
             </div><br/>
-            <div class="form-group row">
-                <label for="totalMark" class="col-md-3 col-form-label"><strong>Attempts allowed</strong></label>
+            <div class="form-group row" hidden>
+                <label for="attempts" class="col-md-3 col-form-label"><strong>Attempts allowed</strong></label>
                 <div class="col-md-6">
-                    <input class="col-md-6 form-control" type="number" name="totalMark" id="totalMark" required  value="1" disabled></input>
+                    <input class="col-md-6 form-control" type="number" th:field="*{attempts}" id="attempts" required  th:value="1"></input>
                 </div>
             </div><br/>
+            <textarea class="ustify-content-center align-items-center" id="descriptionHtml" hidden th:field="*{description}">
             
+            </textarea>
 
             <h4 align="center"><button type="submit" class="btn btn-lg btn-success"> Save Challenge </button></h4>
         </form>
 
-        <div class="ustify-content-center align-items-center" id="richEditor">
-            
-        </div>
+        
 
         <div class="col-md-2"></div>
 </div>
@@ -123,11 +124,13 @@
 <script th:src="@{/assets/js/main.js}"></script>
 <script type="text/javascript">
     var toolbarOptions = [
-        [{ header: [1, 2, 3, false] }],
-        ['bold', 'italic'],
+        [{ header: [1, 2, 3, 4, 5, false] }],
+        ['bold', 'italic', "underline", "strike"],
         [{ 'color': [] }, { 'background': [] }],
         ['link'],
-        [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }]
+        [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
+        [{ list:  "ordered" }, { list:  "bullet" }],
+        [{'font': []}],
     ]
     var editor = new Quill("#description", 
     {
@@ -135,6 +138,19 @@
         modules: {
             toolbar: toolbarOptions
         }
+    });
+    var descriptionHTML;
+    descriptionHTML = $(".ql-editor").html();
+    console.log(descriptionHTML);
+    $("#description").find(".ql-editor").keyup( function(e) {
+        descriptionHTML = $(".ql-editor").html();
+        $("#descriptionHtml").val(descriptionHTML);
+        console.log(descriptionHTML);
+    });
+    $(".ql-toolbar").click( function(e) {
+        descriptionHTML = $(".ql-editor").html();
+        $("#descriptionHtml").val(descriptionHTML);
+        console.log(descriptionHTML);
     });
 
 </script>

@@ -40,7 +40,7 @@ public class ChallengeEntity {
     private boolean isManual;
     @Column(name = "title", nullable = false, length = 50)
     private String title;
-    @Column(name = "description", nullable = false, length = 1024)
+    @Column(name = "description", nullable = false, length = 65535)
     private String description;
     @Column(name = "file_path", nullable = true, length = 256)
     private String filePath;
@@ -52,8 +52,8 @@ public class ChallengeEntity {
     @Column(name="deadline", nullable = false)
     private Instant deadline;
 
-    @Column(name = "is_visible", nullable = false)
-    private boolean isVisible;
+    @Column(name = "visibility", nullable = false, length=10)
+    private String visibility;
 
     @CreationTimestamp(source = SourceType.DB)
     private Instant createdAt;
