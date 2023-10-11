@@ -68,6 +68,8 @@ public class TeamController {
     public String getTeamMembers( @PathVariable("id") Long id,  ModelMap model){
         TeamDTO teamDTO = teamService.findById(id);
         model.addAttribute("team", teamDTO);
+        model.addAttribute("solved",12);
+        model.addAttribute("failed",4);
         return "team/teamMembers";
     }
 
@@ -86,9 +88,11 @@ public class TeamController {
         return "team/registration";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/approve/{id}")
-    public String approveTeam(@PathVariable("id") Long id, Model model, HttpServletRequest request, final RedirectAttributes redirectAttributes){
-       teamService.approve(id);
+    public String approveTeam(@PathVariable("id") Long id, Model model, Principal principal, final RedirectAttributes redirectAttributes){
+       User admin= userService.findUserByEmail(principal.getName()).orElseThrow();
+        teamService.approve(id, admin);
         redirectAttributes.addFlashAttribute("type", "success");
         redirectAttributes.addFlashAttribute("message", "Team Has Been Approved!");
         return "redirect:/teams";

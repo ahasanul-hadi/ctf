@@ -34,33 +34,80 @@
         <h4 class="text-center bold mb-3" th:text="${'Score: '+team.getScore()}">  </h4>
     </div>
 
+    <div>
+        <table class="table table-striped mt-12" style="width:100%">
+            <thead>
+            <tr>
+                <th>SL</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Role</th>
+                <th>Designation</th>
+                <th>Score</th>
 
-    <table class="table table-striped mt-12" style="width:100%">
-        <thead>
-        <tr>
-            <th>SL</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Mobile</th>
-            <th>Role</th>
-            <th>Designation</th>
-            <th>Score</th>
-
-        </tr>
-        </thead>
-        <tbody>
-            <tr th:each="member, iterator: ${team.members}">
-                <td th:text="${iterator.index+1}" />
-                <td th:text="${member.name}" />
-                <td th:text="${member.email}" />
-                <td th:text="${member.mobile}" />
-                <td th:text="${member.role}" />
-                <td th:text="${member.designation}" />
-                <td th:text="${member.getScore()}" />
             </tr>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <tr th:each="member, iterator: ${team.members}">
+                    <td th:text="${iterator.index+1}" />
+                    <td th:text="${member.name}" />
+                    <td th:text="${member.email}" />
+                    <td th:text="${member.mobile}" />
+                    <td th:text="${member.role}" />
+                    <td th:text="${member.designation}" />
+                    <td th:text="${member.getScore()}" />
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
+
+
+    <div class="row d-flex justify-content-center align-items-center" style="margin-top:30px;margin-bottom:30px;">
+        <div class="col-md-6 justify-content-center align-items-center">
+            <div id='solveDiv' style="height: inherit"><!-- Plotly chart will be drawn inside this DIV --></div>
+        </div>
+        <div class="col-md-6 justify-content-center align-items-center">
+            <div id='categoryDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-center align-items-center" style="margin-top:30px;margin-bottom:30px;">
+        <div class="col-md-12 justify-content-center align-items-center">
+            <div id='scoreTime' style="height: inherit"><!-- Plotly chart will be drawn inside this DIV --></div>
+        </div>
+    </div>
+
+
+    <div style="margin-top:50px;">
+        <div class="text-center mb-3"><h5>Attempted Challenges</h5></div>
+        <table class="table table-striped mt-12" style="width:100%">
+            <thead>
+            <tr>
+                <th>SL</th>
+                <th>Challenge</th>
+                <th>Category</th>
+                <th>Submitter</th>
+                <!--<th>submission Link</th>-->
+                <th>Submission Time</th>
+                <th>Score</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="submission, iterator: ${team?.submissions}">
+                <td th:text="${iterator.index+1}" />
+                <td th:text="${submission?.challenge?.title}" />
+                <td th:text="${submission?.challenge?.category}" />
+                <td th:text="${submission?.solver?.name}" />
+                <!--<td th:text="${submission.file_path}" />-->
+                <td th:text="${submission?.submissionTime}" />
+                <td th:text="${submission?.result?.score}" />
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
 
 </main>
 
@@ -84,7 +131,85 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://github.com/makeusabrew/bootbox/releases/download/v6.0.0/bootbox.js"></script>
 
-<script type="text/javascript">
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<script th:inline="javascript" th:with="solvedTimes=${team.getIncrementalScore().![time]},solvedScores=${team.getIncrementalScore().![score]}">
+
+    var solved=/*[[${solved}]]*/;
+    var failed=/*[[${failed}]]*/;
+
+    console.log("solved:"+solved);
+    console.log("failed:"+failed);
+
+    var solvedTimes = /*[[${solvedTimes}]]*/ [];
+    var solvedScores = /*[[${solvedScores}]]*/ [];
+
+    console.log("solvedTimes:"+JSON.stringify(solvedTimes));
+    console.log("solvedScores:"+JSON.stringify(solvedScores));
+
+    var solveData = [{
+      values: [7, 9],
+      labels: ['Solved', 'Failed'],
+      type: 'pie',
+      'hoverinfo': 'label+value',
+      'name': "Solved Percentages"
+    }];
+
+    var categoryData = [{
+      values: [3, 7, 2],
+      labels: ['Linux', 'Network', 'Windows'],
+      type: 'pie',
+      'marker': {
+          'colors': [
+            'rgb(255, 255, 0)',
+            'rgb(240, 88, 0)',
+          ]
+        },
+        'hoverinfo': 'label+value'
+    }];
+
+    var solveLayout = {
+      title: {
+        text:'Solve Percentages',
+        font: {size: 24}
+      },
+      margin:{l:80,t:80,b:80,r:30},
+      height: 350,
+      width: 500
+    };
+
+    var categoryLayout = {
+      title: {
+        text:'Category Breakdown',
+        font: {size: 24}
+      },
+      margin:{l:80,t:80,b:80,r:30},
+      height: 350,
+      width: 500
+    };
+
+    Plotly.newPlot('solveDiv', solveData, solveLayout, {displaylogo: false});
+    Plotly.newPlot('categoryDiv', categoryData, categoryLayout, {displaylogo: false});
+
+
+    <!--Score over time-->
+    var data = [
+      {
+        x: solvedTimes,
+        y: solvedScores,
+        type: 'scatter'
+      }
+    ];
+    var scoreLayout = {
+      title: {
+        text:'Score Over Time',
+        font: {size: 24}
+      }
+    };
+
+Plotly.newPlot('scoreTime', data, scoreLayout);
+
+
 </script>
 
 </body>

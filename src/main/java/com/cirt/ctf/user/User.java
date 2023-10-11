@@ -111,13 +111,12 @@ public class User implements UserDetails, CredentialsContainer {
     @Transient
     private int score;
     public int getScore(){
-        int score= submissions.stream().mapToInt(sub->{
-            if(sub.result==null)
-                return 0;
-            else
-                return sub.result.getScore();
-        }).sum();
 
-        return score;
+        return submissions.stream().mapToInt(sub->{
+                if(sub.getResult()==null)
+                    return 0;
+                else
+                    return sub.getResult().getScore();
+            }).sum();
     }
 }

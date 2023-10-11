@@ -30,4 +30,6 @@ public class ResultEntity {
     @Column(name="marking_time", nullable = false)
     private LocalDateTime markingTime;
 
+    private String comments;
+
 }
