@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/static/favicon.ico}" />
+    <title> Challenges Dashboard </title>
+    <link th:href="@{/assets/img/favicon.png}" rel="icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet">
+</head>
+
+<body class="bg-body-tertiary">
+
+
+<div th:replace="~{fragments/header :: header}"> </div>
+
+<!-- MAIN CONTENT -->
+<main class="container payload">
+        <div class="mt-6 text-center">
+            <h1> Existing Challenges </h1>
+            <a class="btn btn-primary btn-lg" href="/challenges/add"> + Add new challenge</a>
+        </div>
+        <hr/>
+    <div class="row">
+
+        <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
+
+
+        <div class="ustify-content-center align-items-center">
+            
+        </div>
+
+        <div class="col-md-2"></div>
+</div>
+</main>
+
+<!-- END MAIN CONTENT -->
+
+
+<!-- BEGIN FOOTER -->
+<div th:replace="~{fragments/footer :: footer}">Footer</div>
+<!-- END FOOTER -->
+
+
+
+<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
+<!-- Template Main JS File -->
+<script th:src="@{/assets/js/main.js}"></script>
+<script type="text/javascript">
+</script>
+
+</body>
+</html>

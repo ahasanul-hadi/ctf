@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.cirt.ctf.enums.Category;
+import com.cirt.ctf.enums.Role;
 import com.cirt.ctf.team.TeamEntity;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,16 @@ public class ChallengeController{
         
         String htmlPage = role == "ADMIN"? "challenge/admin/home" : "challenge/user/home";
         return htmlPage;
+    }
+
+    @GetMapping( value = "/add" )
+    public String getAddChallengePage(Model model) {
+        String role = "ADMIN";
+        model.addAttribute("categories", Category.values());
+        if(role != Role.ADMIN.toString()) {
+            return "redirect:/challenges";
+        }
+        return "challenge/admin/add";
     }
     
 }

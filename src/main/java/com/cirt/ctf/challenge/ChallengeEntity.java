@@ -34,13 +34,15 @@ public class ChallengeEntity {
     private String category;
     @Column(name = "total_mark", nullable = false)
     private int totalMark;
-    @Column(name = "manual_marking", nullable = false)
-    private boolean manualMarking;
+    @Column(name = "attempts", nullable = false)
+    private int attempts;
+    @Column(name = "is_manual", nullable = false)
+    private boolean isManual;
     @Column(name = "title", nullable = false, length = 50)
     private String title;
     @Column(name = "description", nullable = false, length = 1024)
     private String description;
-    @Column(name = "file_path", nullable = false, length = 256)
+    @Column(name = "file_path", nullable = true, length = 256)
     private String filePath;
 
     @ManyToOne

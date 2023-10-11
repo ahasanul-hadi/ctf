@@ -26,8 +26,10 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests( authorize -> authorize
                         .requestMatchers("/assets/**").permitAll()
+                        .requestMatchers("/challenges/**").permitAll()
                         .requestMatchers("/teams/registration").permitAll()
                         .requestMatchers("/","/index").permitAll()
+                        
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(c->c.accessDeniedPage("/403"))
