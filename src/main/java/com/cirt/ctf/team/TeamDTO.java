@@ -1,5 +1,6 @@
 package com.cirt.ctf.team;
 
+import com.cirt.ctf.submission.SubmissionEntity;
 import com.cirt.ctf.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
@@ -28,6 +29,8 @@ public class TeamDTO {
     @JsonIgnore
     private List<User> members;
 
+    private List<SubmissionEntity> submissions;
+
     public int getCount(){
         return members.size();
     }
@@ -41,7 +44,12 @@ public class TeamDTO {
     }
 
     public String getScore(){
-        int score= members.stream().mapToInt(User::getScore).sum();
+        int score= submissions.stream().mapToInt(sub->{
+            if(sub.result==null)
+                return 0;
+            else
+                return sub.result.getScore();
+        }).sum();
         return score<=0?"-":String.valueOf(score);
     }
 }

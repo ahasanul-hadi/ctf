@@ -1,5 +1,6 @@
 package com.cirt.ctf.team;
 
+import com.cirt.ctf.submission.SubmissionEntity;
 import com.cirt.ctf.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -21,14 +22,17 @@ public class TeamEntity {
     @Column(name = "team_organization", nullable = false)
     private String teamOrganization;
 
-    @Column(name = "order_id", nullable = false)
+    @Column(name = "order_id", nullable = false, unique = true)
     private String orderID;
 
-    @Column(name = "payment_email", nullable = false)
+    @Column(name = "payment_email", nullable = false, unique = true)
     private String paymentEmail;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "team")
-    List<User> members;
+    private List<User> members;
+
+    @OneToMany(mappedBy = "team")
+    private List<SubmissionEntity> submissions;
 
     public void addMember(User member) {
         members.add(member);

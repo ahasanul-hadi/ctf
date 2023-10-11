@@ -1,6 +1,7 @@
 package com.cirt.ctf.user;
 
 import com.cirt.ctf.enums.Role;
+import com.cirt.ctf.submission.SubmissionEntity;
 import com.cirt.ctf.team.TeamEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,6 +58,10 @@ public class User implements UserDetails, CredentialsContainer {
     @ManyToOne
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     private TeamEntity team;
+
+    @OneToMany(mappedBy = "solver", orphanRemoval = true)
+    private List<SubmissionEntity> submissions;
+
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,name = "role")
@@ -105,6 +111,13 @@ public class User implements UserDetails, CredentialsContainer {
     @Transient
     private int score;
     public int getScore(){
-        return 10;
+        int score= submissions.stream().mapToInt(sub->{
+            if(sub.result==null)
+                return 0;
+            else
+                return sub.result.getScore();
+        }).sum();
+
+        return score;
     }
 }

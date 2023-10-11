@@ -42,11 +42,19 @@ public class DocumentService {
 
     public DocumentEntity saveDocument(MultipartFile file){
         try {
-            String absPath= this.root.resolve(file.getOriginalFilename()).toAbsolutePath().toString();
+            String extension="";
+            int index = file.getOriginalFilename().lastIndexOf('.');
+            if (index > 0) {
+                extension = file.getOriginalFilename().substring(index+1);
+            }
+            String saveFileName= System.currentTimeMillis()+"."+extension;
+
+            String absPath= this.root.resolve(saveFileName).toAbsolutePath().toString();
             log.info("absPath:"+absPath);
             Files.copy(file.getInputStream(), Path.of(absPath), StandardCopyOption.REPLACE_EXISTING);
 
             DocumentEntity doc= DocumentEntity.builder()
+                    .saveFileName(saveFileName)
                     .originalFileName(file.getOriginalFilename())
                     .fileLocation(absPath).build();
 
