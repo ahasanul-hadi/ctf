@@ -42,8 +42,10 @@ public class ChallengeService {
         System.out.println(challengeEntities.size());
         for(ChallengeEntity challengeEntity: challengeEntities) {
             ChallengeDTO dto = new ChallengeDTO();
+            dto.setId(challengeEntity.getId());
             dto.setTitle(challengeEntity.getTitle());
             dto.setCategory(challengeEntity.getCategory());
+            dto.setDescription(challengeEntity.getDescription());
             dto.setTotalMark(challengeEntity.getTotalMark());
             dto.setVisibility(challengeEntity.getVisibility());
             dto.setDeadline(challengeEntity.getDeadline().toString());
@@ -61,8 +63,6 @@ public class ChallengeService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if(challengeDTO.getMarkingType().equals("manual")) { isManual = true; challengeDTO.setAttempts(1); }
-        else isManual = false;
 
         ChallengeEntity challengeEntity = new ChallengeEntity();
         challengeEntity.setTitle(challengeDTO.getTitle());
