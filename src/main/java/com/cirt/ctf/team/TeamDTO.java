@@ -5,9 +5,6 @@ import com.cirt.ctf.submission.SubmissionEntity;
 import com.cirt.ctf.user.User;
 import com.cirt.ctf.util.Utils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -73,22 +70,12 @@ public class TeamDTO {
                 gradualScore+=e.getResult().getScore();
                 IncrementalScore ic= IncrementalScore.builder()
                         .score(gradualScore)
-                        .time(Utils.sdf.format(e.getSubmissionTime())).build();
+                        .time(e.getSubmissionTime().format(Utils.formatter)).build();
                 list.add(ic);
 
             }
         }
 
-        LocalDateTime temp= LocalDateTime.now();
-
-        IncrementalScore s1=IncrementalScore.builder()
-                .score(10)
-                .time(temp.minusHours(1).format(Utils.formatter)).build();
-        IncrementalScore s2=IncrementalScore.builder()
-                .score(12)
-                .time(temp.plusHours(1).format(Utils.formatter)).build();
-        list.add(s1);
-        list.add(s2);
         return list;
 
     }

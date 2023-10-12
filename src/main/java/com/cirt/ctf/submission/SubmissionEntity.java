@@ -27,6 +27,9 @@ public class SubmissionEntity {
     @Column(name = "file_path", nullable = false, length = 256)
     private String filePath;
 
+    @Column(name = "document_id")
+    private Long documentID;
+
     @ManyToOne
     @JoinColumn(name = "challenge_id", referencedColumnName = "id")
     private ChallengeEntity challenge;
@@ -39,7 +42,11 @@ public class SubmissionEntity {
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     private TeamEntity team;
 
-    @OneToOne(mappedBy = "submission", orphanRemoval = true)
+
+    @Column(name = "is_verified")
+    private boolean isVerified=false;
+
+    @OneToOne(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
     private ResultEntity result;
 
 

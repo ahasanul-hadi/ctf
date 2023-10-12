@@ -68,8 +68,8 @@ public class TeamController {
     public String getTeamMembers( @PathVariable("id") Long id,  ModelMap model){
         TeamDTO teamDTO = teamService.findById(id);
         model.addAttribute("team", teamDTO);
-        model.addAttribute("solved",12);
-        model.addAttribute("failed",4);
+        model.addAttribute("solved",12); //@TODO
+        model.addAttribute("failed",4); //@TODO
         return "team/teamMembers";
     }
 
