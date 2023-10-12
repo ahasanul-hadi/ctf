@@ -60,12 +60,12 @@
                 <td th:text="${challenge.visibility}" />
                 <td th:text="sample" />
     
-                <td sec:authorize="hasAuthority('ADMIN')">
-                    <a th:href="@{'/users/update/'+${user.id}}" class="btn btn-success" role="button">Update</a>
+               <!-- <td sec:authorize="hasAuthority('ADMIN')">
+                    <a th:href="@{'/users/update/'+${challenge.id}}" class="btn btn-success" role="button">Update</a>
                 </td>
                 <td sec:authorize="hasAuthority('ADMIN')">
-                    <a th:href="@{'/users/delete/'+${user.id}}" class="btn btn-danger delete" role="button">Delete</a>
-                </td>
+                    <a th:href="@{'/users/delete/'+${challenge.id}}" class="btn btn-danger delete" role="button">Delete</a>
+                </td>-->
             </tr>
             </tbody>
         </table>

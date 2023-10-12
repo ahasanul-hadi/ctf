@@ -63,7 +63,7 @@
                 <div class="row mb-3">
                     <label  class="col-md-3 col-form-label">Challenge <span class="text-danger required">*</span> </label>
                     <div class="col-md-6">
-                        <span><a th:href="@{'/challenge/'+${submission.challenge?.id}}" th:text="${submission.challenge?.title}"></a></span>
+                        <span><a target="_blank" th:href="@{'/challenges/'+${submission.challenge?.id}}" th:text="${submission.challenge?.title}"></a></span>
                     </div>
                 </div>
                 <div class="row mb-3">

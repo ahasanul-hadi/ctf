@@ -84,9 +84,14 @@ public class UserService implements UserDetailsService {
             user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
         if(userDTO.getFile()!=null && userDTO.getFile().getSize()>0){
+
+            //String reson=Utils.checkFileValidity(userDTO.getFile());
             try{
                 DocumentEntity doc= documentService.saveDocument(userDTO.getFile());
                 user.setAvatarID(doc.getId());
+
+
+
             }catch (Exception ignored){}
         }
         return userRepository.save(user);

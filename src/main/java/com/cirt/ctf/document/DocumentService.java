@@ -21,7 +21,7 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
 
-    @Value("${document.upload.directory}")
+    @Value("${document.upload.directory:/upload}")
     private String UPLOAD_DIR;
 
     private Path root=null;

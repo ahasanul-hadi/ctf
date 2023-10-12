@@ -3,6 +3,8 @@ package com.cirt.ctf.challenge;
 import java.security.Principal;
 import java.util.List;
 
+import com.cirt.ctf.user.User;
+import com.cirt.ctf.user.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,10 +29,13 @@ import lombok.RequiredArgsConstructor;
 public class ChallengeController{
     private final ChallengeService challengeService;
     private final ModelMapper modelMapper;
+    private final UserService userService;
 
     @GetMapping
-    public String getChallengesPage(Model model) {
-        String role = "USER";
+    public String getChallengesPage(Model model, Principal principal) {
+        User user= userService.findUserByEmail(principal.getName()).orElseThrow();
+
+        String role = user.getRole().toString();
         // List<ChallengeDTO> dtos= this.challengeService.getChallengesForAdmin().stream()
         //                             .map(challenge -> modelMapper.map(challenge,ChallengeDTO.class)).toList();
         if(role == "ADMIN")

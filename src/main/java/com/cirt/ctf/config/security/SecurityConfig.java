@@ -21,14 +21,12 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 //.anonymous(AbstractHttpConfigurer::disable)
-                .formLogin(form->form.loginPage("/login").defaultSuccessUrl("/", true).permitAll())
-                .requestCache(RequestCacheConfigurer::disable)
+                .formLogin(form->form.loginPage("/login").defaultSuccessUrl("/",true).permitAll())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests( authorize -> authorize
                         .requestMatchers("/assets/**").permitAll()
                         .requestMatchers("/challenges/**").permitAll()
                         .requestMatchers("/teams/registration").permitAll()
-                        .requestMatchers("/users/**").permitAll()
                         .requestMatchers("/","/index").permitAll()
                         
                         .anyRequest().authenticated()
