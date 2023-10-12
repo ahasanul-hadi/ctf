@@ -20,6 +20,10 @@
 
     <!-- Template Main CSS File -->
     <link th:href="@{/assets/css/style.css}" rel="stylesheet">
+    <!-- JQuery & Modal -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
 </head>
 
 <body class="bg-body-tertiary">
@@ -30,15 +34,68 @@
 <!-- MAIN CONTENT -->
 <main class="container payload">
         <div class="mt-6 text-center">
-            <h1> Existing Challenges </h1>
+            <h1> Challenges </h1>
         </div>
         <hr/>
     <div class="row">
 
         <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
+        <h3 class="categoryContainer">Windows Category</h3><hr/>
+        <div class="row">
+            <div class="col-sm-3" th:each="challenge,iterator: ${challenges}" th:if="${challenge.category == 'Windows'}">
+                <div class="card text-white bg-secondary">
+                  <div class="card-body">
+                    <h5 class="card-title" th:text="${challenge.title}">Special title treatment</h5>
+                    <p class="card-text" th:text="${challenge.deadline}">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">See Details</a>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <br/><br/><br/><br/>
+        <h3 class="categoryContainer">Linux Category</h3><hr/>
+        <div class="row">
+            <div class="col-sm-3" th:each="challenge,iterator: ${challenges}" th:if="${challenge.category == 'Linux'}">
+                <div class="card text-white bg-secondary">
+                  <div class="card-body">
+                    <h5 class="card-title" th:text="${challenge.title}">Special title treatment</h5>
+                    <p class="card-text" th:text="${challenge.deadline}">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">See Details</a>
+                  </div>
+                </div>
+              </div>
+        </div><br/>
+        <h3 class="categoryContainer">Network Category</h3><hr/>
+        <div id="a" class="modal">
+            <p>Thanks for clicking. That felt good.</p>
+            <a href="#" rel="modal:close">Close</a>
+          </div>
+        <div class="row">
+            <div class="col-sm-3" th:each="challenge,iterator: ${challenges}" th:if="${challenge.category == 'Network'}">
+                <div class="card text-white bg-dark">
+                  <div class="card-body">
+                    <h5 class="card-title" th:text="${challenge.title}">Special title treatment</h5>
+                    <p class="card-text" th:text="${challenge.deadline}">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#a" class="btn btn-primary" rel="modal:open">See Details</a>
+                  </div>
+                </div>
+              </div>
+              
+        </div><br/>
+        <h3 class="categoryContainer">Miscellaneous Category</h3><hr/>
+        <div class="row">
+            <div class="col-sm-3" th:each="challenge,iterator: ${challenges}" th:if="${challenge.category == 'Miscellaneous'}">
+                <div class="card text-white bg-primary">
+                  <div class="card-body">
+                    <h5 class="card-title" th:text="${challenge.title}">Special title treatment</h5>
+                    <p class="card-text" th:text="${challenge.deadline}">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">See Details</a>
+                  </div>
+                </div>
+              </div>
+        </div><br/>
 
-
-        <div class="ustify-content-center align-items-center">
+        <div class="justify-content-center align-items-center">
             
         </div>
 

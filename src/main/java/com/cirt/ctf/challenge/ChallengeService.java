@@ -25,6 +25,7 @@ public class ChallengeService {
         System.out.println(challengeEntities.size());
         for(ChallengeEntity challengeEntity: challengeEntities) {
             ChallengeDTO dto = new ChallengeDTO();
+            dto.setId(challengeEntity.getId());
             dto.setTitle(challengeEntity.getTitle());
             dto.setCategory(challengeEntity.getCategory());
             dto.setTotalMark(challengeEntity.getTotalMark());
@@ -35,8 +36,25 @@ public class ChallengeService {
         return challengeDTOs;
     }
 
+    public List<ChallengeDTO> getChallengesForUser() {
+        List<ChallengeEntity> challengeEntities = challengeRepository.findByVisibility("public");
+        List<ChallengeDTO> challengeDTOs = new ArrayList<>();
+        System.out.println(challengeEntities.size());
+        for(ChallengeEntity challengeEntity: challengeEntities) {
+            ChallengeDTO dto = new ChallengeDTO();
+            dto.setTitle(challengeEntity.getTitle());
+            dto.setCategory(challengeEntity.getCategory());
+            dto.setTotalMark(challengeEntity.getTotalMark());
+            dto.setVisibility(challengeEntity.getVisibility());
+            dto.setDeadline(challengeEntity.getDeadline().toString());
+            dto.setAttempts(challengeEntity.getAttempts());
+            challengeDTOs.add(dto);
+        }
+        System.out.println(challengeDTOs.size());
+        return challengeDTOs;
+    }
+
     public ChallengeEntity saveChallenge(ChallengeDTO challengeDTO) {
-        boolean isManual;
         Date date = null;
         try {
             date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeDTO.getDeadline());
@@ -51,7 +69,7 @@ public class ChallengeService {
         challengeEntity.setCategory(challengeDTO.getCategory());
         challengeEntity.setTotalMark(challengeDTO.getTotalMark());
         challengeEntity.setVisibility(challengeDTO.getVisibility());
-        challengeEntity.setManual(isManual);
+        challengeEntity.setMarkingType(challengeDTO.getMarkingType());
         challengeEntity.setDeadline(date.toInstant());
         challengeEntity.setAttempts(challengeDTO.getAttempts());
         challengeEntity.setDescription(challengeDTO.getDescription());

@@ -36,8 +36,8 @@ public class ChallengeEntity {
     private int totalMark;
     @Column(name = "attempts", nullable = false)
     private int attempts;
-    @Column(name = "is_manual", nullable = false)
-    private boolean isManual;
+    @Column(name = "marking_type", nullable = false, length=20)
+    private String markingType;
     @Column(name = "title", nullable = false, length = 50)
     private String title;
     @Column(name = "description", nullable = false, length = 65535)

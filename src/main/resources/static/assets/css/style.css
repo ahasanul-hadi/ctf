@@ -83,3 +83,7 @@ nav {
   overflow-y: auto;
   width: inherit;
 }
+
+.categoryContainer {
+  margin-top: 50px
+}

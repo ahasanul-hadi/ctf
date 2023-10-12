@@ -30,10 +30,13 @@ public class ChallengeController{
 
     @GetMapping
     public String getChallengesPage(Model model) {
-        String role = "ADMIN";
+        String role = "USER";
         // List<ChallengeDTO> dtos= this.challengeService.getChallengesForAdmin().stream()
         //                             .map(challenge -> modelMapper.map(challenge,ChallengeDTO.class)).toList();
-        model.addAttribute("challenges", challengeService.getChallengesForAdmin());
+        if(role == "ADMIN")
+            model.addAttribute("challenges", challengeService.getChallengesForAdmin());
+        else
+            model.addAttribute("challenges", challengeService.getChallengesForUser());
         String htmlPage = role == "ADMIN"? "challenge/admin/home" : "challenge/user/home";
         return htmlPage;
     }
