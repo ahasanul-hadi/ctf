@@ -85,7 +85,7 @@ public class UserController {
     }
 
 
-    //@PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/new")
     public String createNewUser(Model model, Principal principal){
         model.addAttribute("userDTO",new UserDTO());

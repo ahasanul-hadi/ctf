@@ -64,7 +64,6 @@ public class MailService{
 
 	}
 
-	@Async
 	public void send(MailDTO mailDTO) {
 
 		Properties props = getMailProps();
@@ -96,6 +95,7 @@ public class MailService{
 
 	}
 
+	@Async
 	public void sendRegistrationMail(TeamRegistration team){
 
 		//Team Lead

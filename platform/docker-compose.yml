@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: ctf
+      MYSQL_USER: ctfuser
+      MYSQL_PASSWORD: Password123!
+      MYSQL_ROOT_PASSWORD: Password123!
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./config/my.conf:/etc/mysql/conf.d/config-file.cnf"
+      - "./data:/var/lib/mysql:rw"
+    networks:
+      - ctf-user-net
+
+  app:
+    # Configuration for building the docker image for the backend service
+    build: .
+    image: ctf-web
+    ports:
+      - "8080:8080" # Forward the exposed port 4000 on the container to port 4000 on the host machine
+    volumes:
+      - "./uploads:/uploads"
+    restart: always
+    depends_on:
+      - db # This service depends on mysql. Start that first.
+    environment: # Pass environment variables to the service
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/ctf?useSSL=false
+      SPRING_DATASOURCE_USERNAME: ctfuser
+      SPRING_DATASOURCE_PASSWORD: Password123!
+
+    networks:
+      - ctf-user-net
+
+
+networks:
+  ctf-user-net:
+    name: ctf-user-net
+    ipam:
+      config:
+        - subnet: 192.168.100.0/8

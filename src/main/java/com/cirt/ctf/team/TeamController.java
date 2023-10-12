@@ -31,7 +31,7 @@ public class TeamController {
     private final MailService mailService;
 
     @PostMapping("/registration")
-    public String addTeam(@Valid @ModelAttribute("team") TeamRegistration team, BindingResult result, Model model){
+    public String addTeam(@Valid @ModelAttribute("team") TeamRegistration team, BindingResult result, Model model, final RedirectAttributes redirectAttributes){
 
         model.addAttribute("team",team);
 
@@ -53,7 +53,11 @@ public class TeamController {
             return "team/registration";
         }
         mailService.sendRegistrationMail(team);
-        return "redirect:/teams";
+
+        redirectAttributes.addFlashAttribute("type", "success");
+        redirectAttributes.addFlashAttribute("message", "Your Team has been created successfully. Check your Email");
+        return "redirect:/";
+
     }
 
 
@@ -78,7 +82,8 @@ public class TeamController {
     public String getMyTeam( ModelMap model, Principal principal){
         User user= userService.findUserByEmail(principal.getName()).orElseThrow();
 
-        model.addAttribute("team", user.getTeam());
+        TeamDTO teamDTO = teamService.findById(user.getTeam().getId());
+        model.addAttribute("team", teamDTO);
         return "team/myTeam";
     }
 
