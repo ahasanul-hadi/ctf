@@ -36,7 +36,9 @@ public class DocumentService {
         }
     }
 
-    public Optional<DocumentEntity> findById(long id){
+    public Optional<DocumentEntity> findById(Long id){
+        if(id==null)
+            return Optional.empty();
         return documentRepository.findById(id);
     }
 
