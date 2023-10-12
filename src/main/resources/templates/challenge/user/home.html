@@ -109,7 +109,7 @@
                 <!-- Vertically centered scrollable modal -->
                 <div class="modal fade" th:each="challenge,iterator: ${challenges}" th:id="${challenge.id}"
                     role="dialog" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="staticBackdropLabel" th:text="${challenge.title}">Modal
@@ -120,10 +120,15 @@
                             <div class="modal-body" th:utext="${challenge.description}">
                                 ...
                             </div>
-                            <div class="modal-footer">
-                                <form  method="post" enctype="multipart/form-data">
-                                    <input type="file" ></input>
-                                    <button type="button" class="btn btn-success">Submit Solution</button>
+                            <div class="modal-body">
+                                <form th:action="@{/submissions}" method="post" enctype="multipart/form-data" class="form-inline">
+                                    <div class="row">
+                                        <input type="file" th:if="${challenge.markingType == 'manual'}" class="col-sm-6 form-control" style="margin: 10px; width:-webkit-fill-available;"></input>
+                                        <input type="text" th:if="${challenge.markingType == 'auto'}" class="col-sm-6 form-control" style="margin: 10px;width:-webkit-fill-available;" placeholder="Paste your solution text here"></input>
+                                        <br/>
+                                        <div class="text-center" style="margin-top: 20px;"><button type="button" class="btn btn-success col-sm-3">Submit</button></div>
+                                    </div>
+                                    
                                 </form>
                             </div>
                             <div class="modal-footer">

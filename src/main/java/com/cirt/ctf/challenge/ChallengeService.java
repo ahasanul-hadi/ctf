@@ -50,6 +50,7 @@ public class ChallengeService {
             dto.setVisibility(challengeEntity.getVisibility());
             dto.setDeadline(challengeEntity.getDeadline().toString());
             dto.setAttempts(challengeEntity.getAttempts());
+            dto.setMarkingType(challengeEntity.getMarkingType());
             challengeDTOs.add(dto);
         }
         System.out.println(challengeDTOs.size());
