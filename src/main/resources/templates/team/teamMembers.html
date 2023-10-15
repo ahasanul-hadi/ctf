@@ -102,7 +102,7 @@
                 <td th:text="${submission?.challenge?.category}" />
                 <td th:text="${submission?.solver?.name}" />
                 <!--<td th:text="${submission.file_path}" />-->
-                <td th:text="${submission?.submissionTime}" />
+                <td th:text="${{submission?.submissionTime}}" />
                 <td th:text="${submission?.result?.score}" />
             </tr>
             </tbody>
@@ -168,8 +168,10 @@
       type: 'pie',
       'marker': {
           'colors': [
-            'rgb(255, 255, 0)',
             'rgb(240, 88, 0)',
+            'rgb(184, 6, 142)',
+            'rgb(6, 184, 175)'
+
           ]
         },
         'hoverinfo': 'label+value'

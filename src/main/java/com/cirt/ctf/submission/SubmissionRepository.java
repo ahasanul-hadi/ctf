@@ -10,4 +10,7 @@ import java.util.List;
 public interface SubmissionRepository extends JpaRepository<SubmissionEntity,Long> {
     @Query("SELECT s FROM SubmissionEntity s WHERE s.team.id=?1" )
     List<SubmissionEntity> findByTeam(Long teamID);
+
+    @Query("SELECT s FROM SubmissionEntity s WHERE s.team.id=?1 and s.challenge.id=?2" )
+    List<SubmissionEntity> getSubmissionCount(Long teamID, Long challengeID);
 }

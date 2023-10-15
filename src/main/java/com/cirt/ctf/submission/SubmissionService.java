@@ -72,4 +72,8 @@ public class SubmissionService {
         return returned;
     }
 
+    public Integer getSubmissionCount(Long teamID, Long challengeID){
+        return submissionRepository.getSubmissionCount(teamID,challengeID).size();
+    }
+
 }
