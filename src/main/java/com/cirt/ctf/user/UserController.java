@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.net.ContentHandler;
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/users")
@@ -48,7 +49,7 @@ public class UserController {
     public String updateUser(@PathVariable("id") Long id, Model model, Principal principal){
        //check necessary permission
         User admin= userService.findUserByEmail(principal.getName()).orElseThrow();
-        if(admin.getRole()!=Role.ADMIN && admin.getId()!=id){
+        if(admin.getRole()!=Role.ADMIN && !Objects.equals(admin.getId(), id)){
             return "redirect:/login?logout";
         }
 
@@ -131,7 +132,8 @@ public class UserController {
 
         //check necessary permission
         User admin= userService.findUserByEmail(principal.getName()).orElseThrow();
-        if(admin.getRole()!=Role.ADMIN && admin.getId()!=userDTO.getId()){
+
+        if(admin.getRole()!=Role.ADMIN && !Objects.equals(admin.getId(), userDTO.getId())){
             return "redirect:/login?logout";
         }
 
@@ -175,7 +177,7 @@ public class UserController {
 
         //check necessary permission
         User admin= userService.findUserByEmail(principal.getName()).orElseThrow();
-        if(admin.getRole()!=Role.ADMIN && admin.getId()!=userDTO.getId()){
+        if(admin.getRole()!=Role.ADMIN && !Objects.equals(admin.getId(), userDTO.getId())){
             return "redirect:/login?logout";
         }
 
@@ -218,7 +220,7 @@ public class UserController {
 
         //check necessary permission
         User admin= userService.findUserByEmail(principal.getName()).orElseThrow();
-        if(admin.getRole()!=Role.ADMIN && admin.getId()!=userDTO.getId()){
+        if(admin.getRole()!=Role.ADMIN && !Objects.equals(admin.getId(), userDTO.getId())){
             return "redirect:/login?logout";
         }
 

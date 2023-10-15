@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Data
 public class TeamDTO {
-    private Long id;
+    private String id;
     @NotEmpty(message = "Please enter valid Team Name")
     private String teamName;
 

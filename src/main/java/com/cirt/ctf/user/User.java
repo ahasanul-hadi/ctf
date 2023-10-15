@@ -53,7 +53,7 @@ public class User implements UserDetails, CredentialsContainer {
     private String designation;
 
     @Column(name="avatar_id")
-    private Long avatarID;
+    private String avatarID;
 
     @ManyToOne
     @JoinColumn(name = "team_id", referencedColumnName = "id")

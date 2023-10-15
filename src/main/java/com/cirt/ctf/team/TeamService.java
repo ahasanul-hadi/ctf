@@ -33,9 +33,11 @@ public class TeamService {
 
     @Transactional
     public String addTeam(TeamRegistration teamDTO) {
-        TeamEntity team = modelMapper.map(teamDTO, TeamEntity.class);
+
+        TeamDTO team = modelMapper.map(teamDTO, TeamDTO.class);
+        TeamEntity entity=null;
         try {
-            team = teamRepository.save(team);
+            entity = save(team);
         }catch (Exception ee){
             System.out.println("inside main exp"+ee);
             return "Please provide unique payment email and order id";
@@ -43,7 +45,7 @@ public class TeamService {
 
         //Team Leader
         teamDTO.setPassword(Utils.getRandomPassword(8));
-        UserDTO teamLeader = UserDTO.builder().team(team).role(Role.TEAM_LEAD).email(teamDTO.getEmail()).name(teamDTO.getName()).mobile(teamDTO.getMobile()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation()).build();
+        UserDTO teamLeader = UserDTO.builder().team(entity).role(Role.TEAM_LEAD).email(teamDTO.getEmail()).name(teamDTO.getName()).mobile(teamDTO.getMobile()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation()).build();
         try {
             userService.saveUser(teamLeader, teamDTO.getFile());
         }catch (Exception e){
@@ -53,7 +55,7 @@ public class TeamService {
 
         //member1
         teamDTO.setPassword1(Utils.getRandomPassword(8));
-        UserDTO user1 = UserDTO.builder().team(team).role(Role.MEMBER).email(teamDTO.getEmail1()).name(teamDTO.getName1()).mobile(teamDTO.getMobile1()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation1()).build();
+        UserDTO user1 = UserDTO.builder().team(entity).role(Role.MEMBER).email(teamDTO.getEmail1()).name(teamDTO.getName1()).mobile(teamDTO.getMobile1()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation1()).build();
         try {
             userService.saveUser(user1, teamDTO.getFile1());
         }catch (Exception e){
@@ -61,7 +63,7 @@ public class TeamService {
         }
         //member2
         teamDTO.setPassword2(Utils.getRandomPassword(8));
-        UserDTO user2 = UserDTO.builder().team(team).role(Role.MEMBER).email(teamDTO.getEmail2()).name(teamDTO.getName2()).mobile(teamDTO.getMobile2()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation2()).build();
+        UserDTO user2 = UserDTO.builder().team(entity).role(Role.MEMBER).email(teamDTO.getEmail2()).name(teamDTO.getName2()).mobile(teamDTO.getMobile2()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation2()).build();
         try {
             userService.saveUser(user2, teamDTO.getFile2());
         }catch (Exception e){
@@ -70,7 +72,7 @@ public class TeamService {
 
         //member3
         teamDTO.setPassword3(Utils.getRandomPassword(8));
-        UserDTO user3 = UserDTO.builder().team(team).role(Role.MEMBER).email(teamDTO.getEmail3()).name(teamDTO.getName3()).mobile(teamDTO.getMobile3()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation3()).build();
+        UserDTO user3 = UserDTO.builder().team( entity ).role(Role.MEMBER).email(teamDTO.getEmail3()).name(teamDTO.getName3()).mobile(teamDTO.getMobile3()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation3()).build();
         try {
             userService.saveUser(user3, teamDTO.getFile3());
         }catch (Exception e){
@@ -80,14 +82,14 @@ public class TeamService {
         //member4
         if (teamDTO.getEmail4() != null && !teamDTO.getEmail4().isEmpty()) {
             teamDTO.setPassword4(Utils.getRandomPassword(8));
-            UserDTO user4 = UserDTO.builder().team(team).role(Role.MEMBER).email(teamDTO.getEmail4()).name(teamDTO.getName4()).mobile(teamDTO.getMobile4()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation4()).build();
+            UserDTO user4 = UserDTO.builder().team(entity).role(Role.MEMBER).email(teamDTO.getEmail4()).name(teamDTO.getName4()).mobile(teamDTO.getMobile4()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation4()).build();
             userService.saveUser(user4, teamDTO.getFile4());
         }
 
         //member5
         if (teamDTO.getEmail5() != null && !teamDTO.getEmail5().isEmpty()) {
             teamDTO.setPassword5(Utils.getRandomPassword(8));
-            UserDTO user5 = UserDTO.builder().team(team).role(Role.MEMBER).email(teamDTO.getEmail5()).name(teamDTO.getName5()).mobile(teamDTO.getMobile5()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation5()).build();
+            UserDTO user5 = UserDTO.builder().team(entity).role(Role.MEMBER).email(teamDTO.getEmail5()).name(teamDTO.getName5()).mobile(teamDTO.getMobile5()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation5()).build();
             userService.saveUser(user5, teamDTO.getFile5());
         }
 
@@ -95,18 +97,29 @@ public class TeamService {
         //emailer.send();
 
 
-        team = teamRepository.findById(team.getId()).orElse(null);
+        entity = teamRepository.findById(team.getId()).orElse(null);
 
         return null;
     }
 
+    public TeamEntity save(TeamDTO dto){
+        TeamEntity entity= modelMapper.map(dto, TeamEntity.class);
+
+        //setting random ID
+        if(entity.getId()==null)
+            entity.setId(Utils.getRandomPassword(12));
+
+
+
+        return teamRepository.save(entity);
+    }
 
     public List<TeamDTO> getTeams(){
         return teamRepository.findAll().stream().map(team->modelMapper.map(team, TeamDTO.class)).toList();
     }
 
 
-    public void approve(Long id, User admin) {
+    public void approve(String id, User admin) {
         TeamEntity team= teamRepository.findById(id).orElseThrow();
         team.setApprovedBy(admin);
         team.setApproveDate(LocalDateTime.now());
@@ -120,12 +133,15 @@ public class TeamService {
 
     }
 
-    public TeamDTO findById(Long id) {
-        TeamEntity team= teamRepository.findById(id).orElseThrow();
-        return modelMapper.map(team, TeamDTO.class);
+    public TeamDTO findById(String id) {
+        TeamEntity team= teamRepository.findById(id).orElse(null);
+        return team==null?null:modelMapper.map(team, TeamDTO.class);
+    }
+    public TeamEntity findEntityById(String id){
+        return teamRepository.findById(id).orElse(null);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         teamRepository.deleteById(id);
     }
 

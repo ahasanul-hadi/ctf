@@ -35,7 +35,7 @@ public class UserDTO {
 
     private TeamEntity team;
 
-    private Long avatarID;
+    private String avatarID;
     private String education;
     private String address;
     private String personalInfo;

@@ -49,6 +49,10 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("User Already present");
 
         User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getMobile(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getRole());
+
+        if(userDTO.getId()>0)
+            user.setId(userDTO.getId());
+
         user.setTeam(userDTO.getTeam());
         user.setDesignation(userDTO.getDesignation());
         user.setAccountNonExpired(true);
@@ -117,4 +121,5 @@ public class UserService implements UserDetailsService {
     public void deleteUser(User user) {
         userRepository.deleteById(user.getId());
     }
+
 }

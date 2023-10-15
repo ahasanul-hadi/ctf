@@ -23,7 +23,7 @@ public class DocumentController {
     private final DocumentService documentService;
 
     @RequestMapping(value = { "/api/document/preview/{id}" }, method = RequestMethod.GET)
-    public void getDocumentById(HttpServletResponse response, HttpServletRequest request, @PathVariable Long id) throws Exception {
+    public void getDocumentById(HttpServletResponse response, HttpServletRequest request, @PathVariable String id) throws Exception {
         DocumentEntity dto = documentService.findById(id).orElseThrow(()->new Exception("No document Found!"));
 
         // logger.error("UPLOADED_FOLDER: " + GlobalConstants.UPLOADED_FOLDER);

@@ -34,7 +34,7 @@ public class ScoreBoardService {
                         return firstSubmission.compareTo(secondSubmission);
                     }
                     else if(firstSubmission==null && secondSubmission==null)
-                        return (int) (first.getId()-second.getId());
+                        return (int) (first.getId().compareTo(second.getId()));
                     else if(firstSubmission==null)
                         return 1;
                     else
