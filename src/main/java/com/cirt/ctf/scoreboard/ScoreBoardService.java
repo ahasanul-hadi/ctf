@@ -7,6 +7,7 @@ import com.cirt.ctf.team.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,8 +27,19 @@ public class ScoreBoardService {
             public int compare(TeamDTO first, TeamDTO second) {
                 int score1 = first.getScore();
                 int score2 = second.getScore();
-                if (score1 == score2)
-                    return first.getLastSubmissionTime().compareTo(second.getLastSubmissionTime());
+                if (score1 == score2){
+                    LocalDateTime firstSubmission=first.getLastSubmissionTime();
+                    LocalDateTime secondSubmission=second.getLastSubmissionTime();
+                    if(firstSubmission!=null && secondSubmission!=null){
+                        return firstSubmission.compareTo(secondSubmission);
+                    }
+                    else if(firstSubmission==null && secondSubmission==null)
+                        return (int) (first.getId()-second.getId());
+                    else if(firstSubmission==null)
+                        return 1;
+                    else
+                        return -1;
+                }
                 else
                     return score2 - score1;
 
@@ -35,6 +47,15 @@ public class ScoreBoardService {
         });
         return scoreboard;
 
+    }
+
+    public Integer getPlace(TeamDTO dto){
+        List<TeamDTO> list= getScoreboard();
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).getId()==dto.getId())
+                return i+1;
+        }
+        return null;
     }
 
     public List<Top10Graph> getTop10(){

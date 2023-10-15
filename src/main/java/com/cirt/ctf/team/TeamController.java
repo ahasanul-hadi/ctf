@@ -2,6 +2,7 @@ package com.cirt.ctf.team;
 
 import com.cirt.ctf.email.MailService;
 import com.cirt.ctf.payload.*;
+import com.cirt.ctf.scoreboard.ScoreBoardService;
 import com.cirt.ctf.user.User;
 import com.cirt.ctf.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,10 +26,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class TeamController {
-    private final TeamRepository teamRepository;
     private final TeamService teamService;
     private final UserService userService;
     private final MailService mailService;
+    private final ScoreBoardService scoreBoardService;
 
     @PostMapping("/registration")
     public String addTeam(@Valid @ModelAttribute("team") TeamRegistration team, BindingResult result, Model model, final RedirectAttributes redirectAttributes){
@@ -72,8 +73,9 @@ public class TeamController {
     public String getTeamMembers( @PathVariable("id") Long id,  ModelMap model){
         TeamDTO teamDTO = teamService.findById(id);
         model.addAttribute("team", teamDTO);
-        model.addAttribute("solved",12); //@TODO
-        model.addAttribute("failed",4); //@TODO
+        model.addAttribute("solved",teamService.getSolvedCount(teamDTO));
+        model.addAttribute("failed",teamService.getFailedCount(teamDTO));
+        model.addAttribute("place",scoreBoardService.getPlace(teamDTO));
         return "team/teamMembers";
     }
 
@@ -84,6 +86,7 @@ public class TeamController {
 
         TeamDTO teamDTO = teamService.findById(user.getTeam().getId());
         model.addAttribute("team", teamDTO);
+        model.addAttribute("place",scoreBoardService.getPlace(teamDTO));
         return "team/myTeam";
     }
 

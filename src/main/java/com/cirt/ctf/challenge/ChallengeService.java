@@ -82,4 +82,8 @@ public class ChallengeService {
         }
         return challengeEntity;
     }
+
+    public List<ChallengeDTO> findAll(){
+        return challengeRepository.findAll().stream().map(entity->modelMapper.map(entity,ChallengeDTO.class)).toList();
+    }
 }

@@ -97,6 +97,15 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    public User updatePassword(UserDTO userDTO){
+        User user= findById(userDTO.getId());
+
+        if(userDTO.getPassword()!=null && !userDTO.getPassword().isEmpty())
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+        return userRepository.save(user);
+    }
+
     public List<User> findAll(){
         return userRepository.findAll();
     }

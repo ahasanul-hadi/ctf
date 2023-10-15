@@ -71,6 +71,17 @@ public class UserController {
 
     }
 
+    @GetMapping("/change-password")
+    public String getChangePassword( Model model, Principal principal){
+
+        User user= userService.findUserByEmail(principal.getName()).orElseThrow();
+        UserDTO dto= modelMapper.map(user, UserDTO.class);
+        model.addAttribute("userDTO",dto);
+
+        return "user/updatePassword";
+
+    }
+
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/rest-pass/{id}")
@@ -136,6 +147,10 @@ public class UserController {
                 FieldError fe = new FieldError("userDTO", "rePassword", "password and rePassword does not Match!");
                 result.addError(fe);
             }
+            if(userDTO.getPassword().length()<8){
+                FieldError fe = new FieldError("userDTO", "password", "Password Length should be at least 8 characters");
+                result.addError(fe);
+            }
         }
 
         if(result.hasErrors()){
@@ -152,6 +167,49 @@ public class UserController {
         model.addAttribute("message", "User has been updated!");
 
         return "user/userUpdate";
+    }
+
+
+    @PostMapping("/change-password")
+    public String updatePassword(@ModelAttribute("userDTO") UserDTO userDTO, BindingResult result, Model model, Principal principal){
+
+        //check necessary permission
+        User admin= userService.findUserByEmail(principal.getName()).orElseThrow();
+        if(admin.getRole()!=Role.ADMIN && admin.getId()!=userDTO.getId()){
+            return "redirect:/login?logout";
+        }
+
+        User user= userService.findById(userDTO.getId());
+        userDTO.setAvatarID(user.getAvatarID());
+
+        if(userDTO.getPassword()!=null && !userDTO.getPassword().isEmpty()){
+            if(!passwordEncoder.matches(userDTO.getCurrentPassword(),user.getPassword())){
+                FieldError fe = new FieldError("userDTO", "currentPassword", "Current Password does not Match!");
+                result.addError(fe);
+            }
+            if(userDTO.getPassword().isEmpty() || !userDTO.getPassword().equals(userDTO.getRePassword())){
+                FieldError fe = new FieldError("userDTO", "rePassword", "password and rePassword does not Match!");
+                result.addError(fe);
+            }
+            if(userDTO.getPassword().length()<8){
+                FieldError fe = new FieldError("userDTO", "password", "Password Length should be at least 8 characters");
+                result.addError(fe);
+            }
+        }
+
+        if(result.hasErrors()){
+            model.addAttribute("userDTO", userDTO);
+            return "user/updatePassword";
+        }
+
+        User updatedUser= userService.updatePassword(userDTO);
+        UserDTO dto= modelMapper.map(updatedUser, UserDTO.class);
+
+        model.addAttribute("userDTO", dto);
+        model.addAttribute("type", "success");
+        model.addAttribute("message", "Password has been updated!");
+
+        return "user/updatePassword";
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

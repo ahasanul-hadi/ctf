@@ -1,5 +1,6 @@
 package com.cirt.ctf.team;
 
+import com.cirt.ctf.challenge.ChallengeService;
 import com.cirt.ctf.email.MailDTO;
 import com.cirt.ctf.email.MailService;
 import com.cirt.ctf.enums.Role;
@@ -24,7 +25,7 @@ public class TeamService {
     private final ModelMapper modelMapper;
     private final TeamRepository teamRepository;
     private final UserService userService;
-
+    private final ChallengeService challengeService;
 
     public List<TeamDTO> findAll(){
         return teamRepository.findAll().stream().map(entity->modelMapper.map(entity,TeamDTO.class)).toList();
@@ -41,7 +42,7 @@ public class TeamService {
         }
 
         //Team Leader
-        teamDTO.setPassword(Utils.getRandomPassword(6));
+        teamDTO.setPassword(Utils.getRandomPassword(8));
         UserDTO teamLeader = UserDTO.builder().team(team).role(Role.TEAM_LEAD).email(teamDTO.getEmail()).name(teamDTO.getName()).mobile(teamDTO.getMobile()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation()).build();
         try {
             userService.saveUser(teamLeader, teamDTO.getFile());
@@ -51,7 +52,7 @@ public class TeamService {
 
 
         //member1
-        teamDTO.setPassword1(Utils.getRandomPassword(6));
+        teamDTO.setPassword1(Utils.getRandomPassword(8));
         UserDTO user1 = UserDTO.builder().team(team).role(Role.MEMBER).email(teamDTO.getEmail1()).name(teamDTO.getName1()).mobile(teamDTO.getMobile1()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation1()).build();
         try {
             userService.saveUser(user1, teamDTO.getFile1());
@@ -59,7 +60,7 @@ public class TeamService {
             return user1.getEmail()+" is already used!";
         }
         //member2
-        teamDTO.setPassword2(Utils.getRandomPassword(6));
+        teamDTO.setPassword2(Utils.getRandomPassword(8));
         UserDTO user2 = UserDTO.builder().team(team).role(Role.MEMBER).email(teamDTO.getEmail2()).name(teamDTO.getName2()).mobile(teamDTO.getMobile2()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation2()).build();
         try {
             userService.saveUser(user2, teamDTO.getFile2());
@@ -68,7 +69,7 @@ public class TeamService {
         }
 
         //member3
-        teamDTO.setPassword3(Utils.getRandomPassword(6));
+        teamDTO.setPassword3(Utils.getRandomPassword(8));
         UserDTO user3 = UserDTO.builder().team(team).role(Role.MEMBER).email(teamDTO.getEmail3()).name(teamDTO.getName3()).mobile(teamDTO.getMobile3()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation3()).build();
         try {
             userService.saveUser(user3, teamDTO.getFile3());
@@ -78,14 +79,14 @@ public class TeamService {
 
         //member4
         if (teamDTO.getEmail4() != null && !teamDTO.getEmail4().isEmpty()) {
-            teamDTO.setPassword4(Utils.getRandomPassword(6));
+            teamDTO.setPassword4(Utils.getRandomPassword(8));
             UserDTO user4 = UserDTO.builder().team(team).role(Role.MEMBER).email(teamDTO.getEmail4()).name(teamDTO.getName4()).mobile(teamDTO.getMobile4()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation4()).build();
             userService.saveUser(user4, teamDTO.getFile4());
         }
 
         //member5
         if (teamDTO.getEmail5() != null && !teamDTO.getEmail5().isEmpty()) {
-            teamDTO.setPassword5(Utils.getRandomPassword(6));
+            teamDTO.setPassword5(Utils.getRandomPassword(8));
             UserDTO user5 = UserDTO.builder().team(team).role(Role.MEMBER).email(teamDTO.getEmail5()).name(teamDTO.getName5()).mobile(teamDTO.getMobile5()).password(teamDTO.getPassword()).designation(teamDTO.getDesignation5()).build();
             userService.saveUser(user5, teamDTO.getFile5());
         }
@@ -126,5 +127,13 @@ public class TeamService {
 
     public void deleteById(Long id) {
         teamRepository.deleteById(id);
+    }
+
+    public long getSolvedCount(TeamDTO dto){
+        return dto.getSubmissions().stream().filter(sub->sub.getResult()!=null && sub.getResult().getScore()>0).count();
+    }
+
+    public long getFailedCount(TeamDTO dto){
+        return (long) challengeService.findAll().size() - getSolvedCount(dto);
     }
 }

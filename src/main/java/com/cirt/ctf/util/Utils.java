@@ -1,7 +1,13 @@
 package com.cirt.ctf.util;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 
 public class Utils {
@@ -9,6 +15,7 @@ public class Utils {
     public static SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    public static String[] ALLOWED_IMAGE_EXTENSION={"png","jpg","jpeg","gif"};
 
     public static String getRandomPassword(int length){
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
@@ -20,5 +27,24 @@ public class Utils {
         }
         String saltStr = salt.toString();
         return saltStr;
+    }
+
+    public static String validateImageFile(MultipartFile file){
+        String extension;
+        int index = Objects.requireNonNull(file.getOriginalFilename()).lastIndexOf('.');
+        if (index > 0) {
+            extension = file.getOriginalFilename().substring(index+1);
+        } else {
+            extension = "";
+        }
+        if(Arrays.stream(ALLOWED_IMAGE_EXTENSION).noneMatch(ext->ext.equals(extension.toLowerCase()))){
+            return "Extension didn't match with allowed extension ["+ Arrays.toString(ALLOWED_IMAGE_EXTENSION)+"]";
+        }
+
+        if(file.getSize()*0.00000095367432>1){
+            return "Image size is greater than 1 MB";
+        }
+
+        return null;
     }
 }

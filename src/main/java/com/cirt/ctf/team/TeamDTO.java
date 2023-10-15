@@ -57,13 +57,13 @@ public class TeamDTO {
     }
 
     public LocalDateTime getLastSubmissionTime(){
-        Optional<SubmissionEntity> entity= submissions.stream().max(Comparator.comparing(SubmissionEntity::getSubmissionTime));
+        Optional<SubmissionEntity> entity= submissions.stream().filter(sub->sub.getResult()!=null && sub.getResult().getScore()>0).max(Comparator.comparing(SubmissionEntity::getSubmissionTime));
         return entity.map(SubmissionEntity::getSubmissionTime).orElse(LocalDateTime.MAX);
     }
 
     public List<IncrementalScore> getIncrementalScore(){
         List<IncrementalScore> list= new ArrayList<>();
-        List<SubmissionEntity> orderSubmissions= new ArrayList<>(submissions).stream().sorted(Comparator.comparing(SubmissionEntity::getSubmissionTime)).toList();
+        List<SubmissionEntity> orderSubmissions= new ArrayList<>(submissions).stream().filter(sub->sub.getResult()!=null && sub.getResult().getScore()>0).sorted(Comparator.comparing(SubmissionEntity::getSubmissionTime)).toList();
         int gradualScore=0;
         for(SubmissionEntity e: orderSubmissions){
             if(e.getResult()!=null){
