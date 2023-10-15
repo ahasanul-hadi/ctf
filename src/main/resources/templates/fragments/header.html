@@ -53,6 +53,9 @@
 					<li sec:authorize="isAuthenticated()" class="nav-item">
 						<a class="nav-link" th:href="@{/users/my-profile}">My Profile</a>
 					</li>
+					<li sec:authorize="isAuthenticated()" class="nav-item">
+						<a class="nav-link" th:href="@{/users/change-password}">Change Password</a>
+					</li>
 
 				</ul>
 

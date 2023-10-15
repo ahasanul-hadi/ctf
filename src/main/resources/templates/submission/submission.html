@@ -48,7 +48,7 @@
             <th>Examiner</th>
             <th>Score</th>
 
-            <th sec:authorize="hasAuthority('ADMIN')">Mark</th>
+            <th sec:authorize="hasAuthority('ADMIN')">Assessment</th>
         </tr>
         </thead>
         <tbody>
@@ -77,7 +77,7 @@
                 <span id="boot-icon" class="bi bi-check" style="font-size: 8rem; color: rgb(0, 128, 55);"></span>
             </td>
             <td sec:authorize="hasAuthority('ADMIN')" th:unless="${sub.isVerified}">
-                <a th:href="@{'/submissions/mark/'+${sub.id}}" class="btn btn-success" role="button">Mark</a>
+                <a th:href="@{'/submissions/mark/'+${sub.id}}" class="btn btn-success" role="button">Assess</a>
             </td>
 
         </tr>

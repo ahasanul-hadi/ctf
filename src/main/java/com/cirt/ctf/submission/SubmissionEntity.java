@@ -25,7 +25,7 @@ public class SubmissionEntity {
     private LocalDateTime submissionTime;
 
     @Column(name = "document_id")
-    private Long documentID;
+    private String documentID;
 
     @ManyToOne
     @JoinColumn(name = "challenge_id", referencedColumnName = "id")

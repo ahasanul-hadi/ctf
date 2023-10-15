@@ -49,6 +49,10 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("User Already present");
 
         User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getMobile(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getRole());
+
+        if(userDTO.getId()>0)
+            user.setId(userDTO.getId());
+
         user.setTeam(userDTO.getTeam());
         user.setDesignation(userDTO.getDesignation());
         user.setAccountNonExpired(true);
@@ -63,7 +67,7 @@ public class UserService implements UserDetailsService {
             }catch (Exception ignored){}
         }
         try {
-            user = userRepository.save(user);
+            user = userRepository.saveAndFlush(user);
         }catch (Exception e) {
             throw e;
         }
@@ -97,6 +101,15 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    public User updatePassword(UserDTO userDTO){
+        User user= findById(userDTO.getId());
+
+        if(userDTO.getPassword()!=null && !userDTO.getPassword().isEmpty())
+            user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+        return userRepository.save(user);
+    }
+
     public List<User> findAll(){
         return userRepository.findAll();
     }
@@ -108,4 +121,5 @@ public class UserService implements UserDetailsService {
     public void deleteUser(User user) {
         userRepository.deleteById(user.getId());
     }
+
 }

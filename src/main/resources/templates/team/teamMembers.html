@@ -31,6 +31,7 @@
     <div class="text-center" style="background: #F0F0F0;margin-top:100px;margin-bottom:30px;width:100%">
         <h4 class="text-center bold mt-3" th:text="${'Team: '+team.teamName}">  </h4>
         <h4 class="text-center bold" th:text="${'Organization: '+team.teamOrganization}">  </h4>
+        <h4 class="text-center bold mb-3" th:text="${'Place: '+place}">  </h4>
         <h4 class="text-center bold mb-3" th:text="${'Score: '+team.getScore()}">  </h4>
     </div>
 
@@ -133,7 +134,7 @@
 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-<script th:inline="javascript" th:with="solvedTimes=${team.getIncrementalScore().![time]},solvedScores=${team.getIncrementalScore().![score]}">
+<script th:inline="javascript" th:with="solvedTimes=${team.getIncrementalScore().![time]},solvedScores=${team.getIncrementalScore().![score]}, categories=${categoryList.![category]}, solvedCategories=${categoryList.![solved]}">
 
     var solved=/*[[${solved}]]*/;
     var failed=/*[[${failed}]]*/;
@@ -144,11 +145,17 @@
     var solvedTimes = /*[[${solvedTimes}]]*/ [];
     var solvedScores = /*[[${solvedScores}]]*/ [];
 
+    var categories = /*[[${categories}]]*/ [];
+    var solvedCategories = /*[[${solvedCategories}]]*/ [];
+
     console.log("solvedTimes:"+JSON.stringify(solvedTimes));
     console.log("solvedScores:"+JSON.stringify(solvedScores));
 
+    console.log("categories:"+JSON.stringify(categories));
+    console.log("solvedCategories:"+JSON.stringify(solvedCategories));
+
     var solveData = [{
-      values: [7, 9],
+      values: [solved, failed],
       labels: ['Solved', 'Failed'],
       type: 'pie',
       'hoverinfo': 'label+value',
@@ -156,8 +163,8 @@
     }];
 
     var categoryData = [{
-      values: [3, 7, 2],
-      labels: ['Linux', 'Network', 'Windows'],
+      values: solvedCategories,
+      labels: categories,
       type: 'pie',
       'marker': {
           'colors': [

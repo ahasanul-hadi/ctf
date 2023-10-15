@@ -23,7 +23,7 @@ public class SubmissionDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime submissionTime;
     private String filePath;
-    private Long documentID;
+    private String documentID;
     private ChallengeEntity challenge;
     private User solver;
     private TeamEntity team;
