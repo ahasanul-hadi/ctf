@@ -76,6 +76,7 @@ public class ScoreBoardService {
                 String category= sub.getChallenge().getCategory();
                 CategoryBreakdown breakdown= map.getOrDefault(category, new CategoryBreakdown(category,0));
                 breakdown.solved++;
+                map.put(category, breakdown);
             }
         });
         return map.values().stream().toList();
