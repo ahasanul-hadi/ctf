@@ -44,7 +44,7 @@
             <th>User</th>
             <th>Submission Time</th>
 
-            <th>Is Verified?</th>
+            <th>Answer</th>
             <th>Examiner</th>
             <th>Score</th>
 
@@ -55,7 +55,7 @@
         <tr th:each="sub, iterator: ${submissions}">
             <td th:text="${iterator.index+1}" />
             <td>
-                <a th:href="@{'/challenge/'+${sub.challenge?.id}}"><span th:text="${sub.challenge?.title}"></span></a>
+                <a th:href="@{'/challenges/'+${sub.challenge?.id}}"><span th:text="${sub.challenge?.title}"></span></a>
             </td>
             <td th:text="${sub.challenge?.category}" />
 
@@ -67,7 +67,7 @@
             <!--{#dates.format(sprint.releaseDate, 'dd-MMM-yyyy')
             sub.submissionTime-->
             <td th:text="${{sub.submissionTime}}" />
-            <td th:text="${sub.getVerifiedString()}" />
+            <td><span><a th:href="@{'/api/document/preview/'+${sub.documentID}}">Answer File</a></span></td>
 
             <td th:text="${sub.result?.examiner?.name}" />
             <td th:text="${sub.result?.score}" />

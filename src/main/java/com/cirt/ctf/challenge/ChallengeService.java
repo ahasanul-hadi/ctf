@@ -19,6 +19,9 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ModelMapper modelMapper;
 
+    public ChallengeEntity getChallengeById(long id) {
+        return challengeRepository.findById(id).orElseThrow();
+    }
     public List<ChallengeDTO> getChallengesForAdmin() {
         List<ChallengeEntity> challengeEntities = challengeRepository.findAll();
         List<ChallengeDTO> challengeDTOs = new ArrayList<>();

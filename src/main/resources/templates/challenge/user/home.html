@@ -124,17 +124,18 @@
                             </div>
                             <div class="modal-body">
                                 <form th:action="@{/submissions}" method="post" enctype="multipart/form-data"
-                                    class="form-inline">
+                                    class="form-inline" th:object="${submission}">
                                     <div class="row">
+                                        <input hidden type="number" name="challengeID" th:value="${challenge.id}" ></input>
                                         <input type="file" th:if="${challenge.markingType == 'manual'}"
-                                            class="col-sm-6 form-control"
+                                            class="col-sm-6 form-control" th:field="*{file}"
                                             style="margin: 10px; width:-webkit-fill-available;"></input>
                                         <input type="text" th:if="${challenge.markingType == 'auto'}"
                                             class="col-sm-6 form-control"
                                             style="margin: 10px;width:-webkit-fill-available;"
                                             placeholder="Paste your solution text here"></input>
                                         <br />
-                                        <div class="text-center" style="margin-top: 20px;"><button type="button"
+                                        <div class="text-center" style="margin-top: 20px;"><button type="submit"
                                                 class="btn btn-success col-sm-3">Submit</button></div>
                                     </div>
 

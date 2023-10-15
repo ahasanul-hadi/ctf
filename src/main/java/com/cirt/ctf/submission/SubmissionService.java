@@ -1,5 +1,7 @@
 package com.cirt.ctf.submission;
 
+import com.cirt.ctf.document.DocumentEntity;
+import com.cirt.ctf.document.DocumentService;
 import com.cirt.ctf.marking.ResultDTO;
 import com.cirt.ctf.marking.ResultEntity;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import java.util.List;
 public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final ModelMapper modelMapper;
+    private final DocumentService documentService;
 
     public List<SubmissionDTO> findAll(){
         return submissionRepository.findAll().stream().map(e->modelMapper.map(e,SubmissionDTO.class)).toList();
@@ -37,5 +40,27 @@ public class SubmissionService {
         submissionEntity= submissionRepository.save(submissionEntity);
 
         return modelMapper.map(submissionEntity, SubmissionDTO.class);
+    }
+
+    public SubmissionEntity createSubmission(SubmissionDTO submissionDTO){
+        SubmissionEntity submissionEntity = new SubmissionEntity();
+        submissionEntity.setChallenge(submissionDTO.getChallenge());
+        submissionEntity.setSolver(submissionDTO.getSolver());
+        submissionEntity.setTeam(submissionDTO.getTeam());
+        submissionEntity.setSubmissionTime(submissionDTO.getSubmissionTime());
+        if(submissionDTO.getFile() != null && submissionDTO.getFile().getSize() > 0 ) {
+            try {
+                DocumentEntity documentEntity = documentService.saveDocument(submissionDTO.getFile());
+                submissionEntity.setDocumentID(documentEntity.getId());
+            } catch (Exception ignored){}
+        }
+        SubmissionEntity returned;
+        try {
+            returned = submissionRepository.save(submissionEntity);
+        } catch(Exception e) {
+            throw e;
+        }
+
+        return returned;
     }
 }

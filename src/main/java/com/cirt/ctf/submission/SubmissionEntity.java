@@ -24,9 +24,6 @@ public class SubmissionEntity {
     @Column(name="submission_time", nullable = false)
     private LocalDateTime submissionTime;
 
-    @Column(name = "file_path", nullable = false, length = 256)
-    private String filePath;
-
     @Column(name = "document_id")
     private Long documentID;
 
@@ -48,6 +45,5 @@ public class SubmissionEntity {
 
     @OneToOne(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
     private ResultEntity result;
-
 
 }

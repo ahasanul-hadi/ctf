@@ -54,7 +54,7 @@
             <tbody>
             <tr th:each="challenge,iterator: ${challenges}">
                 <td th:text="${iterator.index+1}" />
-                <td th:text="${challenge.title}" />
+                <td><a th:href="@{'/challenges/'+${challenge.id}}"><span th:text="${challenge.title}"></span></a></td>
                 <td th:text="${challenge.category}" />
                 <td th:text="${challenge.totalMark}" />
                 <td th:text="${challenge.visibility}" />

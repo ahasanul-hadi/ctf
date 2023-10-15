@@ -1,6 +1,8 @@
 package com.cirt.ctf.challenge;
 
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.cirt.ctf.user.User;
@@ -11,12 +13,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cirt.ctf.enums.Category;
 import com.cirt.ctf.enums.Role;
+import com.cirt.ctf.submission.SubmissionDTO;
 import com.cirt.ctf.team.TeamEntity;
 import com.cirt.ctf.user.UserDTO;
 
@@ -40,8 +44,11 @@ public class ChallengeController{
         //                             .map(challenge -> modelMapper.map(challenge,ChallengeDTO.class)).toList();
         if(role == "ADMIN")
             model.addAttribute("challenges", challengeService.getChallengesForAdmin());
-        else
+        else {
             model.addAttribute("challenges", challengeService.getChallengesForUser());
+            model.addAttribute("submission", new SubmissionDTO());
+        }
+            
         String htmlPage = role == "ADMIN"? "challenge/admin/home" : "challenge/user/home";
         return htmlPage;
     }
@@ -54,9 +61,12 @@ public class ChallengeController{
         redirectAttributes.addFlashAttribute("type", "success");
         return "redirect:/challenges";
     }
+
     @GetMapping("/add" )
     public String getAddChallengePage(Model model, Principal principal) {
-        String role = "ADMIN";
+        User user= userService.findUserByEmail(principal.getName()).orElseThrow();
+
+        String role = user.getRole().toString();
         model.addAttribute("categories", Category.values());
         ChallengeDTO challengeDTO = new ChallengeDTO();
         challengeDTO.setTitle("Challenge ");
@@ -69,6 +79,34 @@ public class ChallengeController{
             return "redirect:/challenges";
         }
         return "challenge/admin/add";
+    }
+
+    @GetMapping("/{id}")
+    public String getSingleChallengePage(@PathVariable("id") Long id, Model model, Principal principal) {
+        User user= userService.findUserByEmail(principal.getName()).orElseThrow();
+
+        String role = user.getRole().toString();
+        ChallengeEntity challengeEntity = challengeService.getChallengeById(id);
+        ChallengeDTO challengeDTO = new ChallengeDTO();
+        challengeDTO.setTitle(challengeEntity.getTitle());
+        challengeDTO.setTotalMark(challengeEntity.getTotalMark());
+        challengeDTO.setMarkingType(challengeEntity.getMarkingType());
+        challengeDTO.setVisibility(challengeEntity.getVisibility());
+        challengeDTO.setAttempts(challengeEntity.getAttempts());
+        challengeDTO.setCategory(challengeEntity.getCategory());
+        challengeDTO.setDescription(challengeEntity.getDescription());
+        // try{
+        //     deadline = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeEntity.getDeadline().toString());
+        // } catch(ParseException e) {
+        //     model.addAttribute("error", e);
+        // }
+        // challengeDTO.setDeadline(deadline);
+        model.addAttribute("challenge", challengeDTO);
+        model.addAttribute("categories", Category.values());
+        if(role != Role.ADMIN.toString()) {
+            return "redirect:/challenges";
+        }
+        return "challenge/admin/update";
     }
     
 }
