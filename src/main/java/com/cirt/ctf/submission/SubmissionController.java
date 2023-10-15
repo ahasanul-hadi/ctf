@@ -2,6 +2,7 @@ package com.cirt.ctf.submission;
 
 import com.cirt.ctf.challenge.ChallengeService;
 import com.cirt.ctf.document.DocumentService;
+import com.cirt.ctf.enums.Role;
 import com.cirt.ctf.marking.ResultDTO;
 import com.cirt.ctf.payload.TeamRegistration;
 import com.cirt.ctf.user.User;
@@ -37,8 +38,13 @@ public class SubmissionController {
     private final ChallengeService challengeService;
 
     @GetMapping
-    public String getSubmissions(Model model){
-        model.addAttribute("submissions",submissionService.findAll());
+    public String getSubmissions(Model model, Principal principal){
+        User user= userService.findUserByEmail(principal.getName()).orElseThrow();
+        String role = user.getRole().toString();
+        if(role == Role.ADMIN.toString())
+            model.addAttribute("submissions",submissionService.findAll());
+        else
+            model.addAttribute("submissions",submissionService.findByTeam(user.getTeam().getId()));
         return "submission/submission";
     }
 

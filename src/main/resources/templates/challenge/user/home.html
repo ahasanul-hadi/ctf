@@ -129,7 +129,7 @@
                                         <input hidden type="number" name="challengeID" th:value="${challenge.id}" ></input>
                                         <input type="file" th:if="${challenge.markingType == 'manual'}"
                                             class="col-sm-6 form-control" th:field="*{file}"
-                                            style="margin: 10px; width:-webkit-fill-available;"></input>
+                                            style="margin: 10px; width:-webkit-fill-available;" required></input>
                                         <input type="text" th:if="${challenge.markingType == 'auto'}"
                                             class="col-sm-6 form-control"
                                             style="margin: 10px;width:-webkit-fill-available;"

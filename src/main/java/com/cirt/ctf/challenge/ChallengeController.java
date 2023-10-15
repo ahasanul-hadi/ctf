@@ -88,6 +88,7 @@ public class ChallengeController{
         String role = user.getRole().toString();
         ChallengeEntity challengeEntity = challengeService.getChallengeById(id);
         ChallengeDTO challengeDTO = new ChallengeDTO();
+        challengeDTO.setId(challengeEntity.getId());
         challengeDTO.setTitle(challengeEntity.getTitle());
         challengeDTO.setTotalMark(challengeEntity.getTotalMark());
         challengeDTO.setMarkingType(challengeEntity.getMarkingType());
@@ -95,18 +96,28 @@ public class ChallengeController{
         challengeDTO.setAttempts(challengeEntity.getAttempts());
         challengeDTO.setCategory(challengeEntity.getCategory());
         challengeDTO.setDescription(challengeEntity.getDescription());
-        // try{
-        //     deadline = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeEntity.getDeadline().toString());
-        // } catch(ParseException e) {
-        //     model.addAttribute("error", e);
-        // }
-        // challengeDTO.setDeadline(deadline);
+        String[] deadlineTokens = challengeEntity.getDeadline().toString().split(":");
+        String deadline = String.join(":", deadlineTokens[0], deadlineTokens[1]);
+        challengeDTO.setDeadline(deadline);
         model.addAttribute("challenge", challengeDTO);
         model.addAttribute("categories", Category.values());
         if(role != Role.ADMIN.toString()) {
             return "redirect:/challenges";
         }
         return "challenge/admin/update";
+    }
+
+    @PostMapping("/{id}")
+    public String updateChallenge(@PathVariable("id") Long id, Model model, @ModelAttribute("challenge") ChallengeDTO challengeDTO, Principal principal, RedirectAttributes redirectAttributes) {
+        User user= userService.findUserByEmail(principal.getName()).orElseThrow();
+
+        String role = user.getRole().toString();
+        if(role == Role.ADMIN.toString()) {
+            challengeService.updateChallenge(id, challengeDTO);
+        }
+        redirectAttributes.addFlashAttribute("type", "success");
+        redirectAttributes.addFlashAttribute("message", "Challenge successfully updated");
+        return "redirect:/challenges";
     }
     
 }

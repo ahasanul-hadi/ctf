@@ -30,6 +30,9 @@ public class SubmissionService {
         return submissionRepository.findById(id).map(e->modelMapper.map(e,SubmissionDTO.class)).orElseThrow();
     }
 
+    public List<SubmissionDTO> findByTeam(Long teamID){
+        return submissionRepository.findByTeam(teamID).stream().map(e->modelMapper.map(e,SubmissionDTO.class)).toList();
+    }
     public SubmissionDTO giveMark(ResultDTO resultDTO){
         SubmissionEntity submissionEntity= submissionRepository.findById(resultDTO.getSubmissionID()).orElseThrow();
         ResultEntity resultEntity= ResultEntity.builder()

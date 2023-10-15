@@ -89,4 +89,23 @@ public class ChallengeService {
     public List<ChallengeDTO> findAll(){
         return challengeRepository.findAll().stream().map(entity->modelMapper.map(entity,ChallengeDTO.class)).toList();
     }
+
+    public ChallengeEntity updateChallenge(Long id, ChallengeDTO challengeDTO) {
+        ChallengeEntity challengeEntity = challengeRepository.findById(id).orElseThrow();
+        Date date = null;
+        try {
+            date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeDTO.getDeadline());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        challengeEntity.setTitle(challengeDTO.getTitle());
+        challengeEntity.setCategory(challengeDTO.getCategory());
+        challengeEntity.setDescription(challengeDTO.getDescription());
+        challengeEntity.setTotalMark(challengeDTO.getTotalMark());
+        challengeEntity.setDeadline(date.toInstant());
+        challengeEntity.setVisibility(challengeDTO.getVisibility());
+        challengeEntity.setMarkingType(challengeDTO.getMarkingType());
+        challengeRepository.save(challengeEntity);
+        return challengeEntity;
+    }
 }

@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface SubmissionRepository extends JpaRepository<SubmissionEntity,Long> {
-    @Query("SELECT s FROM SubmissionEntity s WHERE s.team.id=?1 and s.isVerified=true" )
+    @Query("SELECT s FROM SubmissionEntity s WHERE s.team.id=?1" )
     List<SubmissionEntity> findByTeam(Long teamID);
 }
