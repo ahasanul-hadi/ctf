@@ -1,7 +1,10 @@
 package com.cirt.ctf.challenge;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,7 +77,7 @@ public class ChallengeService {
         challengeEntity.setTotalMark(challengeDTO.getTotalMark());
         challengeEntity.setVisibility(challengeDTO.getVisibility());
         challengeEntity.setMarkingType(challengeDTO.getMarkingType());
-        challengeEntity.setDeadline(date.toInstant());
+        challengeEntity.setDeadline(date.toInstant().atZone(ZoneId.of("Asia/Dhaka")).toLocalDateTime());
         challengeEntity.setAttempts(challengeDTO.getAttempts());
         challengeEntity.setDescription(challengeDTO.getDescription());
 
@@ -102,7 +105,7 @@ public class ChallengeService {
         challengeEntity.setCategory(challengeDTO.getCategory());
         challengeEntity.setDescription(challengeDTO.getDescription());
         challengeEntity.setTotalMark(challengeDTO.getTotalMark());
-        challengeEntity.setDeadline(date.toInstant());
+        challengeEntity.setDeadline(date.toInstant().atZone(ZoneId.of("Asia/Dhaka")).toLocalDateTime());
         challengeEntity.setVisibility(challengeDTO.getVisibility());
         challengeEntity.setMarkingType(challengeDTO.getMarkingType());
         challengeRepository.save(challengeEntity);

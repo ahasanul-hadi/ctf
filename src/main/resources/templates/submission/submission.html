@@ -68,7 +68,8 @@
             <!--{#dates.format(sprint.releaseDate, 'dd-MMM-yyyy')
             sub.submissionTime-->
             <td th:text="${{sub.submissionTime}}" />
-            <td><span><a th:href="@{'/api/document/preview/'+${sub.documentID}}">Answer File</a></span></td>
+            <td th:if="${sub.documentID}"><span><a th:href="@{'/api/document/preview/'+${sub.documentID}}">Answer File</a></span></td>
+            <td th:unless="${sub.documentID}"><span> Text Answer Sample </span></td>
 
             <td th:text="${sub.result?.examiner?.name}" />
             <td th:text="${sub.result?.score}" />

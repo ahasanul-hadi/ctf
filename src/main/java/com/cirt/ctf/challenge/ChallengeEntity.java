@@ -1,6 +1,7 @@
 package com.cirt.ctf.challenge;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -50,7 +51,7 @@ public class ChallengeEntity {
     private User user;
 
     @Column(name="deadline", nullable = false)
-    private Instant deadline;
+    private LocalDateTime deadline;
 
     @Column(name = "visibility", nullable = false, length=10)
     private String visibility;
