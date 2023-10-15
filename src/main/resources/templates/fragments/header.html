@@ -46,15 +46,33 @@
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{/challenges}">Challenges</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{/settings}">Settings</a>
-					</li>
 
-					<li sec:authorize="isAuthenticated()" class="nav-item">
-						<a class="nav-link" th:href="@{/users/my-profile}">My Profile</a>
-					</li>
-					<li sec:authorize="isAuthenticated()" class="nav-item">
-						<a class="nav-link" th:href="@{/users/change-password}">Change Password</a>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Profile
+						</a>
+						<ul sec:authorize="isAuthenticated()" class="dropdown-menu">
+							<li class="nav-item">
+								<a sec:authorize="hasAnyAuthority('ADMIN')"  class="nav-link" th:href="@{/settings}">Settings</a>
+							</li>
+							<li  class="nav-item">
+								<a class="nav-link" th:href="@{/users/my-profile}">My Profile</a>
+							</li>
+							<li  class="nav-item">
+								<a class="nav-link" th:href="@{/users/change-password}">Change Password</a>
+							</li>
+							<li sec:authorize="isAuthenticated()" class="nav-item">
+								<a class="nav-link" th:href="@{/logout}">
+                            <span class="d-block" data-toggle="tooltip" data-placement="bottom" title="Login">
+                                <i class="fas fa-sign-in-alt d-none d-md-block d-lg-none"></i>
+                            </span>
+									<span class="d-sm-block d-md-none d-lg-block">
+                                <i class="fas fa-sign-in-alt pr-1"></i>Logout
+                            </span>
+								</a>
+							</li>
+
+						</ul>
 					</li>
 
 				</ul>
@@ -62,19 +80,6 @@
 				<hr class="d-sm-flex d-md-flex d-lg-none">
 
 				<ul class="navbar-nav ml-md-auto d-block d-sm-flex d-md-flex">
-
-
-					<li sec:authorize="isAuthenticated()" class="nav-item">
-						<a class="nav-link" th:href="@{/logout}">
-                            <span class="d-block" data-toggle="tooltip" data-placement="bottom" title="Login">
-                                <i class="fas fa-sign-in-alt d-none d-md-block d-lg-none"></i>
-                            </span>
-							<span class="d-sm-block d-md-none d-lg-block">
-                                <i class="fas fa-sign-in-alt pr-1"></i>Logout
-                            </span>
-						</a>
-					</li>
-
 					<li sec:authorize="!isAuthenticated()" class="nav-item">
 						<a class="nav-link" th:href="@{/login}">
                             <span class="d-block" data-toggle="tooltip" data-placement="bottom" title="Login">
