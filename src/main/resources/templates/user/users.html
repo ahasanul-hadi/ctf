@@ -95,7 +95,7 @@
     $(document).ready(function() {
         $('#example').DataTable();
 
-         $('a.accept').click(function(e){
+         $(document).on('click', '.accept', function(e) {
         	 e.preventDefault();
         	 var href=$(this).attr('href');
         	 bootbox.confirm("Are you sure?", function(result) {
@@ -105,7 +105,7 @@
              });
         })
 
-        $('a.delete').click(function(e){
+        $(document).on('click', '.delete', function(e) {
         	 e.preventDefault();
         	 var href=$(this).attr('href');
         	 bootbox.confirm("Are you sure you want to delete?", function(result) {

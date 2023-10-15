@@ -70,11 +70,12 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
-    public String getTeamMembers( @PathVariable("id") String id,  ModelMap model){
+    public String getTeamMembers( @PathVariable("id") Long id,  ModelMap model){
         TeamDTO teamDTO = teamService.findById(id);
         model.addAttribute("team", teamDTO);
         model.addAttribute("solved",teamService.getSolvedCount(teamDTO));
         model.addAttribute("failed",teamService.getFailedCount(teamDTO));
+        model.addAttribute("categoryList", scoreBoardService.getCategoryWiseSolved(teamDTO));
         model.addAttribute("place",scoreBoardService.getPlace(teamDTO));
         return "team/teamMembers";
     }
@@ -98,7 +99,7 @@ public class TeamController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/approve/{id}")
-    public String approveTeam(@PathVariable("id") String id, Model model, Principal principal, final RedirectAttributes redirectAttributes){
+    public String approveTeam(@PathVariable("id") Long id, Model model, Principal principal, final RedirectAttributes redirectAttributes){
        User admin= userService.findUserByEmail(principal.getName()).orElseThrow();
         teamService.approve(id, admin);
         redirectAttributes.addFlashAttribute("type", "success");
@@ -109,7 +110,7 @@ public class TeamController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/delete/{id}")
-    public String deleteTeam(@PathVariable("id") String id, Model model, Principal principal, final RedirectAttributes redirectAttributes){
+    public String deleteTeam(@PathVariable("id") Long id, Model model, Principal principal, final RedirectAttributes redirectAttributes){
 
         TeamDTO dto = teamService.findById(id);
         teamService.deleteById(id);

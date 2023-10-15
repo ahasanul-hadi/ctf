@@ -1,9 +1,11 @@
 package com.cirt.ctf.user;
 
 import com.cirt.ctf.enums.Role;
+import com.cirt.ctf.exception.ApplicationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -46,9 +48,9 @@ public class UserController {
     }
 
     @GetMapping("/update/{id}")
-    public String updateUser(@PathVariable("id") Long id, Model model, Principal principal){
+    public String updateUser(@PathVariable("id") Long id, Model model, Principal principal) throws ApplicationException {
        //check necessary permission
-        User admin= userService.findUserByEmail(principal.getName()).orElseThrow();
+        User admin= userService.findUserByEmail(principal.getName()).orElseThrow(()->new ApplicationException("User not found!", HttpStatus.NOT_FOUND));
         if(admin.getRole()!=Role.ADMIN && !Objects.equals(admin.getId(), id)){
             return "redirect:/login?logout";
         }

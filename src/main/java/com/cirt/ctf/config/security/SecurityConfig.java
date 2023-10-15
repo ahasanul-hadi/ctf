@@ -1,5 +1,8 @@
 package com.cirt.ctf.config.security;
 
+import com.cirt.ctf.exception.AppAccessDeniedHandler;
+import com.cirt.ctf.exception.AppAuthEntryPoint;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -14,13 +17,18 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private  final AppAuthEntryPoint appAuthEntryPoint;
+    private final AppAccessDeniedHandler accessDeniedHandler;
+
+
     @Bean
     SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception{
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                //.anonymous(AbstractHttpConfigurer::disable)
+                //.exceptionHandling(exp->exp.authenticationEntryPoint(appAuthEntryPoint).accessDeniedHandler(accessDeniedHandler))
                 .formLogin(form->form.loginPage("/login").defaultSuccessUrl("/",true).permitAll())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests( authorize -> authorize

@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -14,6 +15,7 @@ public class Utils {
 
     public static SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static SecureRandom random = new SecureRandom();
 
     public static String[] ALLOWED_IMAGE_EXTENSION={"png","jpg","jpeg","gif"};
 
@@ -46,5 +48,13 @@ public class Utils {
         }
 
         return null;
+    }
+
+    public static Long generateRandomTeamID(int length){
+        StringBuilder sb = new StringBuilder();
+        sb.append((char)('0' + (random.nextInt(9) + 1)));
+        for(int i=0; i < length-1; i++)
+            sb.append((char)('0' + random.nextInt(10)));
+        return Long.parseLong(sb.toString());
     }
 }

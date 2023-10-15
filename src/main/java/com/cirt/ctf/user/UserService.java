@@ -67,7 +67,7 @@ public class UserService implements UserDetailsService {
             }catch (Exception ignored){}
         }
         try {
-            user = userRepository.save(user);
+            user = userRepository.saveAndFlush(user);
         }catch (Exception e) {
             throw e;
         }

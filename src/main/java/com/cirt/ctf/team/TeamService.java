@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -106,10 +107,10 @@ public class TeamService {
         TeamEntity entity= modelMapper.map(dto, TeamEntity.class);
 
         //setting random ID
-        if(entity.getId()==null)
-            entity.setId(Utils.getRandomPassword(12));
-
-
+        if(entity.getId()==null || entity.getId()==0){
+            SecureRandom rand= new SecureRandom();
+            entity.setId(Utils.generateRandomTeamID(12));
+        }
 
         return teamRepository.save(entity);
     }
@@ -119,7 +120,7 @@ public class TeamService {
     }
 
 
-    public void approve(String id, User admin) {
+    public void approve(Long id, User admin) {
         TeamEntity team= teamRepository.findById(id).orElseThrow();
         team.setApprovedBy(admin);
         team.setApproveDate(LocalDateTime.now());
@@ -133,15 +134,15 @@ public class TeamService {
 
     }
 
-    public TeamDTO findById(String id) {
+    public TeamDTO findById(Long id) {
         TeamEntity team= teamRepository.findById(id).orElse(null);
         return team==null?null:modelMapper.map(team, TeamDTO.class);
     }
-    public TeamEntity findEntityById(String id){
+    public TeamEntity findEntityById(Long id){
         return teamRepository.findById(id).orElse(null);
     }
 
-    public void deleteById(String id) {
+    public void deleteById(Long id) {
         teamRepository.deleteById(id);
     }
 

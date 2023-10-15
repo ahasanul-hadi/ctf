@@ -64,12 +64,12 @@ public class MigrationService {
                 String email = currentRow.getCell(5).getStringCellValue();
                 String password= currentRow.getCell(6).getStringCellValue();
 
-                TeamDTO teamDTO= teamService.findById(String.valueOf(team_id));
+                TeamDTO teamDTO= teamService.findById(Long.valueOf(team_id));
 
                 //Team  Leader
                 if(teamDTO==null){
                     teamDTO= new TeamDTO();
-                    teamDTO.setId(String.valueOf(team_id));
+                    teamDTO.setId(Long.valueOf(team_id));
                     teamDTO.setTeamName(team_name);
                     teamDTO.setTeamOrganization(org_name);
                     teamDTO.setOrderID(Utils.getRandomPassword(8));

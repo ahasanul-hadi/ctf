@@ -41,6 +41,12 @@
                         <div th:if="${param.logout}">
                             <div class="alert alert-success">You have been logged out.</div>
                         </div>
+                        <div th:if="${param.disabled}">
+                            <div class="alert alert-warning">Account is not verified yet!</div>
+                        </div>
+                        <div th:if="${param.denied}">
+                            <div class="alert alert-danger">You don't have necessary permission</div>
+                        </div>
                     </div>
                 </div>
 

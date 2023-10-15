@@ -2,17 +2,22 @@ package com.cirt.ctf.submission;
 
 import com.cirt.ctf.marking.ResultDTO;
 import com.cirt.ctf.marking.ResultEntity;
+import com.cirt.ctf.payload.CategoryBreakdown;
+import com.cirt.ctf.team.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final ModelMapper modelMapper;
+    private final TeamRepository teamRepository;
 
     public List<SubmissionDTO> findAll(){
         return submissionRepository.findAll().stream().map(e->modelMapper.map(e,SubmissionDTO.class)).toList();
@@ -38,4 +43,6 @@ public class SubmissionService {
 
         return modelMapper.map(submissionEntity, SubmissionDTO.class);
     }
+
+
 }
