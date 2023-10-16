@@ -29,7 +29,7 @@ public class TeamEntity {
     @Column(name = "payment_email", nullable = false, unique = true)
     private String paymentEmail;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "team")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "team", fetch = FetchType.LAZY)
     private List<User> members;
 
     @ManyToOne
@@ -40,7 +40,7 @@ public class TeamEntity {
     @Column(name = "approve_date")
     private LocalDateTime approveDate;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private List<SubmissionEntity> submissions;
 
     public void addMember(User member) {

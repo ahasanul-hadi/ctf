@@ -27,11 +27,11 @@ public class SubmissionEntity {
     @Column(name = "document_id")
     private String documentID;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id", referencedColumnName = "id")
     private ChallengeEntity challenge;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "submitter_id", referencedColumnName = "id")
     private User solver;
 

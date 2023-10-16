@@ -48,16 +48,11 @@ public class TeamDTO {
     }
 
     public int getScore(){
-        return submissions.stream().mapToInt(sub->{
-            if(sub.getResult()==null)
-                return 0;
-            else
-                return sub.getResult().getScore();
-        }).sum();
+        return submissions.stream().mapToInt(sub-> sub.isVerified()?sub.getResult().getScore():0).sum();
     }
 
     public LocalDateTime getLastSubmissionTime(){
-        Optional<SubmissionEntity> entity= submissions.stream().filter(sub->sub.getResult()!=null && sub.getResult().getScore()>0).max(Comparator.comparing(SubmissionEntity::getSubmissionTime));
+        Optional<SubmissionEntity> entity= submissions.stream().filter(sub->sub.isVerified() && sub.getResult().getScore()>0).max(Comparator.comparing(SubmissionEntity::getSubmissionTime));
         return entity.map(SubmissionEntity::getSubmissionTime).orElse(LocalDateTime.MAX);
     }
 

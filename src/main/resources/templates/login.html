@@ -29,7 +29,7 @@
     <!-- MAIN CONTENT -->
     <main class="container payload">
         <div class="my-3 p-3 bg-body rounded shadow-sm">
-            <h2 class="border-bottom pb-2 mb-0">CTF Panel Login</h2>
+            <h2 class="border-bottom pb-2 mb-0">Cyber Drill Login</h2>
             <form th:action="@{/login}" id="loginForm" method="post">
 
                 <div class="form-group row">
@@ -52,7 +52,7 @@
 
 
                 <div class="form-group row">
-                    <label for="username" class="col-md-3 col-form-label"><strong>Email or Username</strong></label>
+                    <label for="username" class="col-md-3 col-form-label"><strong>Username(Email)</strong></label>
                     <div class="col-md-6">
                         <input class="col-md-6 form-control" type="email" name="username" id="username" required placeholder="Enter Email or username" ><i class="icon-eye"></i></input>
                     </div>
@@ -61,7 +61,7 @@
                     <label for="password" class="col-md-3 col-form-label"><strong>Password</strong></label>
                     <div class="col-md-6">
                         <input class="form-control" type="password" name="password" id="password" required placeholder="Enter your password" ><i class="icon-eye"></i></input><br/>
-                        <a th:href="@{/forgot-password}"> Forgot password? Click here to reset. </a>
+                        <!--<a th:href="@{/forgot-password}"> Forgot password? Click here to reset. </a>-->
                     </div>
                 </div><br/>
 
