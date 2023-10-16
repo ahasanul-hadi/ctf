@@ -40,7 +40,7 @@
         <div class="row">
 
             <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
-            <h3 class="categoryContainer">Windows Category</h3>
+            <h3 class="categoryContainer">Incident Handling Challenges</h3>
             <hr />
 
             <div class="row">
@@ -49,10 +49,10 @@
                     <div class="card text-white bg-secondary">
                         <div class="card-body">
                             <h5 class="card-title" th:text="${challenge.title}">Special title treatment</h5>
-                            <p class="card-text" th:id="'timeString-'+ ${challenge.id}" th:text="${challenge.deadline}" hidden></p>
+                            <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
                             <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
                             <button class="btn btn-primary" data-bs-toggle="modal"
-                                th:attr="data-bs-target='#'+${challenge.id }">Submit Solution</button>
+                                th:attr="data-bs-target='#modal-'+${challenge.id }">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -60,24 +60,25 @@
 
             <div class="modals">
                 <!-- Vertically centered scrollable modal -->
-                <div class="modal fade" th:each="challenge,iterator: ${challenges}" th:id="${challenge.id}"
+                <div class="modal fade" th:each="challenge,iterator: ${challenges}" th:id="'modal-'+${challenge.id}"
                     role="dialog" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel" th:text="${challenge.title}">Modal
-                                    title</h5>
+                                <h3 class="modal-title" id="staticBackdropLabel" th:text="${challenge.title}">Modal
+                                    title</h3>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body" th:utext="${challenge.description}">
                                 ...
                             </div>
-                            <div class="modal-body">
+                            <div class="modal-footer" style="justify-content: center; background-color: antiquewhite;">
                                 <form th:action="@{/submissions}" method="post" enctype="multipart/form-data"
                                     class="form-inline" th:object="${submission}">
                                     <div class="row">
                                         <input hidden type="number" name="challengeID" th:value="${challenge.id}" ></input>
+                                        <span style="color: red;"> * Submit only valid PDF files </span>
                                         <input type="file" th:if="${challenge.markingType == 'manual'}"
                                             class="col-sm-6 form-control" th:field="*{file}"
                                             style="margin: 10px; width:-webkit-fill-available;" required></input>
@@ -85,8 +86,7 @@
                                             class="col-sm-6 form-control" required
                                             style="margin: 10px;width:-webkit-fill-available;"
                                             placeholder="Paste your solution text here"></input>
-                                        <br />
-                                        <div class="text-center" style="margin-top: 20px;"><button type="submit"
+                                        <div class="text-center"><button type="submit"
                                                 class="btn btn-success col-sm-3">Submit</button></div>
                                     </div>
 
@@ -121,7 +121,13 @@
     <script type="text/javascript">
         var cs = "[[${challenges[0].title}]]";
         console.log(cs);
-        function showTimer(timeString) {
+        var l = $(".timeString").each( function (index, element) {
+            var ID = $(element).attr("id");
+            var timeString = $(element).text();
+            showTimer(timeString, `timer-${ID}`);
+        });
+        console.log(l);
+        function showTimer(timeString, elementID) {
             var countDownDate = new Date(timeString).getTime();
 
             // Update the count down every 1 second
@@ -139,18 +145,15 @@
                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                // Display the result in the element with id="demo"
-                // document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-                //     + minutes + "m " + seconds + "s ";
-                return days + "d " + hours + "h " + minutes + "m " + seconds + "s "
+                document.getElementById(elementID).innerHTML =  hours + "h "
+                    + minutes + "m " + seconds + "s ";
                 // If the count down is finished, write some text
                 if (distance < 0) {
                     clearInterval(x);
-                    // document.getElementById("demo").innerHTML = "EXPIRED";
+                    document.getElementById(elementID).innerHTML = "EXPIRED";
                 }
             }, 1000);
         }
-        //console.log(times);
     </script>
 
 </body>
