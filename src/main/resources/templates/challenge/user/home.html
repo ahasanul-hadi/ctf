@@ -52,56 +52,7 @@
                             <p class="card-text" th:id="'timeString-'+ ${challenge.id}" th:text="${challenge.deadline}" hidden></p>
                             <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
                             <button class="btn btn-primary" data-bs-toggle="modal"
-                                th:attr="data-bs-target='#'+${challenge.id }">See Details</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <h3 class="categoryContainer">Linux Category</h3>
-            <hr />
-            <div class="row">
-                <div class="col-sm-3" th:each="challenge,iterator: ${challenges}"
-                    th:if="${challenge.category == 'Linux'}">
-                    <div class="card text-white bg-secondary">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${challenge.title}">Special title treatment</h5>
-                            <p class="card-text" th:id="'timeString-'+ ${challenge.id}" th:text="${challenge.deadline}" hidden></p>
-                            <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
-                            <a href="#" class="btn btn-primary" data-bs-toggle="modal"
-                                th:attr="data-bs-target='#'+${challenge.id }">See Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <h3 class="categoryContainer">Network Category</h3>
-            <hr />
-            <div class="row">
-                <div class="col-sm-3" th:each="challenge,iterator: ${challenges}"
-                    th:if="${challenge.category == 'Network'}">
-                    <div class="card text-white bg-dark">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${challenge.title}">Special title treatment</h5>
-                            <p class="card-text" th:id="'timeString-'+ ${challenge.id}" th:text="${challenge.deadline}" hidden></p>
-                            <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
-                            <a href="#a" class="btn btn-primary" data-bs-toggle="modal"
-                                th:attr="data-bs-target='#'+${challenge.id }">See Details</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <h3 class="categoryContainer">Miscellaneous Category</h3>
-            <hr />
-            <div class="row">
-                <div class="col-sm-3" th:each="challenge,iterator: ${challenges}"
-                    th:if="${challenge.category == 'Miscellaneous'}">
-                    <div class="card text-white bg-primary">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${challenge.title}">Special title treatment</h5>
-                            <p class="card-text" th:id="'timeString-'+ ${challenge.id}" th:text="${challenge.deadline}" hidden></p>
-                            <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
-                            <a href="#" class="btn btn-primary" data-bs-toggle="modal"
-                                th:attr="data-bs-target='#'+${challenge.id }">See Details</a>
+                                th:attr="data-bs-target='#'+${challenge.id }">Submit Solution</button>
                         </div>
                     </div>
                 </div>
@@ -168,7 +119,8 @@
     <!-- Template Main JS File -->
     <script th:src="@{/assets/js/main.js}"></script>
     <script type="text/javascript">
-
+        var cs = "[[${challenges[0].title}]]";
+        console.log(cs);
         function showTimer(timeString) {
             var countDownDate = new Date(timeString).getTime();
 
@@ -198,7 +150,7 @@
                 }
             }, 1000);
         }
-        console.log(times);
+        //console.log(times);
     </script>
 
 </body>
