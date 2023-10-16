@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"  lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="en">
 
 
 <head>
@@ -12,13 +11,15 @@
   <link th:href="@{/assets/img/favicon.png}" rel="icon">
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
   <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
   <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet">
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <!-- Template Main CSS File -->
   <link th:href="@{/assets/css/style.css}" rel="stylesheet">
 </head>
@@ -28,41 +29,59 @@
 
   <div th:replace="~{fragments/header :: header}"> </div>
 
-    <!-- MAIN CONTENT -->
-    <main class="container payload">
+  <!-- MAIN CONTENT -->
+  <main class="container payload">
 
-      <div class="mb-3" th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
-
-      <img th:src="@{assets/img/others/dashboard-banner.jpeg}" width="100%"/>
-      <div class="my-3 p-3 bg-body rounded shadow-sm">
-        <h6 class="border-bottom pb-2 mb-0">Important Links</h6>
-        <div class="d-flex text-body-secondary pt-3">
-          <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="24" height="24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#000000"/><text x="50%" y="50%" fill="#ffffff" dy=".3em">1</text></svg>
-          <p class="pb-3 mb-0 small lh-sm border-bottom">
-            <a th:href="@{/rules}"><strong class="d-block text-gray-dark">Rules of Engagement</strong></a>
-            Rules for the participating teams or individual members to follow throughout the drill. Breaking any rules may cause penalty.
-          </p>
-        </div>
-        <div class="d-flex text-body-secondary pt-3">
-          <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="24" height="24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#000000"/><text x="50%" y="50%" fill="#ffffff" dy=".3em">2</text></svg>
-          <p class="pb-3 mb-0 small lh-sm border-bottom">
-            <a th:href="@{assets/pdf/Reg-Guide.pdf}"><strong class="d-block text-gray-dark">Registration Guideline</strong></a>
-            Guidelines of registration for the teams and individual members.
-          </p>
-        </div>
-        <div class="d-flex text-body-secondary pt-3">
-          <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
-          <p class="pb-3 mb-0 small lh-sm border-bottom">
-            <strong class="d-block text-gray-dark">@username</strong>
-            This user also gets some representative placeholder content. Maybe they did something interesting, and you really want to highlight this in the recent updates.
-          </p>
-        </div>
-        <small class="d-block text-end mt-3">
-          <a href="#">All updates</a>
-        </small>
+    <div class="mb-3" th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
+    <h2 align="middle" id="homepageTimer" th:text="${settings.startTime}"></h2>
+    <img th:src="@{assets/img/others/dashboard-banner.jpeg}" width="100%" />
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
+      <h6 class="border-bottom pb-2 mb-0">Important Links</h6>
+      <div class="d-flex text-body-secondary pt-3">
+        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="24" height="24"
+          xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+          preserveAspectRatio="xMidYMid slice" focusable="false">
+          <title>Placeholder</title>
+          <rect width="100%" height="100%" fill="#000000" /><text x="50%" y="50%" fill="#ffffff" dy=".3em">1</text>
+        </svg>
+        <p class="pb-3 mb-0 small lh-sm border-bottom">
+          <a th:href="@{/rules}"><strong class="d-block text-gray-dark">Rules of Engagement</strong></a>
+          Rules for the participating teams or individual members to follow throughout the drill. Breaking any rules may
+          cause penalty.
+        </p>
       </div>
-    </main>
-    <!-- END MAIN CONTENT -->
+      <div class="d-flex text-body-secondary pt-3">
+        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="24" height="24"
+          xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+          preserveAspectRatio="xMidYMid slice" focusable="false">
+          <title>Placeholder</title>
+          <rect width="100%" height="100%" fill="#000000" /><text x="50%" y="50%" fill="#ffffff" dy=".3em">2</text>
+        </svg>
+        <p class="pb-3 mb-0 small lh-sm border-bottom">
+          <a th:href="@{assets/pdf/Reg-Guide.pdf}"><strong class="d-block text-gray-dark">Registration
+              Guideline</strong></a>
+          Guidelines of registration for the teams and individual members.
+        </p>
+      </div>
+      <div class="d-flex text-body-secondary pt-3">
+        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32"
+          xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+          preserveAspectRatio="xMidYMid slice" focusable="false">
+          <title>Placeholder</title>
+          <rect width="100%" height="100%" fill="#6f42c1" /><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text>
+        </svg>
+        <p class="pb-3 mb-0 small lh-sm border-bottom">
+          <strong class="d-block text-gray-dark">@username</strong>
+          This user also gets some representative placeholder content. Maybe they did something interesting, and you
+          really want to highlight this in the recent updates.
+        </p>
+      </div>
+      <small class="d-block text-end mt-3">
+        <a href="#">All updates</a>
+      </small>
+    </div>
+  </main>
+  <!-- END MAIN CONTENT -->
 
 
   <!-- BEGIN FOOTER -->
@@ -71,12 +90,43 @@
 
 
 
-<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
-<!-- Template Main JS File -->
-<script th:src="@{/assets/js/main.js}"></script>
-<script type="text/javascript">
-</script>
+  <script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
+  <!-- Template Main JS File -->
+  <script th:src="@{/assets/js/main.js}"></script>
+  <script type="text/javascript">
+    var timeStr = $("#homepageTimer").text();
+    console.log(timeStr);
+    showTimer(timeStr, "homepageTimer");
+    function showTimer(timeString, elementID) {
+      var countDownDate = new Date(timeString).getTime();
+
+      // Update the count down every 1 second
+      var x = setInterval(function () {
+
+        // Get today's date and time
+        var now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        var distance = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById(elementID).innerHTML = days+ "d " + hours + "h "
+          + minutes + "m " + seconds + "s ";
+        // If the count down is finished, write some text
+        if (distance < 0) {
+          clearInterval(x);
+          document.getElementById(elementID).innerHTML = "Event Running";
+        }
+      }, 1000);
+    }
+  </script>
 
 </body>
+
 </html>

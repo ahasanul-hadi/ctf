@@ -33,15 +33,15 @@
     <!-- MAIN CONTENT -->
     <main class="container payload">
         <div class="mt-6 text-center">
-            <h1> Challenges </h1>
+            <h1> Incident Handling Challenges </h1>
         </div>
         <hr />
         <div id="demo"></div>
         <div class="row">
 
             <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
-            <h3 class="categoryContainer">Incident Handling Challenges</h3>
-            <hr />
+            <!-- <h3 class="categoryContainer">Incident Handling Challenges</h3>
+            <hr /> -->
 
             <div class="row">
                 <div class="col-sm-3" th:each="challenge,iterator: ${challenges}"
@@ -119,8 +119,6 @@
     <!-- Template Main JS File -->
     <script th:src="@{/assets/js/main.js}"></script>
     <script type="text/javascript">
-        var cs = "[[${challenges[0].title}]]";
-        console.log(cs);
         var l = $(".timeString").each( function (index, element) {
             var ID = $(element).attr("id");
             var timeString = $(element).text();
