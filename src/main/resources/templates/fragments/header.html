@@ -23,20 +23,8 @@
 					</li>
 
 					<li class="nav-item">
-						<a class="nav-link" th:href="@{/teams/registration}">Registration</a>
+						<a class="nav-link" th:href="@{/challenges}">Challenges</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{/users}">Users</a>
-					</li>
-
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{/teams}">Teams</a>
-					</li>
-
-					<li sec:authorize="hasAnyAuthority('TEAM_LEAD', 'MEMBER')" class="nav-item">
-						<a class="nav-link" th:href="@{/teams/my-team}">My Team</a>
-					</li>
-
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{/submissions}">Submissions</a>
 					</li>
@@ -44,11 +32,20 @@
 					<li class="nav-item">
 						<a class="nav-link" th:href="@{/scoreboard}">Scoreboard</a>
 					</li>
-
-
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{/challenges}">Challenges</a>
+					<li sec:authorize="hasAnyAuthority('TEAM_LEAD', 'MEMBER')" class="nav-item">
+						<a class="nav-link" th:href="@{/teams/my-team}">My Team</a>
 					</li>
+					<li hidden class="nav-item">
+						<a class="nav-link" th:href="@{/teams/registration}">Registration</a>
+					</li>
+					<li sec:authorize="hasAnyAuthority('ADMIN')" class="nav-item">
+						<a class="nav-link" th:href="@{/users}">Users</a>
+					</li>
+
+					<li sec:authorize="hasAnyAuthority('ADMIN')" class="nav-item">
+						<a class="nav-link" th:href="@{/teams}">Teams</a>
+					</li>
+					
 
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
