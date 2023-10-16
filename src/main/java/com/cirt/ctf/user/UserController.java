@@ -36,11 +36,6 @@ public class UserController {
     public String getUsers(Model model, Principal principal){
         List<User> users= userService.findAll();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.isAuthenticated()){
-            // is normal user
-            //users= users.stream().filter(user->user.getRole()!= Role.ADMIN).toList();
-        }
-
         List<UserDTO> dtos= users.stream().map(user -> modelMapper.map(user,UserDTO.class)).toList();
         model.addAttribute("users",dtos);
 

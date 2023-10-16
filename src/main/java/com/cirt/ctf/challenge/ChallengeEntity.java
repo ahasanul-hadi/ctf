@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.cirt.ctf.submission.SubmissionEntity;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,15 +13,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.cirt.ctf.team.TeamEntity;
 import com.cirt.ctf.user.User;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
@@ -49,6 +42,12 @@ public class ChallengeEntity {
     @ManyToOne
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     private User user;
+
+    @OneToMany(mappedBy = "challenge", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<SubmissionEntity> submissions;
+
+    @Column(name = "is_scoreboard_published")
+    private Boolean isScoreboardPublished;
 
     @Column(name="deadline", nullable = false)
     private LocalDateTime deadline;

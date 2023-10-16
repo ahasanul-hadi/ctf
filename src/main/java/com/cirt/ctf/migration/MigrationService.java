@@ -10,6 +10,7 @@ import com.cirt.ctf.util.Utils;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 
 @Service
 @RequiredArgsConstructor
 public class MigrationService {
+
+    @Value("${document.upload.directory:/upload}")
+    private String UPLOAD_DIR;
 
     private final ResourceLoader resourceLoader;
     private final TeamService teamService;
@@ -31,13 +37,32 @@ public class MigrationService {
     private static final String FILE_NAME = "team-info.xlsx";
 
     public int loadUser() {
+        String absPath=null;
+        try{
+            Path root = Paths.get(UPLOAD_DIR);
+            absPath= root.resolve(FILE_NAME).toAbsolutePath().toString();
+        }catch(Exception e){}
 
         int count=0;
 
         try {
 
-            Resource resource = resourceLoader.getResource("classpath:team-info.xlsx");
-            File file = resource.getFile();
+
+            File file=null;
+
+            try{
+                file= new File(absPath);
+            }catch (Exception e){}
+
+            try{
+                if(!file.exists()){
+                    Resource resource = resourceLoader.getResource("classpath:team-info.xlsx");
+                    file = resource.getFile();
+                }
+
+            }catch (Exception e){}
+
+
 
            // File file = resource.getFile();
 

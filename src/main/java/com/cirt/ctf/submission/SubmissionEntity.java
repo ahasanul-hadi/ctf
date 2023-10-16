@@ -20,7 +20,6 @@ public class SubmissionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @CreationTimestamp
     @Column(name="submission_time", nullable = false)
     private LocalDateTime submissionTime;
 

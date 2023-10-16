@@ -58,10 +58,10 @@ public class TeamDTO {
 
     public List<IncrementalScore> getIncrementalScore(){
         List<IncrementalScore> list= new ArrayList<>();
-        List<SubmissionEntity> orderSubmissions= new ArrayList<>(submissions).stream().filter(sub->sub.getResult()!=null && sub.getResult().getScore()>0).sorted(Comparator.comparing(SubmissionEntity::getSubmissionTime)).toList();
+        List<SubmissionEntity> orderSubmissions= new ArrayList<>(submissions).stream().filter(sub->sub.isVerified() && sub.getResult().getScore()>0).sorted(Comparator.comparing(SubmissionEntity::getSubmissionTime)).toList();
         int gradualScore=0;
         for(SubmissionEntity e: orderSubmissions){
-            if(e.getResult()!=null){
+            if(e.isVerified()){
                 gradualScore+=e.getResult().getScore();
                 IncrementalScore ic= IncrementalScore.builder()
                         .score(gradualScore)

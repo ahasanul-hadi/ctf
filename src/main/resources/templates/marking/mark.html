@@ -47,29 +47,35 @@
                 <input type="hidden" name="submissionID" th:value="${submission.id}">
 
                 <div class="row mb-3">
-                    <label  class="col-md-3 col-form-label">Team <span class="text-danger required">*</span> </label>
+                    <label  class="col-md-3 col-form-label">Team </label>
                     <div class="col-md-6">
                         <span th:text="${submission.team?.teamName}"></span>
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <label  class="col-md-3 col-form-label">Answer Submitter <span class="text-danger required">*</span> </label>
+                    <label  class="col-md-3 col-form-label">Answer Submitter</label>
                     <div class="col-md-6">
                         <span th:text="${submission.solver?.name}"></span>
                     </div>
                 </div>
 
                 <div class="row mb-3">
-                    <label  class="col-md-3 col-form-label">Challenge <span class="text-danger required">*</span> </label>
+                    <label  class="col-md-3 col-form-label">Challenge</label>
                     <div class="col-md-6">
                         <span><a target="_blank" th:href="@{'/challenges/'+${submission.challenge?.id}}" th:text="${submission.challenge?.title}"></a></span>
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label  class="col-md-3 col-form-label">Challenge Category<span class="text-danger required">*</span> </label>
+                    <label  class="col-md-3 col-form-label">Challenge Category</label>
                     <div class="col-md-6">
                         <span th:text="${submission.challenge?.category}"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label  class="col-md-3 col-form-label">Challenge Score</label>
+                    <div class="col-md-6">
+                        <span th:text="${submission.challenge?.totalMark}"></span>
                     </div>
                 </div>
 
@@ -83,7 +89,7 @@
                 <div class="row mb-3">
                     <label  class="col-md-3 col-form-label">Upload Score<span class="text-danger required">*</span></label>
                     <div class="col-md-6">
-                        <input type="text" class="form-control" placeholder="" th:field="*{score}">
+                        <input type="number" min="0" th:max="${submission.challenge?.totalMark}" class="form-control" placeholder="" th:field="*{score}">
                     </div>
                 </div>
 

@@ -85,7 +85,7 @@
                 <td th:text="${submission?.challenge?.category}" />
                 <td th:text="${submission?.solver?.name}" />
                 <!--<td th:text="${submission.file_path}" />-->
-                <td th:text="${submission?.submissionTime}" />
+                <td th:text="${#temporals.format(submission?.submissionTime, 'dd-MM-yyyy HH:mm:ss')}" />
                 <td th:text="${submission?.result?.score}" />
             </tr>
             </tbody>

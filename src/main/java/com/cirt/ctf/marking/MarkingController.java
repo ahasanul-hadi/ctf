@@ -1,5 +1,7 @@
 package com.cirt.ctf.marking;
 
+import com.cirt.ctf.submission.SubmissionDTO;
+import com.cirt.ctf.submission.SubmissionEntity;
 import com.cirt.ctf.submission.SubmissionService;
 import com.cirt.ctf.user.User;
 import com.cirt.ctf.user.UserService;
@@ -25,6 +27,13 @@ public class MarkingController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public String mark(@Valid ResultDTO resultDTO, Principal principal, final RedirectAttributes redirectAttributes){
+
+        SubmissionDTO submissionDTO= submissionService.findById(resultDTO.getSubmissionID());
+        if(submissionDTO.isVerified()){
+            redirectAttributes.addFlashAttribute("type", "error");
+            redirectAttributes.addFlashAttribute("message", "This submission is already assessed by <b>"+submissionDTO.getResult().getExaminer().getName()+"</b>");
+            return "redirect:/submissions";
+        }
 
         User admin= userService.findUserByEmail(principal.getName()).orElseThrow();
         resultDTO.setExaminer(admin);
