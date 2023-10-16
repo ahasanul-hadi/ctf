@@ -2,7 +2,9 @@ package com.cirt.ctf.challenge;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
+import com.cirt.ctf.submission.SubmissionEntity;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -51,6 +53,9 @@ public class ChallengeDTO {
 
     @NotEmpty(message = "Visibility cannot be empty")
     private String visibility;
+
+    private List<SubmissionEntity> submissions;
+    private Boolean isScoreboardPublished;
 
     
 }

@@ -43,7 +43,9 @@ public class SubmissionService {
                 .submission(submissionEntity).build();
 
         submissionEntity.setResult(resultEntity);
-        submissionEntity.setVerified(true);
+
+        //only verified when score is published
+        //submissionEntity.setVerified(true);
 
         submissionEntity= submissionRepository.save(submissionEntity);
 
