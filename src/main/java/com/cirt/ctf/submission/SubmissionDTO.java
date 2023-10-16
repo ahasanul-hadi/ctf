@@ -27,14 +27,9 @@ public class SubmissionDTO {
     private ChallengeEntity challenge;
     private User solver;
     private TeamEntity team;
-    private boolean isVerified;
+    private boolean isPublished=false;
     private ResultEntity result;
     private MultipartFile file;
     private long challengeID;
-
-    public String getVerifiedString(){
-        return isVerified?"Yes":"No";
-    }
-
 
 }

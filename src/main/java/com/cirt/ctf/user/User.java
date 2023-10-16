@@ -113,7 +113,7 @@ public class User implements UserDetails, CredentialsContainer {
     public int getScore(){
 
         return submissions.stream().mapToInt(sub->{
-                if(!sub.isVerified())
+                if(!sub.isPublished())
                     return 0;
                 else
                     return sub.getResult().getScore();

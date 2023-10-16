@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -89,6 +90,10 @@ public class ChallengeService {
         return challengeEntity;
     }
 
+    public ChallengeEntity findByID(Long id){
+        return challengeRepository.findById(id).orElse(null);
+    }
+
     public List<ChallengeDTO> findAll(){
         return challengeRepository.findAll().stream().map(entity->modelMapper.map(entity,ChallengeDTO.class)).toList();
     }
@@ -110,5 +115,9 @@ public class ChallengeService {
         challengeEntity.setMarkingType(challengeDTO.getMarkingType());
         challengeRepository.save(challengeEntity);
         return challengeEntity;
+    }
+
+    public ChallengeEntity save(ChallengeEntity entity){
+        return challengeRepository.save(entity);
     }
 }

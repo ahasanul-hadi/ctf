@@ -1,10 +1,14 @@
 package com.cirt.ctf.scoreboard;
 
+import com.cirt.ctf.challenge.ChallengeDTO;
+import com.cirt.ctf.challenge.ChallengeEntity;
+import com.cirt.ctf.challenge.ChallengeService;
 import com.cirt.ctf.payload.CategoryBreakdown;
 import com.cirt.ctf.payload.Top10Graph;
 import com.cirt.ctf.submission.SubmissionRepository;
 import com.cirt.ctf.team.TeamDTO;
 import com.cirt.ctf.team.TeamService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +20,7 @@ import java.util.*;
 public class ScoreBoardService {
     private final SubmissionRepository submissionRepository;
     private final TeamService teamService;
+    private final ChallengeService challengeService;
 
     public List<TeamDTO> getScoreboard(){
 
@@ -72,7 +77,7 @@ public class ScoreBoardService {
     public List<CategoryBreakdown> getCategoryWiseSolved(TeamDTO teamDTO){
         Map<String,CategoryBreakdown> map= new HashMap<>();
         submissionRepository.findByTeam(teamDTO.getId()).forEach(sub->{
-            if(sub.isVerified() && sub.getResult().getScore()>0){
+            if(sub.isPublished() && sub.getResult().getScore()>0){
                 String category= sub.getChallenge().getCategory();
                 CategoryBreakdown breakdown= map.getOrDefault(category, new CategoryBreakdown(category,0));
                 breakdown.solved++;
@@ -82,4 +87,19 @@ public class ScoreBoardService {
         return map.values().stream().toList();
     }
 
+    @Transactional
+    public void publish(ChallengeEntity challengeEntity) {
+        challengeEntity.setIsScoreboardPublished(true);
+
+        challengeEntity=challengeService.save(challengeEntity);
+
+        challengeEntity.getSubmissions().forEach(submissionEntity -> {
+            if(submissionEntity.getResult()!=null){
+                submissionEntity.setPublished(true);
+                submissionRepository.save(submissionEntity);
+            }
+
+        });
+
+    }
 }
