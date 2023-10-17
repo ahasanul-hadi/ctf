@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.cirt.ctf.enums.Category;
 import com.cirt.ctf.enums.Role;
 import com.cirt.ctf.submission.SubmissionDTO;
+import com.cirt.ctf.submission.SubmissionService;
 import com.cirt.ctf.team.TeamEntity;
 import com.cirt.ctf.user.UserDTO;
 
@@ -34,18 +35,26 @@ public class ChallengeController{
     private final ChallengeService challengeService;
     private final ModelMapper modelMapper;
     private final UserService userService;
+    private final SubmissionService submissionService;
 
     @GetMapping
     public String getChallengesPage(Model model, Principal principal) {
         User user= userService.findUserByEmail(principal.getName()).orElseThrow();
 
         String role = user.getRole().toString();
-        // List<ChallengeDTO> dtos= this.challengeService.getChallengesForAdmin().stream()
-        //                             .map(challenge -> modelMapper.map(challenge,ChallengeDTO.class)).toList();
+        
+
         if(role == "ADMIN")
             model.addAttribute("challenges", challengeService.getChallengesForAdmin());
         else {
-            model.addAttribute("challenges", challengeService.getChallengesForUser());
+            long tId = user.getTeam().getId();
+            List<ChallengeDTO> challengeDTOs = challengeService.getChallengesForUser();
+            for(ChallengeDTO challengeDTO: challengeDTOs) {
+                int attemptsDone = submissionService.getSubmissionCount(tId, challengeDTO.getId());
+                challengeDTO.setAttemptsDone(attemptsDone);
+                System.out.println(attemptsDone);
+            }
+            model.addAttribute("challenges", challengeDTOs);
             model.addAttribute("submission", new SubmissionDTO());
         }
             

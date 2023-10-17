@@ -12,6 +12,7 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -45,7 +46,6 @@ public class ChallengeService {
     public List<ChallengeDTO> getChallengesForUser() {
         List<ChallengeEntity> challengeEntities = challengeRepository.findByVisibility("public");
         List<ChallengeDTO> challengeDTOs = new ArrayList<>();
-        System.out.println(challengeEntities.size());
         for(ChallengeEntity challengeEntity: challengeEntities) {
             ChallengeDTO dto = new ChallengeDTO();
             dto.setId(challengeEntity.getId());
@@ -59,7 +59,6 @@ public class ChallengeService {
             dto.setMarkingType(challengeEntity.getMarkingType());
             challengeDTOs.add(dto);
         }
-        System.out.println(challengeDTOs.size());
         return challengeDTOs;
     }
 

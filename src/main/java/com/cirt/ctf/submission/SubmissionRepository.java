@@ -12,5 +12,5 @@ public interface SubmissionRepository extends JpaRepository<SubmissionEntity,Lon
     List<SubmissionEntity> findByTeam(Long teamID);
 
     @Query("SELECT s FROM SubmissionEntity s WHERE s.team.id=?1 and s.challenge.id=?2" )
-    List<SubmissionEntity> getSubmissionCount(Long teamID, Long challengeID);
+    List<SubmissionEntity> getSubmissionListByChallengeAndTeam(Long teamID, Long challengeID);
 }

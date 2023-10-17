@@ -44,15 +44,14 @@
             <hr /> -->
 
             <div class="row">
-                <div class="col-sm-3" th:each="challenge,iterator: ${challenges}"
-                    th:if="${challenge.category == 'Windows'}">
-                    <div class="card text-white bg-secondary">
+                <div class="col-sm-4" th:each="challenge,iterator: ${challenges}" style="margin-top: 20px;">
+                    <div class="card text-white bg-dark" >
                         <div class="card-body">
                             <h5 class="card-title" th:text="${challenge.title}">Special title treatment</h5>
                             <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
                             <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
                             <button class="btn btn-primary" data-bs-toggle="modal"
-                                th:attr="data-bs-target='#modal-'+${challenge.id }">Submit</button>
+                                th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
                         </div>
                     </div>
                 </div>
@@ -78,23 +77,24 @@
                                     class="form-inline" th:object="${submission}">
                                     <div class="row">
                                         <input hidden type="number" name="challengeID" th:value="${challenge.id}" ></input>
-                                        <span style="color: red;"> * Submit only valid PDF files </span>
+                                        
+                                        <span style="color: red;" th:if="${challenge.markingType == 'manual'}"> * Submit only valid PDF files </span>
                                         <input type="file" th:if="${challenge.markingType == 'manual'}"
                                             class="col-sm-6 form-control" th:field="*{file}"
-                                            style="margin: 10px; width:-webkit-fill-available;" required></input>
+                                            style="margin: 10px; width:-webkit-fill-available;"></input>
                                         <input type="text" th:if="${challenge.markingType == 'auto'}"
                                             class="col-sm-6 form-control" required
                                             style="margin: 10px;width:-webkit-fill-available;"
                                             placeholder="Paste your solution text here"></input>
+                                        <strong class="text-center"><i style="color: red;" th:text="${challenge.attemptsDone}+'/'+${challenge.attempts}+ ' Attempts Done'"></i></strong>
                                         <div class="text-center"><button type="submit"
-                                                class="btn btn-success col-sm-3">Submit</button></div>
+                                                class="btn btn-success col-sm-4">Submit Solution</button></div>
                                     </div>
 
                                 </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Understood</button>
                             </div>
                         </div>
                     </div>
