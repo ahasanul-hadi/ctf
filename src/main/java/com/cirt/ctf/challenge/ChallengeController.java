@@ -51,7 +51,7 @@ public class ChallengeController{
             List<ChallengeDTO> challengeDTOs = challengeService.getChallengesForUser();
             for(ChallengeDTO challengeDTO: challengeDTOs) {
                 int attemptsDone = submissionService.getSubmissionCount(tId, challengeDTO.getId());
-                String attemptStatus = challengeDTO.getAttemptsDone() == challengeDTO.getAttempts() ? "over" : "remains";
+                String attemptStatus = challengeDTO.getAttemptsDone() >= challengeDTO.getAttempts() ? "over" : "remains";
                 challengeDTO.setAttemptsDone(attemptsDone);
                 challengeDTO.setAttemptStatus(attemptStatus);
             }
