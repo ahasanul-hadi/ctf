@@ -147,7 +147,7 @@ public class TeamService {
     }
 
     public long getSolvedCount(TeamDTO dto){
-        return dto.getSubmissions().stream().filter(sub->sub.isVerified() && sub.getResult().getScore()>0).count();
+        return dto.getSubmissions().stream().filter(sub->sub.isPublished() && sub.getResult().getScore()>0).count();
     }
 
     public long getFailedCount(TeamDTO dto){

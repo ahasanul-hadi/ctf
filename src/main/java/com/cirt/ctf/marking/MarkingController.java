@@ -29,7 +29,7 @@ public class MarkingController {
     public String mark(@Valid ResultDTO resultDTO, Principal principal, final RedirectAttributes redirectAttributes){
 
         SubmissionDTO submissionDTO= submissionService.findById(resultDTO.getSubmissionID());
-        if(submissionDTO.isVerified()){
+        if(submissionDTO.getResult()!=null){
             redirectAttributes.addFlashAttribute("type", "error");
             redirectAttributes.addFlashAttribute("message", "This submission is already assessed by <b>"+submissionDTO.getResult().getExaminer().getName()+"</b>");
             return "redirect:/submissions";

@@ -4,15 +4,12 @@ import com.cirt.ctf.document.DocumentEntity;
 import com.cirt.ctf.document.DocumentService;
 import com.cirt.ctf.marking.ResultDTO;
 import com.cirt.ctf.marking.ResultEntity;
-import com.cirt.ctf.payload.CategoryBreakdown;
 import com.cirt.ctf.team.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +30,7 @@ public class SubmissionService {
     public List<SubmissionDTO> findByTeam(Long teamID){
         return submissionRepository.findByTeam(teamID).stream().map(e->modelMapper.map(e,SubmissionDTO.class)).toList();
     }
-    public SubmissionDTO giveMark(ResultDTO resultDTO){
+    public void giveMark(ResultDTO resultDTO){
         SubmissionEntity submissionEntity= submissionRepository.findById(resultDTO.getSubmissionID()).orElseThrow();
         ResultEntity resultEntity= ResultEntity.builder()
                 .score(resultDTO.getScore())
@@ -44,12 +41,14 @@ public class SubmissionService {
 
         submissionEntity.setResult(resultEntity);
 
+
         //only verified when score is published
-        //submissionEntity.setVerified(true);
+        //submissionEntity.setPublished(true);
+        if(submissionEntity.getChallenge().getIsScoreboardPublished()){
+            submissionEntity.setPublished(true);
+        }
+        submissionRepository.save(submissionEntity);
 
-        submissionEntity= submissionRepository.save(submissionEntity);
-
-        return modelMapper.map(submissionEntity, SubmissionDTO.class);
     }
 
     public SubmissionEntity createSubmission(SubmissionDTO submissionDTO){

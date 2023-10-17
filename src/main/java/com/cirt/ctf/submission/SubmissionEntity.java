@@ -39,8 +39,8 @@ public class SubmissionEntity {
     private TeamEntity team;
 
 
-    @Column(name = "is_verified")
-    private boolean isVerified=false;
+    @Column(name = "is_published")
+    private boolean isPublished=false;
 
     @OneToOne(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
     private ResultEntity result;

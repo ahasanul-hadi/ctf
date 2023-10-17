@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <link rel="shortcut icon" type="image/x-icon" th:href="@{/static/favicon.ico}" />
-    <title>Submissions </title>
+    <title>Publish Scoreboard </title>
     <link th:href="@{/assets/img/favicon.png}" rel="icon">
 
     <!-- Google Fonts -->
@@ -19,9 +19,7 @@
 
     <link th:href="@{/assets/vendor/datatable/css/twitter.bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/assets/vendor/datatable/css/dataTables.bootstrap5.min.css}" rel="stylesheet">
-    <!--<link th:href="@{/assets/vendor/datatable/css/bootstrap-icons.css}" rel="stylesheet">-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
 </head>
 
 <body class="bg-body-tertiary">
@@ -32,59 +30,40 @@
 <!-- MAIN CONTENT -->
 <main class="container payload">
     <div class="text-center">
-        <br/><h3>Submission</h3><br/><br/>
+        <br/><h3>Publish in Scoreboard</h3><br/>
     </div>
 
     <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
 
-    <table id="example" class="table table-striped" style="width:100%">
+    <table  class="table table-striped" style="width:100%">
         <thead>
         <tr>
             <th>SL</th>
             <th>Challenge</th>
             <th>Category</th>
-            <th>Team</th>
-            <th>User</th>
-            <th>Submission Time</th>
-
-            <th>Answer</th>
-            <th sec:authorize="hasAuthority('ADMIN')">Examiner</th>
             <th>Score</th>
-
-            <th sec:authorize="hasAuthority('ADMIN')">Assessment</th>
+            <th>Submission End Time</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="sub, iterator: ${submissions}">
-            <td th:text="${iterator.index+1}" />
-            <td>
-                <a th:href="@{'/challenges/'+${sub.challenge?.id}}"><span th:text="${sub.challenge?.title}"></span></a>
-            </td>
-            <td th:text="${sub.challenge?.category}" />
+            <tr th:each="challenge, iterator: ${publishList}">
+                <td th:text="${iterator.index+1}" />
+                <td>
+                    <a th:href="@{'/challenges/'+${challenge.id}}"><span th:text="${challenge.title}"></span></a>
+                </td>
+                <td th:text="${challenge.category}" />
+                <td th:text="${challenge.totalMark}" />
+                <td th:text="${challenge.deadline}" />
 
-            <td>
-                <a th:href="@{'/teams/'+${sub.team?.id}}"><span th:text="${sub.team?.teamName}"></span></a>
-            </td>
+                <td th:if="${challenge.isScoreboardPublished}">
+                    <span id="boot-icon" class="bi bi-check" style="font-size: 1.5rem;color: rgb(0, 128, 55);"></span>
+                </td>
+                <td  th:unless="${challenge.isScoreboardPublished}">
+                    <a th:href="@{'/scoreboard/publish/challenge/'+${challenge.id}}" class="btn btn-success accept" role="button">Publish</a>
+                </td>
 
-            <td th:text="${sub.solver?.name}" />
-            <!--{#dates.format(sprint.releaseDate, 'dd-MMM-yyyy')
-            sub.submissionTime-->
-            <td th:text="${#temporals.format(sub.submissionTime, 'dd-MM-yyyy HH:mm:ss')}" />
-            <td th:if="${sub.documentID}"><span><a th:href="@{'/api/document/preview/'+${sub.documentID}}">Answer File</a></span></td>
-            <td th:unless="${sub.documentID}"><span> Text Answer Sample </span></td>
-
-            <td sec:authorize="hasAuthority('ADMIN')" th:text="${sub.result?.examiner?.name}" />
-            <td th:text="${sub.result?.score}" />
-
-
-            <td sec:authorize="hasAuthority('ADMIN')" th:if="${sub.result!=null}">
-                <span id="boot-icon" class="bi bi-check" style="font-size: 1.5rem;color: rgb(0, 128, 55);"></span>
-            </td>
-            <td sec:authorize="hasAuthority('ADMIN')" th:unless="${sub.result!=null}">
-                <a th:href="@{'/submissions/mark/'+${sub.id}}" class="btn btn-success" role="button">Assess</a>
-            </td>
-
-        </tr>
+            </tr>
         </tbody>
     </table>
 
@@ -113,6 +92,26 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#example').DataTable();
+
+        $(document).on('click', '.accept', function(e) {
+        	 e.preventDefault();
+        	 var href=$(this).attr('href');
+        	 bootbox.confirm("Are you sure?", function(result) {
+                 if (result) {
+                     window.location=href;
+                 }
+             });
+        })
+
+        $(document).on('click', '.delete', function(e) {
+        	 e.preventDefault();
+        	 var href=$(this).attr('href');
+        	 bootbox.confirm("Are you sure you want to delete?", function(result) {
+                 if (result) {
+                     window.location=href;
+                 }
+             });
+        })
 
     } );
 </script>
