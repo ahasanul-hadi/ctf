@@ -57,4 +57,5 @@ public class ChallengeDTO {
     private List<SubmissionEntity> submissions;
     private Boolean isScoreboardPublished;
     private int attemptsDone;
+    private String attemptStatus;
 }

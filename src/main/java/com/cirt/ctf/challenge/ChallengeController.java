@@ -51,9 +51,11 @@ public class ChallengeController{
             List<ChallengeDTO> challengeDTOs = challengeService.getChallengesForUser();
             for(ChallengeDTO challengeDTO: challengeDTOs) {
                 int attemptsDone = submissionService.getSubmissionCount(tId, challengeDTO.getId());
+                String attemptStatus = challengeDTO.getAttemptsDone() == challengeDTO.getAttempts() ? "over" : "remains";
                 challengeDTO.setAttemptsDone(attemptsDone);
-                System.out.println(attemptsDone);
+                challengeDTO.setAttemptStatus(attemptStatus);
             }
+            
             model.addAttribute("challenges", challengeDTOs);
             model.addAttribute("submission", new SubmissionDTO());
         }

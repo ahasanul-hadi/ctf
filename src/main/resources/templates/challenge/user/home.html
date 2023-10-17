@@ -37,7 +37,7 @@
         </div>
         <hr />
         <div id="demo"></div>
-        <div class="row">
+        <div class="row" >
 
             <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
             <!-- <h3 class="categoryContainer">Incident Handling Challenges</h3>
@@ -47,7 +47,7 @@
                 <div class="col-sm-4" th:each="challenge,iterator: ${challenges}" style="margin-top: 20px;">
                     <div class="card text-white bg-dark" >
                         <div class="card-body">
-                            <h5 class="card-title" th:text="${challenge.title}">Special title treatment</h5>
+                            <h5 class="card-title" th:text="${challenge.title} (${challenge.totalMark})">Special title treatment</h5>
                             <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
                             <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
                             <button class="btn btn-primary" data-bs-toggle="modal"
@@ -75,7 +75,10 @@
                             <div class="modal-footer" style="justify-content: center; background-color: antiquewhite;">
                                 <form th:action="@{/submissions}" method="post" enctype="multipart/form-data"
                                     class="form-inline" th:object="${submission}">
-                                    <div class="row">
+                                    
+                                    <strong class="text-center" th:if="${challenge.attemptStatus} == 'over'"><i style="color: red;" th:text="${challenge.attemptsDone}+'/'+${challenge.attempts}+ ' Attempts Done'"></i></strong>
+                                    
+                                    <div class="row" th:unless="${challenge.attemptStatus} == 'over'">
                                         <input hidden type="number" name="challengeID" th:value="${challenge.id}" ></input>
                                         
                                         <span style="color: red;" th:if="${challenge.markingType == 'manual'}"> * Submit only valid PDF files </span>
