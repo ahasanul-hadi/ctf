@@ -88,6 +88,8 @@
                     <label  class="col-md-3 col-form-label">Image</label>
                     <div class="col-md-6">
                         <input class="form-control" type="file" th:field="*{file}" accept="image/*">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('file')}" th:errors="*{file}"></div>
+
                     </div>
                 </div>
 

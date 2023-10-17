@@ -50,7 +50,7 @@ public class UserService implements UserDetailsService {
 
         User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getMobile(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getRole());
 
-        if(userDTO.getId()>0)
+        if(userDTO.getId()!=null && userDTO.getId()>0)
             user.setId(userDTO.getId());
 
         user.setTeam(userDTO.getTeam());

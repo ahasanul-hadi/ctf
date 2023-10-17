@@ -47,6 +47,18 @@ public class Utils {
             return "Image size is greater than 1 MB";
         }
 
+        String type=file.getContentType();
+        System.out.println("file type:"+type);
+
+        return null;
+    }
+
+    public static String validatePDFFile(MultipartFile file){
+        if(file==null || file.getSize()==0)
+            return null;
+        String type=file.getContentType();
+        System.out.println(type);
+
         return null;
     }
 

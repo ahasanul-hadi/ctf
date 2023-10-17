@@ -87,7 +87,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>ctf</finalName>
+		<finalName>ROOT</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

@@ -2,6 +2,7 @@ package com.cirt.ctf.user;
 
 import com.cirt.ctf.enums.Role;
 import com.cirt.ctf.exception.ApplicationException;
+import com.cirt.ctf.util.Utils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -151,7 +152,11 @@ public class UserController {
                 result.addError(fe);
             }
         }
-
+        String reason=Utils.validateImageFile(userDTO.getFile());
+        if(reason!=null){
+            FieldError fe = new FieldError("userDTO", "file", reason);
+            result.addError(fe);
+        }
         if(result.hasErrors()){
             System.out.println("has error.."+result.getAllErrors().toString());
             model.addAttribute("userDTO", userDTO);

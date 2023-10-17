@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Objects;
 
 import com.cirt.ctf.user.User;
 import com.cirt.ctf.user.UserService;
@@ -44,15 +45,15 @@ public class ChallengeController{
         String role = user.getRole().toString();
         
 
-        if(role == "ADMIN")
+        if(role.equals(Role.ADMIN.toString()))
             model.addAttribute("challenges", challengeService.getChallengesForAdmin());
         else {
             long tId = user.getTeam().getId();
             List<ChallengeDTO> challengeDTOs = challengeService.getChallengesForUser();
             for(ChallengeDTO challengeDTO: challengeDTOs) {
                 int attemptsDone = submissionService.getSubmissionCount(tId, challengeDTO.getId());
-                String attemptStatus = challengeDTO.getAttemptsDone() >= challengeDTO.getAttempts() ? "over" : "remains";
                 challengeDTO.setAttemptsDone(attemptsDone);
+                String attemptStatus = challengeDTO.getAttemptsDone() >= challengeDTO.getAttempts() ? "over" : "remains";
                 challengeDTO.setAttemptStatus(attemptStatus);
             }
             
