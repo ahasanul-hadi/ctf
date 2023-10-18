@@ -1,5 +1,7 @@
 package com.cirt.ctf.submission;
 
+import com.cirt.ctf.challenge.ChallengeDTO;
+import com.cirt.ctf.challenge.ChallengeEntity;
 import com.cirt.ctf.challenge.ChallengeService;
 import com.cirt.ctf.document.DocumentService;
 import com.cirt.ctf.enums.Role;
@@ -12,6 +14,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -67,10 +71,25 @@ public class SubmissionController {
         SubmissionEntity returnedEntity = null;
         User user= userService.findUserByEmail(principal.getName()).orElseThrow();
         String role = user.getRole().toString();
+        ChallengeEntity challengeEntity = challengeService.getChallengeById(submissionDTO.getChallengeID());
+        int submissionCount = submissionService.getSubmissionCount(user.getTeam().getId(), submissionDTO.getChallengeID());
+        LocalDateTime deadline = challengeEntity.getDeadline();
+
+        if(deadline.isBefore(LocalDateTime.now())) {
+            redirectAttributes.addFlashAttribute("type", "error");
+            redirectAttributes.addFlashAttribute("message", "Submission Time is over.");
+            return "redirect:/challenges";
+        }
+        if(challengeEntity.getAttempts() <= submissionCount) {
+            redirectAttributes.addFlashAttribute("type", "error");
+            redirectAttributes.addFlashAttribute("message", "Submission Attempt is over.");
+            return "redirect:/challenges";
+        }
+
         submissionDTO.setSolver(user);
         submissionDTO.setTeam(user.getTeam());
         submissionDTO.setSubmissionTime( LocalDateTime.now() );
-        submissionDTO.setChallenge(challengeService.getChallengeById(submissionDTO.getChallengeID()));
+        submissionDTO.setChallenge(challengeEntity);
         returnedEntity = submissionService.createSubmission(submissionDTO);
         redirectAttributes.addFlashAttribute("type", "success");
         redirectAttributes.addFlashAttribute("message", "Submission is Recorded.");

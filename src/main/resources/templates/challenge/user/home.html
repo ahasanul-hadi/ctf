@@ -75,18 +75,16 @@
                             <div class="modal-footer" style="justify-content: center; background-color: antiquewhite;">
                                 <form th:action="@{/submissions}" method="post" enctype="multipart/form-data"
                                     class="form-inline" th:object="${submission}">
-                                    
+                                    <strong class="text-center" th:if="${challenge.deadlineStatus} == 'over'"><i style="color: red;">"Time is over for this challenge"</i></strong>
                                     <strong class="text-center" th:if="${challenge.attemptStatus} == 'over'"><i style="color: red;" th:text="${challenge.attemptsDone}+'/'+${challenge.attempts}+ ' Attempts Done'"></i></strong>
-                                    
-                                    <div class="row" th:unless="${challenge.attemptStatus} == 'over'">
+                                    <div class="row" th:unless="${challenge.attemptStatus} == 'over' or ${challenge.deadlineStatus} == 'over'">
                                         <input hidden type="number" name="challengeID" th:value="${challenge.id}" ></input>
                                         
-                                        <span style="color: red;" th:if="${challenge.markingType == 'manual'}"> * Submit only valid PDF files </span>
+                                        <span style="color: red;" th:if="${challenge.markingType == 'manual'}"> * Submit only PDF files (Max size 10MB) </span>
                                         <input type="file" th:if="${challenge.markingType == 'manual'}"
-                                            class="col-sm-6 form-control" th:field="*{file}"
-                                            style="margin: 10px; width:-webkit-fill-available;"></input>
-                                        <input type="text" th:if="${challenge.markingType == 'auto'}"
-                                            class="col-sm-6 form-control" required
+                                            class="col-sm-6 form-control" th:field="*{file}" required
+                                               style="margin: 10px; width:-webkit-fill-available;"></input>
+                                        <input type="text" th:if="${challenge.markingType == 'auto'}" class="col-sm-6 form-control" required
                                             style="margin: 10px;width:-webkit-fill-available;"
                                             placeholder="Paste your solution text here"></input>
                                         <strong class="text-center"><i style="color: red;" th:text="${challenge.attemptsDone}+'/'+${challenge.attempts}+ ' Attempts Done'"></i></strong>

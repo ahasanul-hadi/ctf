@@ -3,6 +3,7 @@ package com.cirt.ctf.challenge;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,14 +55,23 @@ public class ChallengeController{
                 int attemptsDone = submissionService.getSubmissionCount(tId, challengeDTO.getId());
                 challengeDTO.setAttemptsDone(attemptsDone);
                 String attemptStatus = challengeDTO.getAttemptsDone() >= challengeDTO.getAttempts() ? "over" : "remains";
+                Date date = null;
+                try {
+                    date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeDTO.getDeadline());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String deadlineStatus = date.before(new Date())? "over" : "remains";
+                System.out.println(deadlineStatus);
                 challengeDTO.setAttemptStatus(attemptStatus);
+                challengeDTO.setDeadlineStatus(deadlineStatus);
             }
             
             model.addAttribute("challenges", challengeDTOs);
             model.addAttribute("submission", new SubmissionDTO());
         }
             
-        String htmlPage = role == "ADMIN"? "challenge/admin/home" : "challenge/user/home";
+        String htmlPage = role.equals(Role.ADMIN.toString()) ? "challenge/admin/home" : "challenge/user/home";
         return htmlPage;
     }
 
