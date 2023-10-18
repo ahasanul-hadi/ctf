@@ -1,7 +1,9 @@
 package com.cirt.ctf.util;
 
+import org.apache.tika.Tika;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SecureRandom;
@@ -54,12 +56,21 @@ public class Utils {
     }
 
     public static String validatePDFFile(MultipartFile file){
-        if(file==null || file.getSize()==0)
-            return null;
-        String type=file.getContentType();
-        System.out.println(type);
-
-        return null;
+        if(file==null)
+            return "Please upload a file. FIle cannot be empty";
+        else if(file.getSize() == 0)
+            return "This is a blank file. FIle cannot be blank";
+        else {
+            try {
+                if (isRealPDF(file.getBytes())) {
+                    return null;
+                } else {
+                    return "This file is not a valid pdf file. Check again";
+                }
+            } catch (IOException e) {
+                return "This file is corrupted";
+            }
+        }
     }
 
     public static Long generateRandomTeamID(int length){
@@ -68,5 +79,11 @@ public class Utils {
         for(int i=0; i < length-1; i++)
             sb.append((char)('0' + random.nextInt(10)));
         return Long.parseLong(sb.toString());
+    }
+    public static boolean isRealPDF(byte[] data) {
+        Tika tika = new Tika();
+        String mimeType = tika.detect(data);
+        //System.out.println(mimeType);
+        return mimeType.equals("application/pdf");
     }
 }

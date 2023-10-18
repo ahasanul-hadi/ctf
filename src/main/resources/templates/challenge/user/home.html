@@ -36,22 +36,31 @@
             <h1> Incident Handling Challenges </h1>
         </div>
         <hr />
-        <div id="demo"></div>
-        <div class="row" >
-
+        <h3 id="demo" th:if="${pageVisibility} == 'hidden'"><span>Cyberdrill is going to start in </span><span id="timer" th:text="${settings.startTime}"> </span> </h3>
+        <h3 th:if="${pageVisibility} == 'hidden'">Drill is not started yet. You can see challenges only when the drill is running.</h3>
+        <div class="row" th:unless="${pageVisibility} == 'hidden'">
             <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
             <!-- <h3 class="categoryContainer">Incident Handling Challenges</h3>
             <hr /> -->
 
             <div class="row">
                 <div class="col-sm-4" th:each="challenge,iterator: ${challenges}" style="margin-top: 20px;">
-                    <div class="card text-white bg-dark" >
+                    <div class="card text-white bg-dark" th:if="${challenge.attemptsDone} == 0 and ${challenge.deadlineStatus} != 'over'">
                         <div class="card-body">
                             <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
                             <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
                             <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
                             <button class="btn btn-primary" data-bs-toggle="modal"
                                 th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
+                        </div>
+                    </div>
+                    <div class="card text-white bg-secondary" th:unless="${challenge.attemptsDone} == 0 and ${challenge.deadlineStatus} != 'over'">
+                        <div class="card-body">
+                            <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
+                            <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
+                            <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
+                            <button class="btn btn-primary" data-bs-toggle="modal"
+                                    th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
                         </div>
                     </div>
                 </div>
@@ -81,7 +90,7 @@
                                         <input hidden type="number" name="challengeID" th:value="${challenge.id}" ></input>
                                         
                                         <span style="color: red;" th:if="${challenge.markingType == 'manual'}"> * Submit only PDF files (Max size 10MB) </span>
-                                        <input type="file" th:if="${challenge.markingType == 'manual'}"
+                                        <input type="file" th:if="${challenge.markingType == 'manual'}" accept="application/pdf"
                                             class="col-sm-6 form-control" th:field="*{file}" required
                                                style="margin: 10px; width:-webkit-fill-available;"></input>
                                         <input type="text" th:if="${challenge.markingType == 'auto'}" class="col-sm-6 form-control" required
@@ -120,6 +129,8 @@
     <!-- Template Main JS File -->
     <script th:src="@{/assets/js/main.js}"></script>
     <script type="text/javascript">
+        var startTimeStr = $("#timer").html();
+        showTimer(startTimeStr, "timer");
         var l = $(".timeString").each( function (index, element) {
             var ID = $(element).attr("id");
             var timeString = $(element).text();
@@ -143,13 +154,13 @@
                 var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                document.getElementById(elementID).innerHTML =  hours + "h "
-                    + minutes + "m " + seconds + "s ";
+                var fullTimeStr = days+"d "+hours + "h " + minutes + "m " + seconds + "s ";
+                if(days == 0) fullTimeStr = hours + "h " + minutes + "m " + seconds + "s ";
+                document.getElementById(elementID).innerHTML =  fullTimeStr;
                 // If the count down is finished, write some text
                 if (distance < 0) {
                     clearInterval(x);
-                    document.getElementById(elementID).innerHTML = "EXPIRED";
+                    document.getElementById(elementID).innerHTML = "Time Over!";
                 }
             }, 1000);
         }

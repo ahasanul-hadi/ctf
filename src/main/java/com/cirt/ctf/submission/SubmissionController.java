@@ -10,6 +10,7 @@ import com.cirt.ctf.payload.TeamRegistration;
 import com.cirt.ctf.user.User;
 import com.cirt.ctf.user.UserService;
 
+import com.cirt.ctf.util.Utils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -74,6 +75,7 @@ public class SubmissionController {
         ChallengeEntity challengeEntity = challengeService.getChallengeById(submissionDTO.getChallengeID());
         int submissionCount = submissionService.getSubmissionCount(user.getTeam().getId(), submissionDTO.getChallengeID());
         LocalDateTime deadline = challengeEntity.getDeadline();
+        String message = Utils.validatePDFFile(submissionDTO.getFile());
 
         if(deadline.isBefore(LocalDateTime.now())) {
             redirectAttributes.addFlashAttribute("type", "error");
@@ -83,6 +85,12 @@ public class SubmissionController {
         if(challengeEntity.getAttempts() <= submissionCount) {
             redirectAttributes.addFlashAttribute("type", "error");
             redirectAttributes.addFlashAttribute("message", "Submission Attempt is over.");
+            return "redirect:/challenges";
+        }
+        if(message != null) {
+            System.out.println(message);
+            redirectAttributes.addFlashAttribute("type", "error");
+            redirectAttributes.addFlashAttribute("message", message);
             return "redirect:/challenges";
         }
 

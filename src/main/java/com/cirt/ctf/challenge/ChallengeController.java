@@ -3,10 +3,14 @@ package com.cirt.ctf.challenge;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import com.cirt.ctf.document.DocumentService;
+import com.cirt.ctf.settings.SettingsEntity;
+import com.cirt.ctf.settings.SettingsService;
 import com.cirt.ctf.user.User;
 import com.cirt.ctf.user.UserService;
 import org.modelmapper.ModelMapper;
@@ -38,23 +42,27 @@ public class ChallengeController{
     private final ModelMapper modelMapper;
     private final UserService userService;
     private final SubmissionService submissionService;
+    private final SettingsService settingsService;
 
     @GetMapping
     public String getChallengesPage(Model model, Principal principal) {
         User user= userService.findUserByEmail(principal.getName()).orElseThrow();
 
         String role = user.getRole().toString();
-        
+        SettingsEntity settingsEntity = settingsService.findById(1L);
 
         if(role.equals(Role.ADMIN.toString()))
             model.addAttribute("challenges", challengeService.getChallengesForAdmin());
         else {
+
+            String pageVisibility = settingsEntity.getStartTime().isBefore(LocalDateTime.now()) ? "public": "hidden";
             long tId = user.getTeam().getId();
             List<ChallengeDTO> challengeDTOs = challengeService.getChallengesForUser();
             for(ChallengeDTO challengeDTO: challengeDTOs) {
                 int attemptsDone = submissionService.getSubmissionCount(tId, challengeDTO.getId());
                 challengeDTO.setAttemptsDone(attemptsDone);
                 String attemptStatus = challengeDTO.getAttemptsDone() >= challengeDTO.getAttempts() ? "over" : "remains";
+
                 Date date = null;
                 try {
                     date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeDTO.getDeadline());
@@ -62,11 +70,11 @@ public class ChallengeController{
                     e.printStackTrace();
                 }
                 String deadlineStatus = date.before(new Date())? "over" : "remains";
-                System.out.println(deadlineStatus);
                 challengeDTO.setAttemptStatus(attemptStatus);
                 challengeDTO.setDeadlineStatus(deadlineStatus);
             }
-            
+            model.addAttribute("settings", settingsEntity);
+            model.addAttribute("pageVisibility", pageVisibility);
             model.addAttribute("challenges", challengeDTOs);
             model.addAttribute("submission", new SubmissionDTO());
         }
