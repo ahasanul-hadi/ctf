@@ -17,7 +17,6 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final ModelMapper modelMapper;
     private final DocumentService documentService;
-    private final TeamRepository teamRepository;
 
     public List<SubmissionDTO> findAll(){
         return submissionRepository.findAll().stream().map(e->modelMapper.map(e,SubmissionDTO.class)).toList();

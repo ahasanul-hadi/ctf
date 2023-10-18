@@ -40,8 +40,8 @@ public class SubmissionController {
     @GetMapping
     public String getSubmissions(Model model, Principal principal){
         User user= userService.findUserByEmail(principal.getName()).orElseThrow();
-        String role = user.getRole().toString();
-        if(role == Role.ADMIN.toString())
+
+        if(user.getRole()==Role.ADMIN)
             model.addAttribute("submissions",submissionService.findAll());
         else
             model.addAttribute("submissions",submissionService.findByTeam(user.getTeam().getId()));
