@@ -89,7 +89,7 @@ public class ScoreBoardService {
 
     @Transactional
     public void publish(ChallengeEntity challengeEntity) {
-        challengeEntity.setIsScoreboardPublished(true);
+        challengeEntity.setScoreboardPublished(true);
 
         challengeEntity=challengeService.save(challengeEntity);
 

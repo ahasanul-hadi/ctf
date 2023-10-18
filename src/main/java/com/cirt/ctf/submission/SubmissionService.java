@@ -43,7 +43,7 @@ public class SubmissionService {
 
         //only verified when score is published
         //submissionEntity.setPublished(true);
-        if(submissionEntity.getChallenge().getIsScoreboardPublished()){
+        if(submissionEntity.getChallenge().isScoreboardPublished()){
             submissionEntity.setPublished(true);
         }
         submissionRepository.save(submissionEntity);

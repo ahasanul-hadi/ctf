@@ -47,7 +47,7 @@ public class ChallengeEntity {
     private List<SubmissionEntity> submissions;
 
     @Column(name = "is_scoreboard_published")
-    private Boolean isScoreboardPublished;
+    private boolean isScoreboardPublished;
 
     @Column(name="deadline", nullable = false)
     private LocalDateTime deadline;

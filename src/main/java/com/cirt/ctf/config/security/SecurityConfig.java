@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .formLogin(form->form.loginPage("/login").defaultSuccessUrl("/",true).permitAll())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests( authorize -> authorize
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/assets/**").permitAll()
                         .requestMatchers("/teams/registration").permitAll()
                         .requestMatchers("/","/index").permitAll()
