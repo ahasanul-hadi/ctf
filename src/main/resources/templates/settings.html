@@ -31,17 +31,23 @@
     <!-- MAIN CONTENT -->
     <main class="container payload">
         <h2 class="border-bottom pb-2 mb-0">Application Settings</h2>
-        <form th:action="@{/}" id="commonForm">
+        <form th:action="@{/settings}" id="commonForm" th:object="${settings}" method="post">
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label"><strong>Event Name</strong></label>
+                <div class="col-md-6">
+                    <input class="col-md-6 form-control" type="text" th:field="*{eventName}" required ></input>
+                </div>
+            </div><br/>
             <div class="form-group row">
                 <label for="startTime" class="col-md-3 col-form-label"><strong>Start Time</strong></label>
                 <div class="col-md-6">
-                    <input class="col-md-6 form-control" type="datetime-local" name="startTime" id="startTime" required ></input>
+                    <input class="col-md-6 form-control" type="datetime-local" th:field="*{startTime}" required th:value="${settings.startTime}"></input>
                 </div>
             </div><br/>
             <div class="form-group row">
                 <label for="endTime" class="col-md-3 col-form-label"><strong>End Time</strong></label>
                 <div class="col-md-6">
-                    <input class="col-md-6 form-control" type="datetime-local" name="endTime" id="endTime" required ></input>
+                    <input class="col-md-6 form-control" type="datetime-local" th:field="*{endTime}" required th:value="${settings.endTime}"></input>
                 </div>
             </div><br/>
             
