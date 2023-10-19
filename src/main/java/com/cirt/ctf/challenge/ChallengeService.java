@@ -119,4 +119,8 @@ public class ChallengeService {
     public ChallengeEntity save(ChallengeEntity entity){
         return challengeRepository.save(entity);
     }
+
+    public void delete(Long id) {
+        challengeRepository.deleteById(id);
+    }
 }

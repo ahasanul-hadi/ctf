@@ -152,10 +152,12 @@ public class UserController {
                 result.addError(fe);
             }
         }
-        String reason=Utils.validateImageFile(userDTO.getFile());
-        if(reason!=null){
-            FieldError fe = new FieldError("userDTO", "file", reason);
-            result.addError(fe);
+        if(userDTO.getFile()!=null && userDTO.getFile().getSize()>0) {
+            String reason = Utils.validateImageFile(userDTO.getFile());
+            if (reason != null) {
+                FieldError fe = new FieldError("userDTO", "file", reason);
+                result.addError(fe);
+            }
         }
         if(result.hasErrors()){
             System.out.println("has error.."+result.getAllErrors().toString());

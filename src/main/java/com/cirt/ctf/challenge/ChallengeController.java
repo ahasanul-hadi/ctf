@@ -14,6 +14,7 @@ import com.cirt.ctf.settings.SettingsService;
 import com.cirt.ctf.user.User;
 import com.cirt.ctf.user.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -147,6 +148,14 @@ public class ChallengeController{
         }
         redirectAttributes.addFlashAttribute("type", "success");
         redirectAttributes.addFlashAttribute("message", "Challenge successfully updated");
+        return "redirect:/challenges";
+    }
+
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/delete/{id}" )
+    public String deleteChallenge(@PathVariable("id") Long id,  Model model, Principal principal) {
+        challengeService.delete(id);
         return "redirect:/challenges";
     }
     

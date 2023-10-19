@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class Utils {
 
-    public static DateTimeFormatter sdf= DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a");
+    //public static DateTimeFormatter sdf= DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a");
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static SecureRandom random = new SecureRandom();
 
@@ -60,6 +60,9 @@ public class Utils {
             return "Please upload a file. FIle cannot be empty";
         else if(file.getSize() == 0)
             return "This is a blank file. FIle cannot be blank";
+        else if(file.getSize()*0.00000095367432>10){
+            return "File size exceeded 10 MB";
+        }
         else {
             try {
                 if (isRealPDF(file.getBytes())) {

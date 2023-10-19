@@ -58,14 +58,16 @@
                 <td th:text="${challenge.category}" />
                 <td th:text="${challenge.totalMark}" />
                 <td th:text="${challenge.visibility}" />
-                <td th:text="sample" />
-    
-               <!-- <td sec:authorize="hasAuthority('ADMIN')">
-                    <a th:href="@{'/users/update/'+${challenge.id}}" class="btn btn-success" role="button">Update</a>
-                </td>
-                <td sec:authorize="hasAuthority('ADMIN')">
-                    <a th:href="@{'/users/delete/'+${challenge.id}}" class="btn btn-danger delete" role="button">Delete</a>
-                </td>-->
+
+                <!--
+             <td sec:authorize="hasAuthority('ADMIN')">
+                  <a th:href="@{'/users/update/'+${challenge.id}}" class="btn btn-success" role="button">Update</a>
+              </td>
+              -->
+
+              <td sec:authorize="hasAuthority('ADMIN')">
+                  <a th:href="@{'/challenges/delete/'+${challenge.id}}" class="btn btn-danger delete" role="button">Delete</a>
+              </td>
             </tr>
             </tbody>
         </table>
@@ -80,12 +82,22 @@
 <!-- END FOOTER -->
 
 
-
+<script th:src="@{/assets/vendor/datatable/js/jquery-3.7.0.js}"></script>
 <script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
+<script th:src="@{/assets/vendor/datatable/js/bootbox.js}"></script>
 <!-- Template Main JS File -->
 <script th:src="@{/assets/js/main.js}"></script>
 <script type="text/javascript">
+    $(document).on('click', '.delete', function(e) {
+           e.preventDefault();
+           var href=$(this).attr('href');
+           bootbox.confirm("Are you sure you want to delete?", function(result) {
+               if (result) {
+                   window.location=href;
+               }
+           });
+      })
 </script>
 
 </body>
