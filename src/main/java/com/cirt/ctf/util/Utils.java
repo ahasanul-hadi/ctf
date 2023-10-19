@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class Utils {
 
-    public static SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static DateTimeFormatter sdf= DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm a");
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static SecureRandom random = new SecureRandom();
 

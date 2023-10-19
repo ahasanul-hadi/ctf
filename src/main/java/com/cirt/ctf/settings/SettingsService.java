@@ -1,9 +1,12 @@
 package com.cirt.ctf.settings;
 
+import com.cirt.ctf.util.Utils;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Service
 @Data
@@ -15,10 +18,11 @@ public class SettingsService {
         return settingsRepository.findById(id).orElseThrow();
     }
 
-    public void update(SettingsEntity settingsEntity) {
+    public void update(SettingsDTO settingsDTO) {
         SettingsEntity entity= findById(1L);
-        entity.setEndTime(settingsEntity.getEndTime());
-        entity.setStartTime(settingsEntity.getStartTime());
+        entity.setEventName(settingsDTO.getEventName());
+        entity.setStartTime(LocalDateTime.parse(settingsDTO.getStartTime()));
+        entity.setEndTime(LocalDateTime.parse(settingsDTO.getEndTime()));
         settingsRepository.save(entity);
     }
 }
