@@ -33,7 +33,7 @@
     <!-- MAIN CONTENT -->
     <main class="container payload">
         <div class="mt-6 text-center">
-            <h1> Incident Handling Challenges </h1>
+            <h1> Challenges </h1>
         </div>
         <hr />
         <h3 id="demo" th:if="${pageVisibility} == 'hidden'"><span>Cyberdrill is going to start in </span><span id="timer" th:text="${settings.startTime}"> </span> </h3>
@@ -42,7 +42,19 @@
             <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
             <!-- <h3 class="categoryContainer">Incident Handling Challenges</h3>
             <hr /> -->
-
+            <h3> Scenario </h3>
+            <p>HR admin of FINCII corporation recently attended a conference and meet with a new fellow, Mr. Jack Shake. They delved into a discussion about the significance of data security and the rise of cyber threats.  Mr. Jack shared a USB drive containing the valuable cyber security related files and documents, urging HR admin to read it at his convenience.
+                <br/>
+                After returning to office, HR admin checked the files and documents from the pendrive from his workstation.
+                <br/>
+                A few days later, HR admin received a message. A threat actor claimed to have infiltrated their organization's systems, encrypting the entire data on their backup server.
+                <br/>
+                The victim organization reached out to local CIRT team for assistance.
+                <br/>
+                As a member of CIRT team, you are requested to analyze the artifact (provided to you with a pen drive). This may help the victim organization to identify the attack path and to recover encrypted data if possible.
+                <br/><br/>
+                <strong>You can find the Network Diagram <a href="https://drive.egovcloud.gov.bd/index.php/s/SUUXhMWpf8GPInN/download"> here </a></strong>
+            </p>
             <div class="row">
                 <div class="col-sm-4" th:each="challenge,iterator: ${challenges}" style="margin-top: 20px;">
                     <div class="card text-white bg-success" th:if="${challenge.attemptsDone} > 0">
