@@ -14,4 +14,11 @@ public class SettingsService {
     public SettingsEntity findById(Long id){
         return settingsRepository.findById(id).orElseThrow();
     }
+
+    public void update(SettingsEntity settingsEntity) {
+        SettingsEntity entity= findById(1L);
+        entity.setEndTime(settingsEntity.getEndTime());
+        entity.setStartTime(settingsEntity.getStartTime());
+        settingsRepository.save(entity);
+    }
 }
