@@ -74,7 +74,8 @@
             <td th:unless="${sub.documentID}"><span> Text Answer Sample </span></td>
 
             <td sec:authorize="hasAuthority('ADMIN')" th:text="${sub.result?.examiner?.name}" />
-            <td th:text="${sub.result?.score}" />
+
+            <td th:text="${(sub.isPublished==true)?sub.result?.score:'-'}" />
 
 
             <td sec:authorize="hasAuthority('ADMIN')" th:if="${sub.result!=null}">
