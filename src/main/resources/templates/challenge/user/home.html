@@ -45,7 +45,16 @@
 
             <div class="row">
                 <div class="col-sm-4" th:each="challenge,iterator: ${challenges}" style="margin-top: 20px;">
-                    <div class="card text-white bg-dark" th:if="${challenge.attemptsDone} == 0 and ${challenge.deadlineStatus} != 'over'">
+                    <div class="card text-white bg-success" th:if="${challenge.attemptsDone} > 0">
+                        <div class="card-body">
+                            <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
+                            <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
+                            <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
+                            <button class="btn btn-primary" data-bs-toggle="modal"
+                                    th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
+                        </div>
+                    </div>
+                    <div class="card text-white bg-danger" th:if="${challenge.attemptsDone} <= 0 and ${challenge.deadlineStatus} == 'over'">
                         <div class="card-body">
                             <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
                             <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
@@ -54,7 +63,7 @@
                                 th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
                         </div>
                     </div>
-                    <div class="card text-white bg-secondary" th:unless="${challenge.attemptsDone} == 0 and ${challenge.deadlineStatus} != 'over'">
+                    <div class="card text-white bg-dark" th:if="${challenge.attemptsDone} <= 0 and ${challenge.deadlineStatus} != 'over'">
                         <div class="card-body">
                             <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
                             <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
