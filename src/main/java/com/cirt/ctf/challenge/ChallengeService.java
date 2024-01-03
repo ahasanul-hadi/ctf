@@ -80,6 +80,7 @@ public class ChallengeService {
         challengeEntity.setDeadline(date.toInstant().atZone(ZoneId.of("Asia/Dhaka")).toLocalDateTime());
         challengeEntity.setAttempts(challengeDTO.getAttempts());
         challengeEntity.setDescription(challengeDTO.getDescription());
+        challengeEntity.setAnswer(challengeDTO.getAnswer());
 
         try {
             challengeEntity = this.challengeRepository.save(challengeEntity);
@@ -112,6 +113,8 @@ public class ChallengeService {
         challengeEntity.setDeadline(date.toInstant().atZone(ZoneId.of("Asia/Dhaka")).toLocalDateTime());
         challengeEntity.setVisibility(challengeDTO.getVisibility());
         challengeEntity.setMarkingType(challengeDTO.getMarkingType());
+        challengeEntity.setAttempts(challengeDTO.getAttempts());
+        challengeEntity.setAnswer(challengeDTO.getAnswer());
         challengeRepository.save(challengeEntity);
         return challengeEntity;
     }
