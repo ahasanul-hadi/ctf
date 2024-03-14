@@ -127,6 +127,7 @@ public class ChallengeController{
         challengeDTO.setAttempts(challengeEntity.getAttempts());
         challengeDTO.setCategory(challengeEntity.getCategory());
         challengeDTO.setDescription(challengeEntity.getDescription());
+        challengeDTO.setAnswer(challengeEntity.getAnswer());
         String[] deadlineTokens = challengeEntity.getDeadline().toString().split(":");
         String deadline = String.join(":", deadlineTokens[0], deadlineTokens[1]);
         challengeDTO.setDeadline(deadline);
