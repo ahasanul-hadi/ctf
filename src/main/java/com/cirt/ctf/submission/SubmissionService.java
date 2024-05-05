@@ -56,11 +56,13 @@ public class SubmissionService {
         submissionEntity.setSolver(submissionDTO.getSolver());
         submissionEntity.setTeam(submissionDTO.getTeam());
         submissionEntity.setSubmissionTime(submissionDTO.getSubmissionTime());
-        if(submissionDTO.getFile() != null && submissionDTO.getFile().getSize() > 0 ) {
+        if((submissionDTO.getFile() != null && submissionDTO.getFile().getSize() > 0) || submissionDTO.getChallenge().getMarkingType().equals("manual")) {
             try {
                 DocumentEntity documentEntity = documentService.saveDocument(submissionDTO.getFile());
                 submissionEntity.setDocumentID(documentEntity.getId());
             } catch (Exception ignored){}
+        } else {
+            submissionEntity.setDocumentID(submissionDTO.getDocumentID());
         }
         SubmissionEntity returned;
         try {

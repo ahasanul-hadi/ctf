@@ -87,7 +87,7 @@ public class SubmissionController {
             redirectAttributes.addFlashAttribute("message", "Submission Attempt is over.");
             return "redirect:/challenges";
         }
-        if(message != null) {
+        if(challengeEntity.getMarkingType().equals("manual") && message != null) {
             System.out.println(message);
             redirectAttributes.addFlashAttribute("type", "error");
             redirectAttributes.addFlashAttribute("message", message);
@@ -98,9 +98,35 @@ public class SubmissionController {
         submissionDTO.setTeam(user.getTeam());
         submissionDTO.setSubmissionTime( LocalDateTime.now() );
         submissionDTO.setChallenge(challengeEntity);
+        submissionDTO.setMarkingType(challengeEntity.getMarkingType());
+        ResultDTO resultDTO = new ResultDTO();
+        // check for auto/manual marking type
+        if(challengeEntity.getMarkingType().equals("auto")) {
+            // generate verdict 
+            resultDTO.setMarkingTime(LocalDateTime.now());
+            String answer = challengeEntity.getAnswer();
+            String submittedAnswer = submissionDTO.getDocumentID();
+            String verdict = generateAutoVerdict(answer, submittedAnswer);
+            resultDTO.setComments(verdict);
+            if(verdict.equals("ACCEPTED")) {
+                resultDTO.setScore(challengeEntity.getTotalMark());
+            } else {
+                resultDTO.setScore(0);
+            }
+        }
         returnedEntity = submissionService.createSubmission(submissionDTO);
+
+        if(challengeEntity.getMarkingType().equals("auto")) {
+            resultDTO.setSubmissionID(returnedEntity.getId());
+            submissionService.giveMark(resultDTO);
+        }
+        
         redirectAttributes.addFlashAttribute("type", "success");
         redirectAttributes.addFlashAttribute("message", "Submission is Recorded.");
         return "redirect:/submissions";
+    }
+
+    private String generateAutoVerdict(String realAnswer, String submittedAnswer) {
+        return "ACCEPTED";
     }
 }

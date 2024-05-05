@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChallengeRepository extends JpaRepository<ChallengeEntity, Long>  {
     public List<ChallengeEntity> findByVisibility(String visibility);
+
+    public List<ChallengeEntity> findByMarkingType(String markingType);
 }

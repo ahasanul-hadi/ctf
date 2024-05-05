@@ -81,7 +81,7 @@ public class ChallengeService {
         challengeEntity.setAttempts(challengeDTO.getAttempts());
         challengeEntity.setDescription(challengeDTO.getDescription());
         challengeEntity.setAnswer(challengeDTO.getAnswer());
-
+        challengeEntity.setScoreboardPublished(challengeDTO.getMarkingType().equals("auto") ? true : false);
         try {
             challengeEntity = this.challengeRepository.save(challengeEntity);
         }catch (Exception e) {
@@ -96,6 +96,10 @@ public class ChallengeService {
 
     public List<ChallengeDTO> findAll(){
         return challengeRepository.findAll().stream().map(entity->modelMapper.map(entity,ChallengeDTO.class)).toList();
+    }
+
+    public List<ChallengeDTO> findAllManualChallenges(){
+        return challengeRepository.findByMarkingType("manual").stream().map(entity->modelMapper.map(entity,ChallengeDTO.class)).toList();
     }
 
     public ChallengeEntity updateChallenge(Long id, ChallengeDTO challengeDTO) {

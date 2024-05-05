@@ -40,7 +40,7 @@ public class ScoreBoardController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/publish")
     public String getPublish(Model model){
-        model.addAttribute("publishList",challengeService.findAll());
+        model.addAttribute("publishList",challengeService.findAllManualChallenges());
         return "scoreboard/publish";
     }
 
