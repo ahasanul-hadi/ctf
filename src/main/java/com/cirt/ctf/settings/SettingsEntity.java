@@ -26,5 +26,7 @@ public class SettingsEntity {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
+    @Column(name = "scoreboard_visibility", length = 10)
+    private String scoreboardVisibility;
 
 }

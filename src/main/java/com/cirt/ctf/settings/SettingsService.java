@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Service
 @Data
 @RequiredArgsConstructor
-public class SettingsService {
+public class SettingsService { 
     private final SettingsRepository settingsRepository;
 
     public SettingsEntity findById(Long id){
@@ -23,6 +23,7 @@ public class SettingsService {
         entity.setEventName(settingsDTO.getEventName());
         entity.setStartTime(LocalDateTime.parse(settingsDTO.getStartTime()));
         entity.setEndTime(LocalDateTime.parse(settingsDTO.getEndTime()));
+        entity.setScoreboardVisibility(settingsDTO.getScoreboardVisibility());
         settingsRepository.save(entity);
     }
 }

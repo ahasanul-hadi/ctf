@@ -93,7 +93,13 @@ public class SubmissionController {
             redirectAttributes.addFlashAttribute("message", message);
             return "redirect:/challenges";
         }
-
+        if(challengeEntity.getMarkingType().equals("auto") && 
+            submissionService.anySubmissionAccepted(user.getTeam().getId(), submissionDTO.getChallengeID())) {
+            
+            redirectAttributes.addFlashAttribute("type", "error");
+            redirectAttributes.addFlashAttribute("message", "Submission is already ACCEPTED for this challenge. No further submission allowed.");
+            return "redirect:/challenges";
+        }
         submissionDTO.setSolver(user);
         submissionDTO.setTeam(user.getTeam());
         submissionDTO.setSubmissionTime( LocalDateTime.now() );

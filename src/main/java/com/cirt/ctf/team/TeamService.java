@@ -32,6 +32,10 @@ public class TeamService {
         return teamRepository.findAll().stream().map(entity->modelMapper.map(entity,TeamDTO.class)).toList();
     }
 
+    public List<TeamDTO> findWithoutAdminTeam(){
+        return teamRepository.findByTeamNameNotContaining("AdminTest")
+                        .stream().map(entity->modelMapper.map(entity,TeamDTO.class)).toList();
+    }
     @Transactional
     public String addTeam(TeamRegistration teamDTO) {
 

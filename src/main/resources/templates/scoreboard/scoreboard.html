@@ -48,6 +48,7 @@
             <tr>
                 <th>Place</th>
                 <th>Team</th>
+                <th>Organization</th>
                 <th>Score</th>
             </tr>
             </thead>
@@ -57,6 +58,7 @@
                 <td>
                     <a th:href="@{'/teams/'+${team.id}}"><span th:text="${team.teamName}"></span></a>
                 </td>
+                <td th:text="${team.getTeamOrganization()}" />
                 <td th:text="${team.getScore()}" />
             </tr>
             </tbody>

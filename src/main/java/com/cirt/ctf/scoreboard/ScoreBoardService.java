@@ -10,6 +10,8 @@ import com.cirt.ctf.team.TeamDTO;
 import com.cirt.ctf.team.TeamService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,6 +19,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ScoreBoardService {
     private final SubmissionRepository submissionRepository;
     private final TeamService teamService;
@@ -24,8 +27,7 @@ public class ScoreBoardService {
 
     public List<TeamDTO> getScoreboard(){
 
-        List<TeamDTO> scoreboard= new ArrayList<>(teamService.findAll());
-
+        List<TeamDTO> scoreboard= new ArrayList<>(teamService.findWithoutAdminTeam());
         scoreboard.sort(new Comparator<TeamDTO>() {
             public int compare(TeamDTO first, TeamDTO second) {
                 int score1 = first.getScore();

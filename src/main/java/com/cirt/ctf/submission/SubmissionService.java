@@ -78,4 +78,16 @@ public class SubmissionService {
         return submissionRepository.getSubmissionListByChallengeAndTeam(teamID,challengeID).size();
     }
 
+    public boolean anySubmissionAccepted(Long teamID, Long challengeID) {
+        boolean isACCEPTED = false;
+        List<SubmissionEntity> submissionEntities = submissionRepository.getSubmissionListByChallengeAndTeam(teamID, challengeID);
+
+        for(SubmissionEntity submissionEntity: submissionEntities) {
+            if(submissionEntity.getResult().getComments().equals("ACCEPTED")) {
+                isACCEPTED = true;
+                break;
+            }
+        }
+        return isACCEPTED;
+    }
 }
