@@ -56,11 +56,13 @@ public class SubmissionService {
         submissionEntity.setSolver(submissionDTO.getSolver());
         submissionEntity.setTeam(submissionDTO.getTeam());
         submissionEntity.setSubmissionTime(submissionDTO.getSubmissionTime());
-        if(submissionDTO.getFile() != null && submissionDTO.getFile().getSize() > 0 ) {
+        if((submissionDTO.getFile() != null && submissionDTO.getFile().getSize() > 0) || submissionDTO.getChallenge().getMarkingType().equals("manual")) {
             try {
                 DocumentEntity documentEntity = documentService.saveDocument(submissionDTO.getFile());
                 submissionEntity.setDocumentID(documentEntity.getId());
             } catch (Exception ignored){}
+        } else {
+            submissionEntity.setDocumentID(submissionDTO.getDocumentID());
         }
         SubmissionEntity returned;
         try {
@@ -76,4 +78,16 @@ public class SubmissionService {
         return submissionRepository.getSubmissionListByChallengeAndTeam(teamID,challengeID).size();
     }
 
+    public boolean anySubmissionAccepted(Long teamID, Long challengeID) {
+        boolean isACCEPTED = false;
+        List<SubmissionEntity> submissionEntities = submissionRepository.getSubmissionListByChallengeAndTeam(teamID, challengeID);
+
+        for(SubmissionEntity submissionEntity: submissionEntities) {
+            if(submissionEntity.getResult().getComments().equals("ACCEPTED")) {
+                isACCEPTED = true;
+                break;
+            }
+        }
+        return isACCEPTED;
+    }
 }

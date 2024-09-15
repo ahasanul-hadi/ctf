@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequestMapping("/settings")
 @RequiredArgsConstructor
+
 public class SettingsController {
     private final SettingsService settingsService;
     private final ModelMapper modelMapper;
@@ -30,7 +31,6 @@ public class SettingsController {
         String[] endTokens = settingsEntity.getEndTime().toString().split(":");
         String endTime = String.join(":", endTokens[0], endTokens[1]);
         settingsDTO.setEndTime(endTime);
-
         model.addAttribute("settings", settingsDTO);
         return "settings";
     }

@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/assets/**").permitAll()
                         .requestMatchers("/teams/registration").permitAll()
+                        .requestMatchers("/scoreboard/public").permitAll()
                         .requestMatchers("/","/index").permitAll()
                         
                         .anyRequest().authenticated()

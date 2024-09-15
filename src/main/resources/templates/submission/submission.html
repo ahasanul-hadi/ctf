@@ -48,6 +48,7 @@
             <th>Submission Time</th>
 
             <th>Answer</th>
+            <th>Comments</th>
             <th sec:authorize="hasAuthority('ADMIN')">Examiner</th>
             <th>Score</th>
 
@@ -70,9 +71,10 @@
             <!--{#dates.format(sprint.releaseDate, 'dd-MMM-yyyy')
             sub.submissionTime-->
             <td th:text="${#temporals.format(sub.submissionTime, 'dd-MM-yyyy HH:mm:ss')}" />
-            <td th:if="${sub.documentID}"><span><a th:href="@{'/api/document/preview/'+${sub.documentID}}">Answer File</a></span></td>
-            <td th:unless="${sub.documentID}"><span> Text Answer Sample </span></td>
+            <td th:if="${sub.challenge?.markingType == 'manual'}"><span><a th:href="@{'/api/document/preview/'+${sub.documentID}}">Answer File</a></span></td>
+            <td th:if="${sub.challenge?.markingType == 'auto'}" th:text="${sub.documentID}" ><span> Text Answer Sample </span></td>
 
+            <td th:text="${sub.result?.comments}" ><strong> Text Answer Sample </strong></td>
             <td sec:authorize="hasAuthority('ADMIN')" th:text="${sub.result?.examiner?.name}" />
 
             <td th:text="${(sub.isPublished==true)?sub.result?.score:'-'}" />

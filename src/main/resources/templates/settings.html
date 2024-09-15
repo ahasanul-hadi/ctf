@@ -8,7 +8,7 @@
 <head>
   <meta charset="utf-8" />
   <link rel="shortcut icon" type="image/x-icon" th:href="@{/static/favicon.ico}" />
-  <title> CTF Settings </title>
+  <title> App Settings </title>
   <link th:href="@{/assets/img/favicon.png}" rel="icon">
 
   <!-- Google Fonts -->
@@ -50,7 +50,15 @@
                     <input class="col-md-6 form-control" type="datetime-local" th:field="*{endTime}" required th:value="${settings.endTime}"></input>
                 </div>
             </div><br/>
-            
+            <div class="form-group row">
+                <label for="scoreboard" class="col-md-3 col-form-label"><strong>Scoreboard Visibility</strong></label>
+                <div class="col-md-6">
+                    <select class="col-md-6 form-control" th:field="*{scoreboardVisibility}" required>
+                        <option th:value="private" th:selected="${settings.scoreboardVisibility} == 'private' ? 'true' : 'false'">Private</option>
+                        <option th:value="public" th:selected="${settings.scoreboardVisibility} == 'public' ? 'true' : 'false'">Public</option> 
+                    </select>
+                </div>
+            </div><br/>
 
             <h3 align="center"><button type="submit" class="btn btn-lg btn-success"> Save Settings </button></h3>
         </form>

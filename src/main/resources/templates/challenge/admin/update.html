@@ -45,7 +45,7 @@
                     <input class="col-md-6 form-control" type="text" th:field="*{title}" id="title" required value="Challenge "></input>
                 </div>
             </div><br/>
-            <div class="form-group row" hidden="true">
+            <div class="form-group row">
                 <label for="category" class="col-md-3 col-form-label"><strong>Category</strong></label>
                 <div class="col-md-6">
                     <select class="col-md-6 form-control" required th:field="*{category}">
@@ -80,7 +80,7 @@
                     </select>
                 </div>
             </div><br/>
-            <div class="form-group row" hidden>
+            <div class="form-group row">
                 <label for="markingType" class="col-md-3 col-form-label"><strong>Marking Type</strong></label>
                 <div class="col-md-6">
                     <select class="col-md-6 form-control" th:field="*{markingType}" id="markingType" required>
@@ -89,14 +89,23 @@
                     </select>
                 </div>
             </div><br/>
-            <div class="form-group row" hidden>
+            <div class="form-group row">
                 <label for="attempts" class="col-md-3 col-form-label"><strong>Attempts allowed</strong></label>
                 <div class="col-md-6">
-                    <input class="col-md-6 form-control" type="number" th:field="*{attempts}" id="attempts" required  th:value="1"></input>
+                    <input class="col-md-6 form-control" type="number" th:field="*{attempts}" id="attempts" required></input>
+                </div>
+            </div><br/>
+            <div class="form-group row">
+                <label for="answer" class="col-md-3 col-form-label"><strong>Answer</strong></label>
+                <div class="col-md-6">
+                    <!-- <input class="col-md-6 form-control" type="number" th:field="*{attempts}" id="answer"></input> -->
+                    <textarea class="col-md-6 form-control" th:field="*{answer}" id="answer" >
+            
+                    </textarea>
                 </div>
             </div><br/>
             <textarea class="ustify-content-center align-items-center" id="descriptionHtml" hidden th:field="*{description}">
-            
+
             </textarea>
 
             <h4 align="center"><button type="submit" class="btn btn-lg btn-success"> Update Challenge </button></h4>

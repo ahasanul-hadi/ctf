@@ -55,7 +55,6 @@ public class ChallengeController{
         if(role.equals(Role.ADMIN.toString()))
             model.addAttribute("challenges", challengeService.getChallengesForAdmin());
         else {
-
             String pageVisibility = settingsEntity.getStartTime().isBefore(LocalDateTime.now()) ? "public": "hidden";
             long tId = user.getTeam().getId();
             List<ChallengeDTO> challengeDTOs = challengeService.getChallengesForUser();
@@ -105,8 +104,9 @@ public class ChallengeController{
         challengeDTO.setMarkingType("manual");
         challengeDTO.setVisibility("hidden");
         challengeDTO.setAttempts(1);
+        challengeDTO.setAnswer("");
         model.addAttribute("challenge", challengeDTO);
-        if(role != Role.ADMIN.toString()) {
+        if(!role.equals(Role.ADMIN.toString())) {
             return "redirect:/challenges";
         }
         return "challenge/admin/add";
@@ -127,6 +127,7 @@ public class ChallengeController{
         challengeDTO.setAttempts(challengeEntity.getAttempts());
         challengeDTO.setCategory(challengeEntity.getCategory());
         challengeDTO.setDescription(challengeEntity.getDescription());
+        challengeDTO.setAnswer(challengeEntity.getAnswer());
         String[] deadlineTokens = challengeEntity.getDeadline().toString().split(":");
         String deadline = String.join(":", deadlineTokens[0], deadlineTokens[1]);
         challengeDTO.setDeadline(deadline);

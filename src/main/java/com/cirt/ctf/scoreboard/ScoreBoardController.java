@@ -2,6 +2,8 @@ package com.cirt.ctf.scoreboard;
 
 import com.cirt.ctf.challenge.ChallengeEntity;
 import com.cirt.ctf.challenge.ChallengeService;
+import com.cirt.ctf.settings.SettingsEntity;
+import com.cirt.ctf.settings.SettingsService;
 import com.cirt.ctf.submission.SubmissionEntity;
 import com.cirt.ctf.team.TeamDTO;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +28,23 @@ public class ScoreBoardController {
 
     private final ScoreBoardService scoreBoardService;
     private final ChallengeService challengeService;
+    private final SettingsService settingsService;
 
 
+    @GetMapping("/public")
+    public String getPublicScoreboard(Model model){
+        SettingsEntity settingsEntity = settingsService.findById(1L);
+        if(settingsEntity.getScoreboardVisibility().equals("private")) {
+            return "redirect:/login";
+        } else {
+            List<TeamDTO> scoreList= scoreBoardService.getScoreboard();
+            log.info("scoreList size:"+scoreList.size());
+            model.addAttribute("scoreboard",scoreList);
+            model.addAttribute("top10",scoreBoardService.getTop10());
+            return "scoreboard/scoreboard";
+        }
+        
+    }
     @GetMapping
     public String getScoreboard(Model model){
         List<TeamDTO> scoreList= scoreBoardService.getScoreboard();
@@ -40,7 +57,7 @@ public class ScoreBoardController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/publish")
     public String getPublish(Model model){
-        model.addAttribute("publishList",challengeService.findAll());
+        model.addAttribute("publishList",challengeService.findAllManualChallenges());
         return "scoreboard/publish";
     }
 

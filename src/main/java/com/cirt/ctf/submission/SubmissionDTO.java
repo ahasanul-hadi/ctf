@@ -31,5 +31,5 @@ public class SubmissionDTO {
     private ResultEntity result;
     private MultipartFile file;
     private long challengeID;
-
+    private String markingType;
 }

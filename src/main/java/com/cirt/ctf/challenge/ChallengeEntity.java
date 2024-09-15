@@ -36,8 +36,8 @@ public class ChallengeEntity {
     private String title;
     @Column(name = "description", nullable = false, length = 65535)
     private String description;
-    @Column(name = "file_path", nullable = true, length = 256)
-    private String filePath;
+    @Column(name = "attachment", nullable = true, length = 256)
+    private String attachment;
 
     @ManyToOne
     @JoinColumn(name = "created_by", referencedColumnName = "id")
@@ -54,6 +54,9 @@ public class ChallengeEntity {
 
     @Column(name = "visibility", nullable = false, length=10)
     private String visibility;
+
+    @Column(name = "answer", nullable = true, length=255)
+    private String answer;
 
     @CreationTimestamp(source = SourceType.DB)
     private Instant createdAt;

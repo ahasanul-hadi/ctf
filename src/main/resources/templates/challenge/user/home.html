@@ -115,7 +115,7 @@
                                             class="col-sm-6 form-control" th:field="*{file}" required
                                                style="margin: 10px; width:-webkit-fill-available;"></input>
                                         <input type="text" th:if="${challenge.markingType == 'auto'}" class="col-sm-6 form-control" required
-                                            style="margin: 10px;width:-webkit-fill-available;"
+                                            style="margin: 10px;width:-webkit-fill-available;" th:field="*{documentID}"
                                             placeholder="Paste your solution text here"></input>
                                         <strong class="text-center"><i style="color: red;" th:text="${challenge.attemptsDone}+'/'+${challenge.attempts}+ ' Attempts Done'"></i></strong>
                                         <div class="text-center"><button type="submit"
