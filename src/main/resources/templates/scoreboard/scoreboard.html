@@ -32,10 +32,6 @@
         <h3>Scoreboard</h3><br/><br/>
     </div>
 
-    <div sec:authorize="hasAnyAuthority('ADMIN')" class="pull-right">
-        <a th:href="@{/scoreboard/publish}" class="btn btn-success" role="button">Publish</a>
-    </div>
-
     <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
 
     <div style="margin-bottom:30px;">

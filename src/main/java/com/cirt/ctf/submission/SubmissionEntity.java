@@ -39,6 +39,11 @@ public class SubmissionEntity {
     private TeamEntity team;
 
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "taker_id", referencedColumnName = "id")
+    private User takenBy;
+
+
     @Column(name = "is_published")
     private boolean isPublished=false;
 

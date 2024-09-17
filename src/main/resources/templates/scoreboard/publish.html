@@ -60,7 +60,7 @@
                     <span id="boot-icon" class="bi bi-check" style="font-size: 1.5rem;color: rgb(0, 128, 55);"></span>
                 </td>
                 <td  th:unless="${challenge.isScoreboardPublished}">
-                    <a th:href="@{'/scoreboard/publish/challenge/'+${challenge.id}}" class="btn btn-success accept" role="button">Publish</a>
+                    <a th:href="@{'/marking/challenges/'+${challenge.id}}" class="btn btn-success accept" role="button">Preview</a>
                 </td>
 
             </tr>
@@ -92,27 +92,6 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#example').DataTable();
-
-        $(document).on('click', '.accept', function(e) {
-        	 e.preventDefault();
-        	 var href=$(this).attr('href');
-        	 bootbox.confirm("Are you sure?", function(result) {
-                 if (result) {
-                     window.location=href;
-                 }
-             });
-        })
-
-        $(document).on('click', '.delete', function(e) {
-        	 e.preventDefault();
-        	 var href=$(this).attr('href');
-        	 bootbox.confirm("Are you sure you want to delete?", function(result) {
-                 if (result) {
-                     window.location=href;
-                 }
-             });
-        })
-
     } );
 </script>
 

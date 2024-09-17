@@ -2,12 +2,18 @@ package com.cirt.ctf.submission;
 
 import com.cirt.ctf.document.DocumentEntity;
 import com.cirt.ctf.document.DocumentService;
+import com.cirt.ctf.enums.Role;
+import com.cirt.ctf.exception.ApplicationException;
 import com.cirt.ctf.marking.ResultDTO;
 import com.cirt.ctf.marking.ResultEntity;
 import com.cirt.ctf.team.TeamRepository;
+import com.cirt.ctf.user.User;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
@@ -19,15 +25,36 @@ public class SubmissionService {
     private final DocumentService documentService;
 
     public List<SubmissionDTO> findAll(){
-        return submissionRepository.findAll().stream().map(e->modelMapper.map(e,SubmissionDTO.class)).toList();
+        return submissionRepository.findAll().stream().map(this::mapToDTO).toList();
+    }
+    public List<SubmissionDTO> findByChallenges(Long challengeID){
+        return submissionRepository.findByChallengeId(challengeID).stream().map(this::mapToDTO).toList();
     }
 
+
     public SubmissionDTO findById(Long id){
-        return submissionRepository.findById(id).map(e->modelMapper.map(e,SubmissionDTO.class)).orElseThrow();
+        return submissionRepository.findById(id).map(this::mapToDTO).orElseThrow();
+    }
+
+    public SubmissionEntity findEntityById(Long id) throws ApplicationException {
+        return submissionRepository.findById(id).orElseThrow(()-> new ApplicationException("No Submission Found with id:"+id, HttpStatus.NOT_FOUND));
+    }
+
+    @Transactional
+    public synchronized User bookExaminer(Long submissionID, User examiner) throws ApplicationException {
+        if(examiner.getRole()!= Role.ADMIN)
+            throw  new ApplicationException("Only Admin can give mark", HttpStatus.FORBIDDEN);
+
+        SubmissionEntity submissionEntity = findEntityById(submissionID);
+        if(submissionEntity.getTakenBy()!=null)
+            return submissionEntity.getTakenBy();
+
+        submissionEntity.setTakenBy(examiner);
+        return submissionRepository.save(submissionEntity).getTakenBy();
     }
 
     public List<SubmissionDTO> findByTeam(Long teamID){
-        return submissionRepository.findByTeam(teamID).stream().map(e->modelMapper.map(e,SubmissionDTO.class)).toList();
+        return submissionRepository.findByTeam(teamID).stream().map(this::mapToDTO).toList();
     }
     public void giveMark(ResultDTO resultDTO){
         SubmissionEntity submissionEntity= submissionRepository.findById(resultDTO.getSubmissionID()).orElseThrow();
@@ -89,5 +116,16 @@ public class SubmissionService {
             }
         }
         return isACCEPTED;
+    }
+
+    public SubmissionDTO mapToDTO(SubmissionEntity entity){
+        SubmissionDTO submissionDTO= modelMapper.map(entity, SubmissionDTO.class);
+        String absPath = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/document/preview/{id}")
+                .buildAndExpand(entity.getDocumentID())
+                .toUriString();
+        submissionDTO.setFilePath(absPath);
+
+        return submissionDTO;
     }
 }

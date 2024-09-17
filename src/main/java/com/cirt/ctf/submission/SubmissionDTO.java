@@ -27,6 +27,7 @@ public class SubmissionDTO {
     private ChallengeEntity challenge;
     private User solver;
     private TeamEntity team;
+    private User takenBy;
     private boolean isPublished=false;
     private ResultEntity result;
     private MultipartFile file;

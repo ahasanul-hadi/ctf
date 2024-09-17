@@ -54,18 +54,6 @@ public class SubmissionController {
     }
 
 
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/mark/{id}")
-    public String getSubmission(@PathVariable("id") Long id,  Model model){
-
-        SubmissionDTO submissionDTO= submissionService.findById(id);
-
-        model.addAttribute("resultDTO", new ResultDTO());
-        model.addAttribute("submission",submissionDTO);
-        model.addAttribute("document",documentService.findById(submissionDTO.getDocumentID()));
-        return "marking/mark";
-    }
-
     @PostMapping
     public String saveSubmission(@Valid @ModelAttribute("submission") SubmissionDTO submissionDTO, BindingResult result, Model model, Principal principal, final RedirectAttributes redirectAttributes)
     {

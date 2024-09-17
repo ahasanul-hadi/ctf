@@ -67,19 +67,10 @@ public class ScoreBoardController {
     public String publish(@PathVariable("id") Long id, RedirectAttributes redirectAttributes){
 
         ChallengeEntity challengeEntity = challengeService.findByID(id);
-        if(challengeEntity.getDeadline().isAfter(LocalDateTime.now())){
-            redirectAttributes.addFlashAttribute("type", "error");
-            redirectAttributes.addFlashAttribute("message", "Deadline has not been ended for this challenge");
-            return "redirect:/scoreboard";
-        }
-        List<SubmissionEntity> submissionEntityList= challengeEntity.getSubmissions();
-        for(SubmissionEntity submissionEntity: submissionEntityList){
-            if(submissionEntity.getResult()==null){
-                redirectAttributes.addFlashAttribute("type", "error");
-                redirectAttributes.addFlashAttribute("message", "All submissions for "+challengeEntity.getTitle()+" has not been assessed yet!");
-                return "redirect:/submissions";
-            }
-        }
+
+        String validateResult= scoreBoardService.validateBeforePublish(challengeEntity, redirectAttributes);
+        if(validateResult!=null)
+            return validateResult;
 
         scoreBoardService.publish(challengeEntity);
 

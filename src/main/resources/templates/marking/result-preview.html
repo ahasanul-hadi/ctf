@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <link rel="shortcut icon" type="image/x-icon" th:href="@{/static/favicon.ico}" />
-    <title>Submissions </title>
+    <title>Result </title>
     <link th:href="@{/assets/img/favicon.png}" rel="icon">
 
     <!-- Google Fonts -->
@@ -32,12 +32,12 @@
 <!-- MAIN CONTENT -->
 <main class="container payload">
     <div class="text-center">
-        <br/><h3>Submission</h3><br/><br/>
+        <br/><h3 th:text="${challenge.title}"></h3><br/><br/>
+    </div>
+    <div sec:authorize="hasAnyAuthority('ADMIN','SUPER')" class="text-center">
+        <a th:href="@{'/scoreboard/publish/challenge/'+${challenge.id}}" class="btn btn-success accept" role="button">Publish</a>
     </div>
 
-    <div sec:authorize="hasAnyAuthority('ADMIN','SUPER')" class="text-center">
-        <a th:href="@{/scoreboard/publish}" class="btn btn-success accept" role="button">Publish in Scoreboard</a>
-    </div>
 
     <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
 
@@ -45,50 +45,32 @@
         <thead>
         <tr>
             <th>SL</th>
-            <th>Challenge</th>
-            <th>Category</th>
             <th>Team</th>
-            <th>User</th>
-            <th>Submission Time</th>
-
+            <th>Solver</th>
             <th>Answer</th>
-            <th>Comments</th>
-            <th sec:authorize="hasAuthority('ADMIN')">Taken By</th>
+            <th>Submission Time</th>
+            <th>Examiner</th>
             <th>Score</th>
-
-            <th sec:authorize="hasAuthority('ADMIN')">Assessment</th>
+            <th sec:authorize="hasAuthority('SUPER')">Action</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="sub, iterator: ${submissions}">
+        <tr th:each="sub, iterator : ${submissions}">
             <td th:text="${iterator.index+1}" />
-            <td>
-                <a th:href="@{'/challenges/'+${sub.challenge?.id}}"><span th:text="${sub.challenge?.title}"></span></a>
-            </td>
-            <td th:text="${sub.challenge?.category}" />
-
             <td>
                 <a th:href="@{'/teams/'+${sub.team?.id}}"><span th:text="${sub.team?.teamName}"></span></a>
             </td>
-
             <td th:text="${sub.solver?.name}" />
-            <!--{#dates.format(sprint.releaseDate, 'dd-MMM-yyyy')
-            sub.submissionTime-->
+            <td th:if="${challenge.markingType.equals('manual')}"><span><a th:href="@{'/api/document/preview/'+${sub.documentID}}">Answer File</a></span></td>
+            <td th:if="${challenge.markingType.equals('auto')}" ><span th:text="${sub.documentID}"> Text Answer Sample </span></td>
+
             <td th:text="${#temporals.format(sub.submissionTime, 'dd-MM-yyyy HH:mm:ss')}" />
-            <td th:if="${sub.challenge?.markingType == 'manual'}"><span><a th:href="@{'/api/document/preview/'+${sub.documentID}}">Answer File</a></span></td>
-            <td th:if="${sub.challenge?.markingType == 'auto'}" th:text="${sub.documentID}" ><span> Text Answer Sample </span></td>
+            <td th:text="${sub.result?.examiner?.name}" />
 
-            <td th:text="${sub.result?.comments}" ><strong> Text Answer Sample </strong></td>
-            <td sec:authorize="hasAuthority('ADMIN')" th:text="${sub.takenBy?.name}" />
+            <td th:text="${sub.result?.score}" />
 
-            <td th:text="${(sub.isPublished==true)?sub.result?.score:'-'}" />
-
-
-            <td sec:authorize="hasAuthority('ADMIN')" th:if="${sub.result!=null}">
-                <span id="boot-icon" class="bi bi-check" style="font-size: 1.5rem;color: rgb(0, 128, 55);"></span>
-            </td>
-            <td sec:authorize="hasAuthority('ADMIN')" th:unless="${sub.result!=null}">
-                <a th:href="@{'/marking/submissions/'+${sub.id}}" class="btn btn-success" role="button">Assess</a>
+            <td sec:authorize="hasAuthority('SUPER')">
+                <a th:href="@{'/marking/re-assess/'+${sub.id}}" class="btn btn-success" role="button">Re-Assess</a>
             </td>
 
         </tr>
@@ -121,7 +103,17 @@
     $(document).ready(function() {
         $('#example').DataTable();
 
-    } );
+         $(document).on('click', '.accept', function(e) {
+        	 e.preventDefault();
+        	 var href=$(this).attr('href');
+        	 bootbox.confirm("Are you sure?", function(result) {
+                 if (result) {
+                     window.location=href;
+                 }
+             });
+        })
+
+    });
 </script>
 
 </body>

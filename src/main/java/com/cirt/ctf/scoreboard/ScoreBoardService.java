@@ -5,6 +5,7 @@ import com.cirt.ctf.challenge.ChallengeEntity;
 import com.cirt.ctf.challenge.ChallengeService;
 import com.cirt.ctf.payload.CategoryBreakdown;
 import com.cirt.ctf.payload.Top10Graph;
+import com.cirt.ctf.submission.SubmissionEntity;
 import com.cirt.ctf.submission.SubmissionRepository;
 import com.cirt.ctf.team.TeamDTO;
 import com.cirt.ctf.team.TeamService;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -100,8 +102,25 @@ public class ScoreBoardService {
                 submissionEntity.setPublished(true);
                 submissionRepository.save(submissionEntity);
             }
-
         });
-
     }
+
+    public String validateBeforePublish(ChallengeEntity challengeEntity, RedirectAttributes redirectAttributes){
+        if(challengeEntity.getDeadline().isAfter(LocalDateTime.now())){
+            redirectAttributes.addFlashAttribute("type", "error");
+            redirectAttributes.addFlashAttribute("message", "Deadline has not been ended for this challenge");
+            return "redirect:/marking/challenges/"+challengeEntity.getId();
+        }
+        List<SubmissionEntity> submissionEntityList= challengeEntity.getSubmissions();
+        for(SubmissionEntity submissionEntity: submissionEntityList){
+            if(submissionEntity.getResult()==null){
+                redirectAttributes.addFlashAttribute("type", "error");
+                redirectAttributes.addFlashAttribute("message", "All submissions for "+challengeEntity.getTitle()+" has not been assessed yet!");
+                return "redirect:/marking/challenges/"+challengeEntity.getId();
+            }
+        }
+
+        return null;
+    }
+
 }
