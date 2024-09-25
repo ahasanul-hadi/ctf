@@ -30,7 +30,7 @@
 					</li>
 
 					<li class="nav-item">
-						<a class="nav-link" th:href="@{/scoreboard}">Scoreboard</a>
+						<a class="nav-link" th:href="@{/scoreboard/v2}">Scoreboard</a>
 					</li>
 					<li sec:authorize="hasAnyAuthority('TEAM_LEAD', 'MEMBER')" class="nav-item">
 						<a class="nav-link" th:href="@{/teams/my-team}">My Team</a>

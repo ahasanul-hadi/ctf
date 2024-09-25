@@ -28,7 +28,7 @@ public class ResultEntity {
 
     private int score;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "examiner_id")
     private User examiner;
 

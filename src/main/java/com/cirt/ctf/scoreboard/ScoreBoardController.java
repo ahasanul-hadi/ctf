@@ -54,6 +54,15 @@ public class ScoreBoardController {
         return "scoreboard/scoreboard";
     }
 
+    @GetMapping("/v2")
+    public String getScoreboardV2(Model model){
+        List<ScoreSummary> scoreList= scoreBoardService.getScoreboardV2();
+        log.info("scoreList size:"+scoreList.size());
+        model.addAttribute("scoreboard",scoreList);
+        model.addAttribute("top10",scoreBoardService.getTop10FromScoreboard(scoreList));
+        return "scoreboard/scoreboard";
+    }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/publish")
     public String getPublish(Model model){

@@ -30,11 +30,10 @@ public class TeamDTO {
     @NotEmpty(message = "Please enter valid Payment Email")
     private String paymentEmail;
 
-    @JsonIgnore
-    private List<User> members;
-
     private List<SubmissionEntity> submissions;
 
+    @JsonIgnore
+    private List<User> members;
     public int getCount(){
         return members.size();
     }
@@ -47,6 +46,7 @@ public class TeamDTO {
         return true;
     }
 
+
     public int getScore(){
         return submissions.stream().mapToInt(sub-> sub.isPublished()?sub.getResult().getScore():0).sum();
     }
@@ -56,22 +56,4 @@ public class TeamDTO {
         return entity.map(SubmissionEntity::getSubmissionTime).orElse(LocalDateTime.MAX);
     }
 
-    public List<IncrementalScore> getIncrementalScore(){
-        List<IncrementalScore> list= new ArrayList<>();
-        List<SubmissionEntity> orderSubmissions= new ArrayList<>(submissions).stream().filter(sub->sub.isPublished() && sub.getResult().getScore()>0).sorted(Comparator.comparing(SubmissionEntity::getSubmissionTime)).toList();
-        int gradualScore=0;
-        for(SubmissionEntity e: orderSubmissions){
-            if(e.isPublished()){
-                gradualScore+=e.getResult().getScore();
-                IncrementalScore ic= IncrementalScore.builder()
-                        .score(gradualScore)
-                        .time(e.getSubmissionTime().format(Utils.formatter)).build();
-                list.add(ic);
-
-            }
-        }
-
-        return list;
-
-    }
 }

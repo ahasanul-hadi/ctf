@@ -142,6 +142,11 @@ public class TeamService {
         TeamEntity team= teamRepository.findById(id).orElse(null);
         return team==null?null:modelMapper.map(team, TeamDTO.class);
     }
+
+    public List<TeamEntity> findByIds(List<Long> ids) {
+        return teamRepository.findByIdIn(ids);
+    }
+
     public TeamEntity findEntityById(Long id){
         return teamRepository.findById(id).orElse(null);
     }
@@ -155,6 +160,10 @@ public class TeamService {
     }
 
     public long getFailedCount(TeamDTO dto){
-        return (long) challengeService.findAll().size() - getSolvedCount(dto);
+        return ( challengeService.getChallengeCount() - getSolvedCount(dto));
+    }
+
+    private TeamDTO mapToDTO(TeamEntity entity){
+        return modelMapper.map(entity, TeamDTO.class);
     }
 }

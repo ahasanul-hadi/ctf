@@ -45,7 +45,7 @@
                 <th>Place</th>
                 <th>Team</th>
                 <th>Organization</th>
-                <th>Score</th>
+                <th style="text-align:center">Score</th>
             </tr>
             </thead>
             <tbody>
@@ -55,7 +55,8 @@
                     <a th:href="@{'/teams/'+${team.id}}"><span th:text="${team.teamName}"></span></a>
                 </td>
                 <td th:text="${team.getTeamOrganization()}" />
-                <td th:text="${team.getScore()}" />
+                <td style="text-align:center" th:if="${team.getScore()==null}" th:text="${'-'}" />
+                <td style="text-align:center" th:unless="${team.getScore()==null}" th:text="${team.getScore()}" />
             </tr>
             </tbody>
         </table>
@@ -86,27 +87,13 @@
 
 <script th:inline="javascript" >
     $(document).ready(function() {
-        $('#example').DataTable();
+        $('#example').DataTable({"pageLength": 100});
 
         setInterval(function() {
             window.location.reload(true);
-         }, 30000);
+         }, 120000);
 
 
-
-         var trace1 = {
-
-            x: [1952, 1957, 1962, 1967, 1972, 1977, 1982, 1987, 1992, 1997, 2002, 2007],
-            y: [69.39,70.26,71.24,71.52,71.89,72.22,73.84,74.32,76.33,77.55,79.11,80.204],
-            type: 'scatter',
-            name: 'Name of Trace 1'
-        };
-        var trace2 = {
-          x: [1952, 1957, 1962, 1967, 1972, 1977, 1982, 1987, 1992, 1997, 2002, 2007],
-          y: [69.12,70.33,70.93,71.1,71.93,73.49,74.74,76.32,77.56,78.83,80.37,81.235],
-          type: 'scatter',
-          name: 'Name of Trace 2'
-        };
         var data = [[${top10}]];
 
         console.log("data:"+JSON.stringify(data));

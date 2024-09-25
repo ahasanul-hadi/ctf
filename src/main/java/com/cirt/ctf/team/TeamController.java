@@ -76,7 +76,7 @@ public class TeamController {
         model.addAttribute("solved",teamService.getSolvedCount(teamDTO));
         model.addAttribute("failed",teamService.getFailedCount(teamDTO));
         model.addAttribute("categoryList", scoreBoardService.getCategoryWiseSolved(teamDTO));
-        model.addAttribute("place",scoreBoardService.getPlace(teamDTO));
+        model.addAttribute("place",scoreBoardService.getPlace(teamDTO.getId()));
         return "team/teamMembers";
     }
 
@@ -87,7 +87,7 @@ public class TeamController {
 
         TeamDTO teamDTO = teamService.findById(user.getTeam().getId());
         model.addAttribute("team", teamDTO);
-        model.addAttribute("place",scoreBoardService.getPlace(teamDTO));
+        model.addAttribute("place",scoreBoardService.getPlace(teamDTO.getId()));
         return "team/myTeam";
     }
 

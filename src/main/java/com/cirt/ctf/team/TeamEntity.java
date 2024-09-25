@@ -32,15 +32,17 @@ public class TeamEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "team", fetch = FetchType.LAZY)
     private List<User> members;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "approver_id")
     private User approvedBy;
 
+    @Column(name = "is_displayed", columnDefinition = "boolean default true")
+    private boolean isDisplayed;
 
     @Column(name = "approve_date")
     private LocalDateTime approveDate;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "team")
     private List<SubmissionEntity> submissions;
 
     public void addMember(User member) {

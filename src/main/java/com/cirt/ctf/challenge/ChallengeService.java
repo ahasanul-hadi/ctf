@@ -130,4 +130,8 @@ public class ChallengeService {
     public void delete(Long id) {
         challengeRepository.deleteById(id);
     }
+
+    public Long getChallengeCount(){
+        return challengeRepository.count();
+    }
 }
