@@ -4,6 +4,8 @@ import com.cirt.ctf.document.DocumentEntity;
 import com.cirt.ctf.document.DocumentService;
 import com.cirt.ctf.enums.Role;
 import com.cirt.ctf.exception.ApplicationException;
+import com.cirt.ctf.hints.TeamHintsEntity;
+import com.cirt.ctf.hints.TeamHintsRepository;
 import com.cirt.ctf.marking.ResultDTO;
 import com.cirt.ctf.marking.ResultEntity;
 import com.cirt.ctf.team.TeamRepository;
@@ -23,12 +25,14 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final ModelMapper modelMapper;
     private final DocumentService documentService;
+    private final TeamHintsRepository teamHintsRepository;
 
     public List<SubmissionDTO> findAll(){
         return submissionRepository.findAll().stream().map(this::mapToDTO).toList();
     }
-    public List<SubmissionDTO> findByChallenges(Long challengeID){
-        return submissionRepository.findByChallengeId(challengeID).stream().map(this::mapToDTO).toList();
+
+    public List<SubmissionEntity> findByChallenges(Long challengeID){
+        return submissionRepository.findByChallengeId(challengeID);
     }
 
 
@@ -56,6 +60,8 @@ public class SubmissionService {
     public List<SubmissionDTO> findByTeam(Long teamID){
         return submissionRepository.findByTeam(teamID).stream().map(this::mapToDTO).toList();
     }
+
+
     public void giveMark(ResultDTO resultDTO){
         SubmissionEntity submissionEntity= submissionRepository.findById(resultDTO.getSubmissionID()).orElseThrow();
         ResultEntity resultEntity= ResultEntity.builder()
@@ -67,7 +73,12 @@ public class SubmissionService {
 
         submissionEntity.setResult(resultEntity);
 
+        Integer hintPenalty = teamHintsRepository.findByTeamIdAndHintId(submissionEntity.getTeam().getId(), submissionEntity.getChallenge().getId()).map(e->e.getHint().getDeductMark()).orElse(0);
+        int score= resultEntity.getScore() - hintPenalty;
+        score= Math.max(0, score);
 
+        submissionEntity.setPenalty(hintPenalty);
+        submissionEntity.setScore(score);
         //only verified when score is published
         //submissionEntity.setPublished(true);
         if(submissionEntity.getChallenge().isScoreboardPublished()){
@@ -110,7 +121,7 @@ public class SubmissionService {
         List<SubmissionEntity> submissionEntities = submissionRepository.getSubmissionListByChallengeAndTeam(teamID, challengeID);
 
         for(SubmissionEntity submissionEntity: submissionEntities) {
-            if(submissionEntity.getResult().getComments().equals("ACCEPTED")) {
+            if(submissionEntity.getResult() !=null && submissionEntity.getResult().getComments().equals("ACCEPTED")) {
                 isACCEPTED = true;
                 break;
             }
@@ -127,5 +138,9 @@ public class SubmissionService {
         submissionDTO.setFilePath(absPath);
 
         return submissionDTO;
+    }
+
+    public List<SubmissionEntity> findAllSubmissions() {
+        return submissionRepository.findAllSubmissions();
     }
 }

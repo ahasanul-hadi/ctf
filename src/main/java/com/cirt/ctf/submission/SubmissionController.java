@@ -47,7 +47,7 @@ public class SubmissionController {
         User user= userService.findUserByEmail(principal.getName()).orElseThrow();
 
         if(user.getRole()==Role.ADMIN)
-            model.addAttribute("submissions",submissionService.findAll());
+            model.addAttribute("submissions",submissionService.findAllSubmissions());
         else
             model.addAttribute("submissions",submissionService.findByTeam(user.getTeam().getId()));
         return "submission/submission";

@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.cirt.ctf.hints.HintsEntity;
+import com.cirt.ctf.marking.ResultEntity;
 import com.cirt.ctf.submission.SubmissionEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,7 +41,7 @@ public class ChallengeEntity {
     @Column(name = "attachment", nullable = true, length = 256)
     private String attachment;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     private User user;
 
@@ -57,6 +59,10 @@ public class ChallengeEntity {
 
     @Column(name = "answer", nullable = true, length=255)
     private String answer;
+
+
+    @OneToOne(mappedBy = "challenge", optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private HintsEntity hint;
 
     @CreationTimestamp(source = SourceType.DB)
     private Instant createdAt;

@@ -108,6 +108,32 @@
 
             </textarea>
 
+
+            <hr/>
+
+            <div class="form-group row">
+                <label for="attempts" class="col-md-3 col-form-label"><strong>Hint mark deduction</strong></label>
+                <div class="col-md-6">
+                    <input class="col-md-6 form-control" type="number" th:field="*{hint.deductMark}" />
+                </div>
+            </div><br/>
+            <div class="form-group row">
+                <label for="answer" class="col-md-3 col-form-label"><strong>Hint Description</strong></label>
+                <div class="col-md-6">
+                    <textarea class="col-md-6 form-control" th:field="*{hint.description}"  >
+                    </textarea>
+                </div>
+            </div><br/>
+            <div class="form-group row">
+                <label for="visibility" class="col-md-3 col-form-label"><strong>Visibility</strong></label>
+                <div class="col-md-6">
+                    <select class="col-md-6 form-control" th:field="*{hint.showHint}">
+                        <option th:selected="${challenge.hint.showHint==false}" th:value="false">Hidden</option>
+                        <option th:selected="${challenge.hint.showHint==true}" th:value="true">Public</option>
+                    </select>
+                </div>
+            </div><br/>
+
             <h4 align="center"><button type="submit" class="btn btn-lg btn-success"> Update Challenge </button></h4>
         </form>
 

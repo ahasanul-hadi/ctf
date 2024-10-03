@@ -46,7 +46,6 @@
                 <th>Mobile</th>
                 <th>Role</th>
                 <th>Designation</th>
-                <th>Score</th>
 
             </tr>
             </thead>
@@ -58,7 +57,6 @@
                     <td th:text="${member.mobile}" />
                     <td th:text="${member.role}" />
                     <td th:text="${member.designation}" />
-                    <td th:text="${member.getScore()}" />
                 </tr>
             </tbody>
         </table>
@@ -104,7 +102,7 @@
                 <td th:text="${submission?.solver?.name}" />
                 <!--<td th:text="${submission.file_path}" />-->
                 <td th:text="${#temporals.format(submission?.submissionTime, 'dd-MM-yyyy HH:mm:ss')}" />
-                <td th:text="${(submission.isPublished==true)?submission.result.score:'-'}" />
+                <td th:text="${(submission.isPublished==true)?submission.score:'-'}" />
             </tr>
             </tbody>
         </table>

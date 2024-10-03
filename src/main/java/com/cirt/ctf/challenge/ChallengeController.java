@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.cirt.ctf.document.DocumentService;
+import com.cirt.ctf.hints.HintsDTO;
 import com.cirt.ctf.settings.SettingsEntity;
 import com.cirt.ctf.settings.SettingsService;
 import com.cirt.ctf.user.User;
@@ -85,13 +86,13 @@ public class ChallengeController{
 
     @PostMapping
     public String submitForm(Model model, @ModelAttribute("challenge") ChallengeDTO challengeDTO, BindingResult result, final RedirectAttributes redirectAttributes) {
-        System.out.println(challengeDTO.getDeadline());
         this.challengeService.saveChallenge(challengeDTO);
         redirectAttributes.addFlashAttribute("message", "Challenge is successfully saved");
         redirectAttributes.addFlashAttribute("type", "success");
         return "redirect:/challenges";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','SUPER')")
     @GetMapping("/add" )
     public String getAddChallengePage(Model model, Principal principal) {
         User user= userService.findUserByEmail(principal.getName()).orElseThrow();
@@ -128,6 +129,7 @@ public class ChallengeController{
         challengeDTO.setCategory(challengeEntity.getCategory());
         challengeDTO.setDescription(challengeEntity.getDescription());
         challengeDTO.setAnswer(challengeEntity.getAnswer());
+        challengeDTO.setHint(modelMapper.map(challengeEntity.getHint(), HintsDTO.class));
         String[] deadlineTokens = challengeEntity.getDeadline().toString().split(":");
         String deadline = String.join(":", deadlineTokens[0], deadlineTokens[1]);
         challengeDTO.setDeadline(deadline);
@@ -139,6 +141,7 @@ public class ChallengeController{
         return "challenge/admin/update";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{id}")
     public String updateChallenge(@PathVariable("id") Long id, Model model, @ModelAttribute("challenge") ChallengeDTO challengeDTO, Principal principal, RedirectAttributes redirectAttributes) {
         User user= userService.findUserByEmail(principal.getName()).orElseThrow();

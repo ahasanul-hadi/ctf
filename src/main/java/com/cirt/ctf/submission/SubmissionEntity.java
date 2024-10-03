@@ -7,6 +7,8 @@ import com.cirt.ctf.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -26,28 +28,34 @@ public class SubmissionEntity {
     @Column(name = "document_id")
     private String documentID;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "challenge_id", referencedColumnName = "id")
     private ChallengeEntity challenge;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "team_id", referencedColumnName = "id")
+    private TeamEntity team;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "submitter_id", referencedColumnName = "id")
     private User solver;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id", referencedColumnName = "id")
-    private TeamEntity team;
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "taker_id", referencedColumnName = "id")
     private User takenBy;
 
-
     @Column(name = "is_published")
     private boolean isPublished=false;
 
-    @OneToOne(mappedBy = "submission", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "score")
+    private Integer score;
+
+    @Column(name = "penalty")
+    private Integer penalty;
+
+    @OneToOne(mappedBy = "submission",  cascade = CascadeType.ALL, orphanRemoval = true)
     private ResultEntity result;
+
+
 
 }

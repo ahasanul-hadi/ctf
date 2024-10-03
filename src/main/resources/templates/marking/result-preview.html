@@ -65,9 +65,9 @@
             <td th:if="${challenge.markingType.equals('auto')}" ><span th:text="${sub.documentID}"> Text Answer Sample </span></td>
 
             <td th:text="${#temporals.format(sub.submissionTime, 'dd-MM-yyyy HH:mm:ss')}" />
-            <td th:text="${sub.result?.examiner?.name}" />
+            <td th:text="${sub.takenBy?.name}" />
 
-            <td th:text="${sub.result?.score}" />
+            <td th:text="${sub.score}" />
 
             <td sec:authorize="hasAuthority('SUPER')">
                 <a th:href="@{'/marking/re-assess/'+${sub.id}}" class="btn btn-success" role="button">Re-Assess</a>

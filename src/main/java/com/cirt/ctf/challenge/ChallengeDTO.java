@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
+import com.cirt.ctf.hints.HintsDTO;
+import com.cirt.ctf.hints.HintsEntity;
 import com.cirt.ctf.submission.SubmissionEntity;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SourceType;
@@ -58,4 +60,6 @@ public class ChallengeDTO {
     private boolean isScoreboardPublished;
     private int attemptsDone;
     private String attemptStatus, deadlineStatus, answer;
+
+    private HintsDTO hint;
 }

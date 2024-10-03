@@ -100,10 +100,10 @@ public class ScoreBoardService {
 
     public List<IncrementalScore> getIncrementalScore(List<SubmissionEntity> submissions){
         List<IncrementalScore> list= new ArrayList<>();
-        List<SubmissionEntity> orderSubmissions= new ArrayList<>(submissions).stream().filter(sub->sub.isPublished() && sub.getResult().getScore()>0).sorted(Comparator.comparing(SubmissionEntity::getSubmissionTime)).toList();
+        List<SubmissionEntity> orderSubmissions= new ArrayList<>(submissions).stream().filter(sub->sub.isPublished() && sub.getScore()>0).sorted(Comparator.comparing(SubmissionEntity::getSubmissionTime)).toList();
         int gradualScore=0;
         for(SubmissionEntity e: orderSubmissions){
-            gradualScore+=e.getResult().getScore();
+            gradualScore+=e.getScore();
             IncrementalScore ic= IncrementalScore.builder()
                     .score(gradualScore)
                     .time(e.getSubmissionTime().format(Utils.formatter)).build();

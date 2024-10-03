@@ -88,6 +88,26 @@
             </div>
 
             <div class="modals">
+                <div class="modal fade" id="hintModal" role="dialog" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Hint</h3>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" >
+                                You will be deducted <span id="deduct"></span> marks (Only for first time).
+                                <br/>Are you sure you want to see Hint? <a id="link" href="#link" class="btn btn-info" role="button">See</a>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modals">
                 <!-- Vertically centered scrollable modal -->
                 <div class="modal fade" th:each="challenge,iterator: ${challenges}" th:id="'modal-'+${challenge.id}"
                     role="dialog" tabindex="-1" aria-hidden="true">
@@ -96,6 +116,9 @@
                             <div class="modal-header">
                                 <h3 class="modal-title" id="staticBackdropLabel" th:text="${challenge.title}">Modal
                                     title</h3>
+
+                                <span th:if="${challenge.hint?.showHint==true}" style="float:right"> <button class="btn btn-primary" th:onclick='myHintModal([[${challenge.hint?.deductMark}]], [[${challenge.id}]],  [[${challenge.hint?.id}]]);'>Hint</button></span>
+
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
@@ -185,6 +208,15 @@
                 }
             }, 1000);
         }
+
+        function myHintModal( mark, challengeID,  hintID){
+            console.log("mark:"+mark+" hintID:"+hintID);
+            $('#deduct').text(mark);
+            $("#link").attr("href", '../hints/fetch/'+hintID);
+            $('#modal-'+challengeID).modal('hide');
+            $('#hintModal').modal('show');
+        }
+
     </script>
 
 </body>

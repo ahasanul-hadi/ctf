@@ -81,7 +81,7 @@ public class MarkingController {
 
         User admin= userService.findUserByEmail(principal.getName()).orElseThrow();
         ChallengeEntity challenge= challengeService.findByID(challengeID);
-        List<SubmissionDTO> submissions= submissionService.findByChallenges(challengeID);
+        List<SubmissionEntity> submissions= submissionService.findByChallenges(challengeID);
 
         model.addAttribute("challenge",challenge);
         model.addAttribute("submissions",submissions);

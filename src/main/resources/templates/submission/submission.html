@@ -54,6 +54,7 @@
             <th>Answer</th>
             <th>Comments</th>
             <th sec:authorize="hasAuthority('ADMIN')">Taken By</th>
+            <th>Hint Penalty</th>
             <th>Score</th>
 
             <th sec:authorize="hasAuthority('ADMIN')">Assessment</th>
@@ -81,7 +82,8 @@
             <td th:text="${sub.result?.comments}" ><strong> Text Answer Sample </strong></td>
             <td sec:authorize="hasAuthority('ADMIN')" th:text="${sub.takenBy?.name}" />
 
-            <td th:text="${(sub.isPublished==true)?sub.result?.score:'-'}" />
+            <td th:text="${(sub.isPublished==true)?sub.penalty:'-'}" />
+            <td th:text="${(sub.isPublished==true)?sub.score:'-'}" />
 
 
             <td sec:authorize="hasAuthority('ADMIN')" th:if="${sub.result!=null}">
@@ -119,7 +121,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#example').DataTable();
+        $('#example').DataTable({"pageLength": 50});
 
     } );
 </script>

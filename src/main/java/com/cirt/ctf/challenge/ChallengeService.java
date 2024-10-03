@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.cirt.ctf.hints.HintsDTO;
+import com.cirt.ctf.hints.HintsEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +60,7 @@ public class ChallengeService {
             dto.setDeadline(challengeEntity.getDeadline().toString());
             dto.setAttempts(challengeEntity.getAttempts());
             dto.setMarkingType(challengeEntity.getMarkingType());
+            dto.setHint(modelMapper.map(challengeEntity.getHint(), HintsDTO.class));
             challengeDTOs.add(dto);
         }
         return challengeDTOs;
@@ -82,6 +85,13 @@ public class ChallengeService {
         challengeEntity.setDescription(challengeDTO.getDescription());
         challengeEntity.setAnswer(challengeDTO.getAnswer());
         challengeEntity.setScoreboardPublished(challengeDTO.getMarkingType().equals("auto") ? true : false);
+
+
+        HintsEntity hint= modelMapper.map(challengeDTO.getHint(), HintsEntity.class);
+        hint.setChallenge(challengeEntity);
+        challengeEntity.setHint(hint);
+
+
         try {
             challengeEntity = this.challengeRepository.save(challengeEntity);
         }catch (Exception e) {
@@ -119,6 +129,9 @@ public class ChallengeService {
         challengeEntity.setMarkingType(challengeDTO.getMarkingType());
         challengeEntity.setAttempts(challengeDTO.getAttempts());
         challengeEntity.setAnswer(challengeDTO.getAnswer());
+        challengeEntity.getHint().setDescription(challengeDTO.getHint().getDescription());
+        challengeEntity.getHint().setDeductMark(challengeDTO.getHint().getDeductMark());
+        challengeEntity.getHint().setShowHint(challengeDTO.getHint().isShowHint());
         challengeRepository.save(challengeEntity);
         return challengeEntity;
     }

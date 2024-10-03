@@ -48,7 +48,7 @@ public class TeamDTO {
 
 
     public int getScore(){
-        return submissions.stream().mapToInt(sub-> sub.isPublished()?sub.getResult().getScore():0).sum();
+        return submissions.stream().mapToInt(sub-> sub.isPublished()?sub.getScore():0).sum();
     }
 
     public LocalDateTime getLastSubmissionTime(){

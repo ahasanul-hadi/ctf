@@ -5,18 +5,17 @@ import com.cirt.ctf.marking.ResultEntity;
 import com.cirt.ctf.team.TeamEntity;
 import com.cirt.ctf.user.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
 @Data
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SubmissionDTO {
     private long id;
 
@@ -29,8 +28,11 @@ public class SubmissionDTO {
     private TeamEntity team;
     private User takenBy;
     private boolean isPublished=false;
+    private Integer score;
     private ResultEntity result;
     private MultipartFile file;
     private long challengeID;
     private String markingType;
+
+    private Integer penalty;
 }
