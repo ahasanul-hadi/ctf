@@ -80,7 +80,7 @@
                     </select>
                 </div>
             </div><br/>
-            <div class="form-group row">
+            <!-- <div class="form-group row">
                 <label for="markingType" class="col-md-3 col-form-label"><strong>Marking Type</strong></label>
                 <div class="col-md-6">
                     <select class="col-md-6 form-control" th:field="*{markingType}" id="markingType" required>
@@ -88,22 +88,37 @@
                         <option th:value="auto">Auto</option> 
                     </select>
                 </div>
-            </div><br/>
+            </div><br/> -->
             <div class="form-group row">
                 <label for="attempts" class="col-md-3 col-form-label"><strong>Attempts allowed</strong></label>
                 <div class="col-md-6">
                     <input class="col-md-6 form-control" type="number" th:field="*{attempts}" id="attempts" required></input>
                 </div>
             </div><br/>
-            <div class="form-group row">
-                <label for="answer" class="col-md-3 col-form-label"><strong>Answer</strong></label>
-                <div class="col-md-6">
-                    <!-- <input class="col-md-6 form-control" type="number" th:field="*{attempts}" id="answer"></input> -->
-                    <textarea class="col-md-6 form-control" th:field="*{answer}" id="answer" >
-            
-                    </textarea>
-                </div>
-            </div><br/>
+            <input hidden type="text" th:field="*{markingType}"/>
+            <div class="form-group row" style="color: blue;">
+                <label for="markingType" class="col-md-3 col-form-label"><strong>Marking Type: &nbsp;</strong><strong th:text="${challenge.markingType}"></strong></label>
+            </div>
+            <section id="forAutoChallenge" th:if="${challenge.markingType == 'auto'}">
+                <div class="form-group row">
+                    <label for="team" class="col-md-3 col-form-label"><strong>Team</strong></label>
+                    <div class="col-md-6">
+                        <select class="col-md-6 form-control" id="team" required th:field="${autoAnswer.teamId}">
+                            <option th:value="-1" disabled>Select a Team</option>
+                            <option th:each="team: ${teams}" th:value="${team.id}" th:text="${team.teamName}"></option> 
+                        </select>
+                    </div>
+                </div><br/>
+                <div class="form-group row">
+                    <label for="answer" class="col-md-3 col-form-label"><strong>Answer</strong></label>
+                    <div class="col-md-6">
+                        <!-- <input class="col-md-6 form-control" type="number" th:field="*{attempts}" id="answer"></input> -->
+                        <textarea class="col-md-6 form-control" th:field="${autoAnswer.answer}" id="answer" >
+                
+                        </textarea>
+                    </div>
+                </div><br/>
+            </section>
             <textarea class="ustify-content-center align-items-center" id="descriptionHtml" hidden th:field="*{description}">
 
             </textarea>
@@ -125,7 +140,7 @@
                 </div>
             </div><br/>
             <div class="form-group row">
-                <label for="visibility" class="col-md-3 col-form-label"><strong>Visibility</strong></label>
+                <label for="visibility" class="col-md-3 col-form-label"><strong>Hint Visibility</strong></label>
                 <div class="col-md-6">
                     <select class="col-md-6 form-control" th:field="*{hint.showHint}">
                         <option th:selected="${challenge.hint.showHint==false}" th:value="false">Hidden</option>
@@ -186,6 +201,19 @@
         descriptionHTML = $(".ql-editor").html();
         $("#descriptionHtml").val(descriptionHTML);
         console.log(descriptionHTML);
+    });
+    
+    
+    $("#team").change( function(e) {
+        let sentData = {
+            challenge: location.pathname.split("/").pop(),
+            team: $("#team").val()
+        }
+        $.get("/autoAnswer", sentData, function(data, status){
+            if( status === "success" ) {
+                $("#answer").val(data);
+            }
+        });
     });
 
 </script>

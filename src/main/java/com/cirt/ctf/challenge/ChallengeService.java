@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChallengeService {
     private final ChallengeRepository challengeRepository;
+    private final AutoAnswerRepository autoAnswerRepository;
     private final ModelMapper modelMapper;
 
     public ChallengeEntity getChallengeById(long id) {
@@ -66,14 +67,13 @@ public class ChallengeService {
         return challengeDTOs;
     }
 
-    public ChallengeEntity saveChallenge(ChallengeDTO challengeDTO) {
+    public ChallengeEntity saveChallenge(ChallengeDTO challengeDTO, AutoAnswerDTO autoAnswerDTO) {
         Date date = null;
         try {
             date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeDTO.getDeadline());
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         ChallengeEntity challengeEntity = new ChallengeEntity();
         challengeEntity.setTitle(challengeDTO.getTitle());
         challengeEntity.setCategory(challengeDTO.getCategory());
@@ -83,20 +83,25 @@ public class ChallengeService {
         challengeEntity.setDeadline(date.toInstant().atZone(ZoneId.of("Asia/Dhaka")).toLocalDateTime());
         challengeEntity.setAttempts(challengeDTO.getAttempts());
         challengeEntity.setDescription(challengeDTO.getDescription());
-        challengeEntity.setAnswer(challengeDTO.getAnswer());
         challengeEntity.setScoreboardPublished(challengeDTO.getMarkingType().equals("auto") ? true : false);
-
-
+        
         HintsEntity hint= modelMapper.map(challengeDTO.getHint(), HintsEntity.class);
         hint.setChallenge(challengeEntity);
         challengeEntity.setHint(hint);
 
-
         try {
             challengeEntity = this.challengeRepository.save(challengeEntity);
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
+        if(challengeEntity.getMarkingType().equals("auto")) {
+            AutoAnswerEntity autoAnswerEntity = new AutoAnswerEntity();
+            autoAnswerEntity.setChallengeId(challengeEntity.getId());
+            autoAnswerEntity.setTeamId(autoAnswerDTO.getTeamId());
+            autoAnswerEntity.setAnswer(autoAnswerDTO.getAnswer());
+            this.autoAnswerRepository.save(autoAnswerEntity);
+        }
+        
         return challengeEntity;
     }
 
@@ -112,8 +117,9 @@ public class ChallengeService {
         return challengeRepository.findByMarkingType("manual").stream().map(entity->modelMapper.map(entity,ChallengeDTO.class)).toList();
     }
 
-    public ChallengeEntity updateChallenge(Long id, ChallengeDTO challengeDTO) {
+    public ChallengeEntity updateChallenge(Long id, ChallengeDTO challengeDTO, AutoAnswerDTO autoAnswerDTO) {
         ChallengeEntity challengeEntity = challengeRepository.findById(id).orElseThrow();
+        AutoAnswerEntity autoAnswerEntity = new AutoAnswerEntity();
         Date date = null;
         try {
             date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeDTO.getDeadline());
@@ -126,13 +132,18 @@ public class ChallengeService {
         challengeEntity.setTotalMark(challengeDTO.getTotalMark());
         challengeEntity.setDeadline(date.toInstant().atZone(ZoneId.of("Asia/Dhaka")).toLocalDateTime());
         challengeEntity.setVisibility(challengeDTO.getVisibility());
-        challengeEntity.setMarkingType(challengeDTO.getMarkingType());
+        //challengeEntity.setMarkingType(challengeDTO.getMarkingType());
         challengeEntity.setAttempts(challengeDTO.getAttempts());
-        challengeEntity.setAnswer(challengeDTO.getAnswer());
         challengeEntity.getHint().setDescription(challengeDTO.getHint().getDescription());
         challengeEntity.getHint().setDeductMark(challengeDTO.getHint().getDeductMark());
         challengeEntity.getHint().setShowHint(challengeDTO.getHint().isShowHint());
         challengeRepository.save(challengeEntity);
+        if(challengeDTO.getMarkingType().equals("auto")) {
+            autoAnswerEntity.setTeamId(autoAnswerDTO.getTeamId());
+            autoAnswerEntity.setChallengeId(id);
+            autoAnswerEntity.setAnswer(autoAnswerDTO.getAnswer());
+            this.autoAnswerRepository.save(autoAnswerEntity);
+        }
         return challengeEntity;
     }
 

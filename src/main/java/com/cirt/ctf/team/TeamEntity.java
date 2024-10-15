@@ -1,5 +1,6 @@
 package com.cirt.ctf.team;
 
+import com.cirt.ctf.challenge.AutoAnswerEntity;
 import com.cirt.ctf.submission.SubmissionEntity;
 import com.cirt.ctf.user.User;
 import jakarta.persistence.*;
@@ -44,6 +45,10 @@ public class TeamEntity {
 
     @OneToMany(mappedBy = "team")
     private List<SubmissionEntity> submissions;
+
+    @ManyToOne
+    @JoinColumn( name = "answer_id" )
+    private AutoAnswerEntity answer;
 
     public void addMember(User member) {
         members.add(member);

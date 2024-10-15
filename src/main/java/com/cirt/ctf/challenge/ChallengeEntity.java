@@ -57,13 +57,14 @@ public class ChallengeEntity {
     @Column(name = "visibility", nullable = false, length=10)
     private String visibility;
 
-    @Column(name = "answer", nullable = true, length=255)
-    private String answer;
-
 
     @OneToOne(mappedBy = "challenge", optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private HintsEntity hint;
 
+    @ManyToOne
+    @JoinColumn( name = "answer_id" )
+    private AutoAnswerEntity answer;
+    
     @CreationTimestamp(source = SourceType.DB)
     private Instant createdAt;
 

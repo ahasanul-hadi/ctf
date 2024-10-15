@@ -1,5 +1,7 @@
 package com.cirt.ctf.submission;
 
+import com.cirt.ctf.challenge.AutoAnswerControllerService;
+import com.cirt.ctf.challenge.AutoAnswerEntity;
 import com.cirt.ctf.challenge.ChallengeDTO;
 import com.cirt.ctf.challenge.ChallengeEntity;
 import com.cirt.ctf.challenge.ChallengeService;
@@ -41,7 +43,7 @@ public class SubmissionController {
     private final DocumentService documentService;
     private final UserService userService;
     private final ChallengeService challengeService;
-
+    private final AutoAnswerControllerService autoAnswerService;
     @GetMapping
     public String getSubmissions(Model model, Principal principal){
         User user= userService.findUserByEmail(principal.getName()).orElseThrow();
@@ -98,8 +100,9 @@ public class SubmissionController {
         if(challengeEntity.getMarkingType().equals("auto")) {
             // generate verdict 
             resultDTO.setMarkingTime(LocalDateTime.now());
-            String answer = challengeEntity.getAnswer();
-            String submittedAnswer = submissionDTO.getDocumentID();
+            Long teamId = user.getTeam().getId();
+            String answer = autoAnswerService.getAutoAnswerForJudge(challengeEntity.getId(), teamId);
+            String submittedAnswer = submissionDTO.getDocumentID();     // for auto type, doc ID holds the 
             String verdict = generateAutoVerdict(answer, submittedAnswer);
             resultDTO.setComments(verdict);
             if(verdict.equals("ACCEPTED")) {

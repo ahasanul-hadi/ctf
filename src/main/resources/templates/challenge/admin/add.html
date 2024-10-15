@@ -84,8 +84,8 @@
                 <label for="markingType" class="col-md-3 col-form-label"><strong>Marking Type</strong></label>
                 <div class="col-md-6">
                     <select class="col-md-6 form-control" th:field="*{markingType}" id="markingType" required>
-                        <option th:value="manual">Manual</option>
                         <option th:value="auto">Auto</option> 
+                        <option th:value="manual">Manual</option>
                     </select>
                 </div>
             </div><br/>
@@ -95,22 +95,33 @@
                     <input class="col-md-6 form-control" type="number" th:field="*{attempts}" id="attempts" required></input>
                 </div>
             </div><br/>
-            <div class="form-group row">
-                <label for="answer" class="col-md-3 col-form-label"><strong>Answer</strong></label>
-                <div class="col-md-6">
-                    <!-- <input class="col-md-6 form-control" type="number" th:field="*{attempts}" id="answer"></input> -->
-                    <textarea class="col-md-6 form-control" th:field="*{answer}" id="answer" >
-            
-                    </textarea>
-                </div>
-            </div><br/>
+            <section id="forAutoChallenge">
+                <div class="form-group row">
+                    <label for="markingType" class="col-md-3 col-form-label"><strong>Team</strong></label>
+                    <div class="col-md-6">
+                        <select class="col-md-6 form-control" th:field="${autoAnswer.teamId}" id="team" required>
+                            <option th:value="-1" disabled>Select a Team</option>
+                            <option th:each="team: ${teams}" th:value="${team.id}" th:text="${team.teamName}"></option> 
+                        </select>
+                    </div>
+                </div><br/>
+                <div class="form-group row">
+                    <label for="answer" class="col-md-3 col-form-label"><strong>Answer</strong></label>
+                    <div class="col-md-6">
+                        <!-- <input class="col-md-6 form-control" type="number" th:field="*{attempts}" id="answer"></input> -->
+                        <textarea class="col-md-6 form-control" th:field="${autoAnswer.answer}" id="answer" >
+                
+                        </textarea>
+                    </div>
+                </div><br/>
+            </section>
             <textarea class="ustify-content-center align-items-center" id="descriptionHtml" hidden th:field="*{description}">
             </textarea>
 
             <hr/>
 
             <div class="form-group row">
-                <label for="attempts" class="col-md-3 col-form-label"><strong>Hint mark deduction</strong></label>
+                <label for="hint" class="col-md-3 col-form-label"><strong>Hint mark deduction</strong></label>
                 <div class="col-md-6">
                     <input class="col-md-6 form-control" type="number" th:field="*{hint.deductMark}" />
                 </div>
@@ -123,7 +134,7 @@
                 </div>
             </div><br/>
             <div class="form-group row">
-                <label for="visibility" class="col-md-3 col-form-label"><strong>Visibility</strong></label>
+                <label for="visibility" class="col-md-3 col-form-label"><strong>Hint Visibility</strong></label>
                 <div class="col-md-6">
                     <select class="col-md-6 form-control" th:field="*{hint.showHint}">
                         <option th:value="false">Hidden</option>
@@ -187,6 +198,13 @@
         descriptionHTML = $(".ql-editor").html();
         $("#descriptionHtml").val(descriptionHTML);
         console.log(descriptionHTML);
+    });
+    $("#markingType").change( function(e) {
+        if($("#markingType").val() === "manual") {
+            $("#forAutoChallenge").slideUp();
+        } else {
+            $("#forAutoChallenge").slideDown();
+        }
     });
 
 </script>
