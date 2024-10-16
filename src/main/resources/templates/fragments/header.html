@@ -47,11 +47,11 @@
 					</li>
 					
 
-					<li class="nav-item dropdown">
+					<li class="nav-item dropdown" sec:authorize="isAuthenticated()">
 						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							Profile
 						</a>
-						<ul sec:authorize="isAuthenticated()" class="dropdown-menu" id="profileMainMenu">
+						<ul class="dropdown-menu" id="profileMainMenu">
 							<li class="nav-item">
 								<a sec:authorize="hasAnyAuthority('ADMIN')"  class="nav-link" th:href="@{/settings}">Settings</a>
 							</li>
@@ -74,12 +74,21 @@
 
 						</ul>
 					</li>
-
+					<li sec:authorize="!isAuthenticated()" class="nav-item">
+						<a class="nav-link" th:href="@{/login}">
+                            <span class="d-block" data-toggle="tooltip" data-placement="bottom" title="Login">
+                                <i class="fas fa-sign-in-alt d-none d-md-block d-lg-none"></i>
+                            </span>
+							<span class="d-sm-block d-md-none d-lg-block">
+                                <i class="fas fa-sign-in-alt pr-1"></i>Login
+                            </span>
+						</a>
+					</li>
 				</ul>
 
 				<hr class="d-sm-flex d-md-flex d-lg-none">
 
-				<ul class="navbar-nav ml-md-auto d-block d-sm-flex d-md-flex">
+				<!-- <ul class="navbar-nav ml-md-auto d-block d-sm-flex d-md-flex">
 					<li sec:authorize="!isAuthenticated()" class="nav-item">
 						<a class="nav-link" th:href="@{/login}">
                             <span class="d-block" data-toggle="tooltip" data-placement="bottom" title="Login">
@@ -91,7 +100,7 @@
 						</a>
 					</li>
 
-				</ul>
+				</ul> -->
 			</div>
 		</div>
 	</nav>
