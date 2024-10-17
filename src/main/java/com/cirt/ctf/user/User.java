@@ -55,11 +55,11 @@ public class User implements UserDetails, CredentialsContainer {
     @Column(name="avatar_id")
     private String avatarID;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     private TeamEntity team;
 
-    @OneToMany(mappedBy = "solver", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "solver", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<SubmissionEntity> submissions;
 
 
