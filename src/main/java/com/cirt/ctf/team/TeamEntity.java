@@ -30,7 +30,7 @@ public class TeamEntity {
     @Column(name = "payment_email", nullable = false, unique = true)
     private String paymentEmail;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "team", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "team", fetch = FetchType.EAGER)
     private List<User> members;
 
     @ManyToOne(fetch = FetchType.LAZY)
