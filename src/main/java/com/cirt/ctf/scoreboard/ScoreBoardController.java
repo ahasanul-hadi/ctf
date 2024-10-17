@@ -37,7 +37,7 @@ public class ScoreBoardController {
         if(settingsEntity.getScoreboardVisibility().equals("private")) {
             return "redirect:/login";
         } else {
-            List<TeamDTO> scoreList= scoreBoardService.getScoreboard();
+            List<ScoreSummary> scoreList= scoreBoardService.getScoreboardV2();
             log.info("scoreList size:"+scoreList.size());
             model.addAttribute("scoreboard",scoreList);
             model.addAttribute("top10",scoreBoardService.getTop10());
@@ -47,15 +47,6 @@ public class ScoreBoardController {
     }
     @GetMapping
     public String getScoreboard(Model model){
-        List<TeamDTO> scoreList= scoreBoardService.getScoreboard();
-        log.info("scoreList size:"+scoreList.size());
-        model.addAttribute("scoreboard",scoreList);
-        model.addAttribute("top10",scoreBoardService.getTop10());
-        return "scoreboard/scoreboard";
-    }
-
-    @GetMapping("/v2")
-    public String getScoreboardV2(Model model){
         List<ScoreSummary> scoreList= scoreBoardService.getScoreboardV2();
         log.info("scoreList size:"+scoreList.size());
         model.addAttribute("scoreboard",scoreList);

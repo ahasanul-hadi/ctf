@@ -61,7 +61,7 @@ public class TeamController {
 
     }
 
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping()
     public String getTeams( ModelMap model, HttpServletRequest request){
         List<TeamDTO> teams= teamService.getTeams();
