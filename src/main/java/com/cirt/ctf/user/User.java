@@ -55,7 +55,7 @@ public class User implements UserDetails, CredentialsContainer {
     @Column(name="avatar_id")
     private String avatarID;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     private TeamEntity team;
 
