@@ -59,7 +59,7 @@ public class User implements UserDetails, CredentialsContainer {
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     private TeamEntity team;
 
-    @OneToMany(mappedBy = "solver", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "solver", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<SubmissionEntity> submissions;
 
 
