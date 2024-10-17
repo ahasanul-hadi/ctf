@@ -54,6 +54,7 @@
             <th>Answer</th>
             <th>Comments</th>
             <th sec:authorize="hasAuthority('ADMIN')">Taken By</th>
+            <th>Submission Mark</th>
             <th>Hint Penalty</th>
             <th>Score</th>
 
@@ -82,6 +83,7 @@
             <td th:text="${sub.result?.comments}" ><strong> Text Answer Sample </strong></td>
             <td sec:authorize="hasAuthority('ADMIN')" th:text="${sub.takenBy?.name}" />
 
+            <td th:text="${(sub.isPublished==true)?sub.mark:'-'}" />
             <td th:text="${(sub.isPublished==true)?sub.penalty:'-'}" />
             <td th:text="${(sub.isPublished==true)?sub.score:'-'}" />
 

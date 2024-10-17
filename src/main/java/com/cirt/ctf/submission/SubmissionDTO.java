@@ -28,11 +28,12 @@ public class SubmissionDTO {
     private TeamEntity team;
     private User takenBy;
     private boolean isPublished=false;
+    private Integer mark;
+    private Integer penalty;
     private Integer score;
     private ResultEntity result;
     private MultipartFile file;
     private long challengeID;
     private String markingType;
 
-    private Integer penalty;
 }

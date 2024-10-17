@@ -117,7 +117,7 @@ public class ScoreBoardService {
     public List<CategoryBreakdown> getCategoryWiseSolved(TeamDTO teamDTO){
         Map<String,CategoryBreakdown> map= new HashMap<>();
         submissionRepository.findByTeam(teamDTO.getId()).forEach(sub->{
-            if(sub.isPublished() && sub.getResult().getScore()>0){
+            if(sub.isPublished() && sub.getScore()>0){
                 String category= sub.getChallenge().getCategory();
                 CategoryBreakdown breakdown= map.getOrDefault(category, new CategoryBreakdown(category,0));
                 breakdown.solved++;

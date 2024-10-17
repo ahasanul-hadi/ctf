@@ -4,6 +4,8 @@ import com.cirt.ctf.document.DocumentEntity;
 import com.cirt.ctf.document.DocumentService;
 import com.cirt.ctf.enums.Role;
 import com.cirt.ctf.exception.ApplicationException;
+import com.cirt.ctf.hints.HintsEntity;
+import com.cirt.ctf.hints.HintsRepository;
 import com.cirt.ctf.hints.TeamHintsEntity;
 import com.cirt.ctf.hints.TeamHintsRepository;
 import com.cirt.ctf.marking.ResultDTO;
@@ -17,7 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,8 @@ public class SubmissionService {
     private final ModelMapper modelMapper;
     private final DocumentService documentService;
     private final TeamHintsRepository teamHintsRepository;
+    private final TeamRepository teamRepository;
+    private final HintsRepository hintsRepository;
 
     public List<SubmissionDTO> findAll(){
         return submissionRepository.findAll().stream().map(this::mapToDTO).toList();
@@ -74,11 +80,11 @@ public class SubmissionService {
         submissionEntity.setResult(resultEntity);
 
         Integer hintPenalty = teamHintsRepository.findByTeamIdAndHintId(submissionEntity.getTeam().getId(), submissionEntity.getChallenge().getId()).map(e->e.getHint().getDeductMark()).orElse(0);
-        int score= resultEntity.getScore() - hintPenalty;
-        score= Math.max(0, score);
-
+        submissionEntity.setMark(resultDTO.getScore());
         submissionEntity.setPenalty(hintPenalty);
-        submissionEntity.setScore(score);
+        submissionEntity.setScore(submissionEntity.getMark() - submissionEntity.getPenalty());
+
+
         //only verified when score is published
         //submissionEntity.setPublished(true);
         if(submissionEntity.getChallenge().isScoreboardPublished()){
@@ -142,5 +148,25 @@ public class SubmissionService {
 
     public List<SubmissionEntity> findAllSubmissions() {
         return submissionRepository.findAllSubmissions();
+    }
+
+    public void submitPenalty(Long teamID, User requester, HintsEntity hint) {
+        Optional<SubmissionEntity> optionalSubmissionEntity =submissionRepository.getSubmissionByTeamAndChallenge(teamID, hint.getChallenge().getId());
+        SubmissionEntity submissionEntity= optionalSubmissionEntity.orElseGet(()->{
+            SubmissionEntity entity= new SubmissionEntity();
+            entity.setTeam(teamRepository.getReferenceById(teamID));
+            entity.setChallenge(hint.getChallenge());
+            entity.setSubmissionTime(LocalDateTime.now());
+            entity.setSolver(requester);
+            if(hint.getChallenge().isScoreboardPublished())
+                entity.setPublished(true);
+            entity.setMark(null);
+            return entity;
+        });
+        int mark= submissionEntity.getMark()==null? 0: submissionEntity.getMark();
+        submissionEntity.setPenalty(hint.getDeductMark());
+        submissionEntity.setScore(mark - submissionEntity.getPenalty());
+
+        submissionRepository.save(submissionEntity);
     }
 }

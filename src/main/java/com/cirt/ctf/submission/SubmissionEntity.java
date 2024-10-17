@@ -47,11 +47,14 @@ public class SubmissionEntity {
     @Column(name = "is_published")
     private boolean isPublished=false;
 
-    @Column(name = "score")
-    private Integer score;
+    @Column(name = "mark")
+    private Integer mark;
 
     @Column(name = "penalty")
     private Integer penalty;
+
+    @Column(name = "score")
+    private Integer score;
 
     @OneToOne(mappedBy = "submission",  cascade = CascadeType.ALL, orphanRemoval = true)
     private ResultEntity result;

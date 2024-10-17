@@ -7,6 +7,7 @@ import com.cirt.ctf.submission.SubmissionDTO;
 import com.cirt.ctf.submission.SubmissionService;
 import com.cirt.ctf.user.User;
 import com.cirt.ctf.user.UserService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,19 +32,22 @@ import java.util.Optional;
 public class HintsController {
     private final HintsService hintsService;
     private  final UserService userService;
-    private final ChallengeService challengeService;
+    private final SubmissionService submissionService;
 
 
 
     @GetMapping("/fetch/{id}")
+    @Transactional
     public String fetchHintById(@PathVariable("id") Long hintID, Model model, Principal principal, final RedirectAttributes redirectAttributes) throws ApplicationException {
 
         User requester= userService.findUserByEmail(principal.getName()).orElseThrow();
         HintsEntity hint= hintsService.getHintById(hintID);
 
         Optional<TeamHintsEntity> teamHint= hintsService.getTeamHint(requester.getTeam().getId(), hintID);
-        if(teamHint.isEmpty())
+        if(teamHint.isEmpty()) {
             hintsService.requestHint(requester.getTeam().getId(), hintID, requester.getId());
+            submissionService.submitPenalty(requester.getTeam().getId(), requester, hint);
+        }
 
         model.addAttribute("hint",hint);
         return "hint/hint-preview";

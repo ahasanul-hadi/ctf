@@ -73,9 +73,9 @@ public class TeamController {
     public String getTeamMembers( @PathVariable("id") Long id,  ModelMap model){
         TeamDTO teamDTO = teamService.findById(id);
         model.addAttribute("team", teamDTO);
-        model.addAttribute("solved",teamService.getSolvedCount(teamDTO));
-        model.addAttribute("failed",teamService.getFailedCount(teamDTO));
-        model.addAttribute("categoryList", scoreBoardService.getCategoryWiseSolved(teamDTO));
+        //model.addAttribute("solved",teamService.getSolvedCount(teamDTO));
+        //model.addAttribute("failed",teamService.getFailedCount(teamDTO));
+        //model.addAttribute("categoryList", scoreBoardService.getCategoryWiseSolved(teamDTO));
         model.addAttribute("place",scoreBoardService.getPlace(teamDTO.getId()));
         return "team/teamMembers";
     }

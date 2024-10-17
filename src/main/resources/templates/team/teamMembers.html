@@ -131,6 +131,7 @@
 <script th:src="@{/assets/vendor/datatable/js/bootbox.js}"></script>
 <script th:src="@{/assets/vendor/datatable/js/plotly-latest.min.js}"></script>
 
+<!--
 <script th:inline="javascript" th:with="solvedTimes=${team.getIncrementalScore().![time]},solvedScores=${team.getIncrementalScore().![score]}, categories=${categoryList.![category]}, solvedCategories=${categoryList.![solved]}">
 
     var solved=/*[[${solved}]]*/;
@@ -198,7 +199,7 @@
     Plotly.newPlot('categoryDiv', categoryData, categoryLayout, {displaylogo: false});
 
 
-    <!--Score over time-->
+  
     var data = [
       {
         x: solvedTimes,
@@ -217,6 +218,7 @@ Plotly.newPlot('scoreTime', data, scoreLayout);
 
 
 </script>
+-->
 
 </body>
 </html>
