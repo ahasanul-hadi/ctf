@@ -124,6 +124,7 @@ public class SubmissionController {
     }
 
     private String generateAutoVerdict(String realAnswer, String submittedAnswer) {
-        return "ACCEPTED";
+        String verdictToReturn = realAnswer.trim().compareToIgnoreCase(submittedAnswer.trim()) == 0 ? "ACCEPTED" : "WRONG ANSWER";
+        return verdictToReturn;
     }
 }
