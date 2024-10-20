@@ -1,5 +1,10 @@
 package com.cirt.ctf.migration;
 
+import com.cirt.ctf.challenge.AutoAnswerControllerService;
+import com.cirt.ctf.challenge.AutoAnswerDTO;
+import com.cirt.ctf.challenge.AutoAnswerEntity;
+import com.cirt.ctf.challenge.ChallengeDTO;
+import com.cirt.ctf.challenge.ChallengeService;
 import com.cirt.ctf.enums.Role;
 import com.cirt.ctf.team.TeamDTO;
 import com.cirt.ctf.team.TeamEntity;
@@ -21,26 +26,34 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class MigrationService {
 
-    @Value("${document.upload.directory:/upload}")
+    @Value("${document.upload.directory:/uploads}")
     private String UPLOAD_DIR;
 
     private final ResourceLoader resourceLoader;
     private final TeamService teamService;
     private final UserService userService;
+    private final ChallengeService challengeService;
+    private final AutoAnswerControllerService autoAnswerService;
 
-    private static final String FILE_NAME = "team-info.xlsx";
+    private static final String REGISTRATION_FILE_NAME = "team-info.xlsx";
+    private static final String TEAMWISE_ANSWER_FILE_NAME = "team-answers.xlsx";
 
     public int loadUser() {
         String absPath=null;
         try{
             Path root = Paths.get(UPLOAD_DIR);
-            absPath= root.resolve(FILE_NAME).toAbsolutePath().toString();
+            absPath= root.resolve(REGISTRATION_FILE_NAME).toAbsolutePath().toString();
         }catch(Exception e){}
 
         int count=0;
@@ -140,6 +153,112 @@ public class MigrationService {
             e.printStackTrace();
         }
 
+        return count;
+    }
+
+    public int loadChallenges() {
+        String absPath=null;
+        try{
+            Path root = Paths.get(UPLOAD_DIR);
+            absPath= root.resolve(TEAMWISE_ANSWER_FILE_NAME).toAbsolutePath().toString();
+        }catch(Exception e){}
+
+        int count=0;
+
+        try {
+            File file=null;
+            try{
+                file= new File(absPath);
+            }catch (Exception e){}
+
+            try{
+                if(!file.exists()){
+                    Resource resource = resourceLoader.getResource("classpath:team-answers.xlsx");
+                    file = resource.getFile();
+                }
+
+            }catch (Exception e){}
+
+            FileInputStream excelFile = new FileInputStream(file);
+            Workbook workbook = new XSSFWorkbook(excelFile);
+            Sheet datatypeSheet = workbook.getSheetAt(0);
+            Iterator<Row> iterator = datatypeSheet.iterator();
+            List<AutoAnswerEntity> autoAnswerEntities = new ArrayList<AutoAnswerEntity>();
+            String[] revColumnMap = new String[20];
+            Set<Long> challengeIds = new HashSet<Long>();
+            int columnCount = 11;
+            //get header
+            Row header = iterator.next();
+            for(int i=0; i<columnCount; i++) {
+                revColumnMap[i] = header.getCell(i).getStringCellValue();
+            }
+            while (iterator.hasNext()) {
+                Row currentRow = iterator.next();
+                ChallengeDTO challengeDTO = new ChallengeDTO();
+                AutoAnswerEntity autoAnswerEntity = new AutoAnswerEntity();
+                // in case end of data set
+                if(currentRow.getCell(0) == null) {
+                    break;
+                }
+                for(int i=0; i<columnCount; i++) {
+                    String currentColumn = revColumnMap[i];
+                    
+                    switch (currentColumn) {
+                        case "title":
+                            challengeDTO.setTitle(currentRow.getCell(i).getStringCellValue().trim());
+                            break;
+                        case "category":
+                            challengeDTO.setCategory(currentRow.getCell(i).getStringCellValue().trim());
+                            break;
+                        case "description":
+                            challengeDTO.setDescription(currentRow.getCell(i).getStringCellValue().trim());
+                            break;
+                        case "deadline":
+                            challengeDTO.setDeadline(currentRow.getCell(i).getStringCellValue().trim());
+                            break;
+                        case "visibility":
+                            challengeDTO.setVisibility(currentRow.getCell(i).getStringCellValue().trim());
+                            break;
+                        case "marking_type":
+                            challengeDTO.setMarkingType(currentRow.getCell(i).getStringCellValue().trim());
+                            break;
+                        case "answer":
+                            autoAnswerEntity.setAnswer(currentRow.getCell(i).getStringCellValue().trim());
+                            break;
+                        case "total_mark":
+                            challengeDTO.setTotalMark((int) currentRow.getCell(i).getNumericCellValue());
+                            break;
+                        case "attempt_allowed":
+                            if(challengeDTO.getMarkingType().equals("auto"))
+                                challengeDTO.setAttempts((int) currentRow.getCell(i).getNumericCellValue());
+                            else 
+                                challengeDTO.setAttempts(1);
+                            break;
+                        case "challenge_id":
+                            long challenge_id = (long) currentRow.getCell(i).getNumericCellValue();
+                            challengeDTO.setId(challenge_id);
+                            autoAnswerEntity.setChallengeId(challenge_id);
+                            break;
+                        case "team_id":
+                            autoAnswerEntity.setTeamId(Long.parseLong(currentRow.getCell(i).getStringCellValue().trim()));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if(!challengeIds.contains(challengeDTO.getId())) {
+                    this.challengeService.saveChallengeFromExcel(challengeDTO);
+                }
+                if(challengeDTO.getMarkingType().equals("auto")) {
+                    autoAnswerEntities.add(autoAnswerEntity);
+                }    
+            }
+            autoAnswerService.addAllRecords(autoAnswerEntities);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return count;
     }
 }

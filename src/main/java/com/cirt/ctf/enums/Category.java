@@ -1,8 +1,10 @@
 package com.cirt.ctf.enums;
 
 public enum Category {
-    Windows,
-    Linux,
+    Web_Challenge,
+    Forensic,
     Network,
-    Miscellaneous
+    OSINT,
+    Crypto,
+    MISC
 }

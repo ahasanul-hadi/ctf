@@ -103,8 +103,8 @@
                 <div class="form-group row">
                     <label for="team" class="col-md-3 col-form-label"><strong>Team</strong></label>
                     <div class="col-md-6">
-                        <select class="col-md-6 form-control" id="team" required th:field="${autoAnswer.teamId}">
-                            <option th:value="-1" disabled>Select a Team</option>
+                        <select class="col-md-6 form-control" id="team">
+                            <option th:value="-1" selected>Select a Team</option>
                             <option th:each="team: ${teams}" th:value="${team.id}" th:text="${team.teamName}"></option> 
                         </select>
                     </div>
@@ -112,8 +112,7 @@
                 <div class="form-group row">
                     <label for="answer" class="col-md-3 col-form-label"><strong>Answer</strong></label>
                     <div class="col-md-6">
-                        <!-- <input class="col-md-6 form-control" type="number" th:field="*{attempts}" id="answer"></input> -->
-                        <textarea class="col-md-6 form-control" th:field="${autoAnswer.answer}" id="answer" >
+                        <textarea class="col-md-6 form-control" id="answer" readonly>
                 
                         </textarea>
                     </div>

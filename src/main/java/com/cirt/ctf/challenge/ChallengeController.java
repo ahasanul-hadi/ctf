@@ -89,8 +89,8 @@ public class ChallengeController{
     }
 
     @PostMapping
-    public String submitForm(Model model, @ModelAttribute("challenge") ChallengeDTO challengeDTO, @ModelAttribute("autoAnswer") AutoAnswerDTO autoAnswerDTO, BindingResult result, final RedirectAttributes redirectAttributes) {
-        this.challengeService.saveChallenge(challengeDTO, autoAnswerDTO);
+    public String submitForm(Model model, @ModelAttribute("challenge") ChallengeDTO challengeDTO, BindingResult result, final RedirectAttributes redirectAttributes) {
+        this.challengeService.saveChallenge(challengeDTO);
         redirectAttributes.addFlashAttribute("message", "Challenge is successfully saved");
         redirectAttributes.addFlashAttribute("type", "success");
         return "redirect:/challenges";
@@ -111,9 +111,6 @@ public class ChallengeController{
         challengeDTO.setVisibility("hidden");
         challengeDTO.setAttempts(1);
         challengeDTO.setAnswer("");
-        AutoAnswerDTO autoAnswerDTO = new AutoAnswerDTO();
-        autoAnswerDTO.setTeamId(-1L);
-        model.addAttribute("autoAnswer", autoAnswerDTO);
         model.addAttribute("challenge", challengeDTO);
         model.addAttribute("teams", teamList);
         if(!role.equals(Role.ADMIN.toString())) {
@@ -147,9 +144,6 @@ public class ChallengeController{
         String[] deadlineTokens = challengeEntity.getDeadline().toString().split(":");
         String deadline = String.join(":", deadlineTokens[0], deadlineTokens[1]);
         challengeDTO.setDeadline(deadline);
-        AutoAnswerDTO autoAnswerDTO = new AutoAnswerDTO();
-        autoAnswerDTO.setTeamId(-1L);
-        model.addAttribute("autoAnswer", autoAnswerDTO);
         model.addAttribute("challenge", challengeDTO);
         model.addAttribute("categories", Category.values());
         if(!role.equals(Role.ADMIN.toString()) ) {
@@ -160,18 +154,8 @@ public class ChallengeController{
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{id}")
-    public String updateChallenge(@PathVariable("id") Long id, Model model, @ModelAttribute("challenge") ChallengeDTO challengeDTO, @ModelAttribute("autoAnswer") AutoAnswerDTO autoAnswerDTO, Principal principal, RedirectAttributes redirectAttributes) {
-        User user= userService.findUserByEmail(principal.getName()).orElseThrow();
-
-        String role = user.getRole().toString();
-        if(role.equals(Role.ADMIN.toString())) {
-            AutoAnswerEntity autoAnswerEntity = this.autoAnswerService.getAutoAnswerRowForAdmin(id, autoAnswerDTO.getTeamId());
-            if( autoAnswerEntity != null ) {
-                String retValue = autoAnswerService.deleteSingleRowByAdmin(autoAnswerEntity);
-            }
-            challengeService.updateChallenge(id, challengeDTO, autoAnswerDTO);
-            
-        }
+    public String updateChallenge(@PathVariable("id") Long id, Model model, @ModelAttribute("challenge") ChallengeDTO challengeDTO, Principal principal, RedirectAttributes redirectAttributes) {
+        challengeService.updateChallenge(id, challengeDTO);
         redirectAttributes.addFlashAttribute("type", "success");
         redirectAttributes.addFlashAttribute("message", "Challenge successfully updated");
         return "redirect:/challenges";

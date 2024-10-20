@@ -67,7 +67,7 @@ public class ChallengeService {
         return challengeDTOs;
     }
 
-    public ChallengeEntity saveChallenge(ChallengeDTO challengeDTO, AutoAnswerDTO autoAnswerDTO) {
+    public ChallengeEntity saveChallenge(ChallengeDTO challengeDTO) {
         Date date = null;
         try {
             date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeDTO.getDeadline());
@@ -94,14 +94,37 @@ public class ChallengeService {
         } catch (Exception e) {
             throw e;
         }
-        if(challengeEntity.getMarkingType().equals("auto")) {
-            AutoAnswerEntity autoAnswerEntity = new AutoAnswerEntity();
-            autoAnswerEntity.setChallengeId(challengeEntity.getId());
-            autoAnswerEntity.setTeamId(autoAnswerDTO.getTeamId());
-            autoAnswerEntity.setAnswer(autoAnswerDTO.getAnswer());
-            this.autoAnswerRepository.save(autoAnswerEntity);
+        return challengeEntity;
+    }
+
+    public ChallengeEntity saveChallengeFromExcel(ChallengeDTO challengeDTO) {
+        Date date = null;
+        try {
+            date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeDTO.getDeadline());
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+        ChallengeEntity challengeEntity = new ChallengeEntity();
+        challengeEntity.setId(challengeDTO.getId());
+        challengeEntity.setTitle(challengeDTO.getTitle());
+        challengeEntity.setCategory(challengeDTO.getCategory());
+        challengeEntity.setTotalMark(challengeDTO.getTotalMark());
+        challengeEntity.setVisibility(challengeDTO.getVisibility());
+        challengeEntity.setMarkingType(challengeDTO.getMarkingType());
+        challengeEntity.setDeadline(date.toInstant().atZone(ZoneId.of("Asia/Dhaka")).toLocalDateTime());
+        challengeEntity.setAttempts(challengeDTO.getAttempts());
+        challengeEntity.setDescription(challengeDTO.getDescription());
+        challengeEntity.setScoreboardPublished(challengeDTO.getMarkingType().equals("auto") ? true : false);
         
+        HintsEntity hint= modelMapper.map(challengeDTO.getHint(), HintsEntity.class);
+        hint.setChallenge(challengeEntity);
+        challengeEntity.setHint(hint);
+
+        try {
+            challengeEntity = this.challengeRepository.save(challengeEntity);
+        } catch (Exception e) {
+            throw e;
+        }
         return challengeEntity;
     }
 
@@ -117,9 +140,8 @@ public class ChallengeService {
         return challengeRepository.findByMarkingType("manual").stream().map(entity->modelMapper.map(entity,ChallengeDTO.class)).toList();
     }
 
-    public ChallengeEntity updateChallenge(Long id, ChallengeDTO challengeDTO, AutoAnswerDTO autoAnswerDTO) {
+    public ChallengeEntity updateChallenge(Long id, ChallengeDTO challengeDTO) {
         ChallengeEntity challengeEntity = challengeRepository.findById(id).orElseThrow();
-        AutoAnswerEntity autoAnswerEntity = new AutoAnswerEntity();
         Date date = null;
         try {
             date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeDTO.getDeadline());
@@ -138,12 +160,6 @@ public class ChallengeService {
         challengeEntity.getHint().setDeductMark(challengeDTO.getHint().getDeductMark());
         challengeEntity.getHint().setShowHint(challengeDTO.getHint().isShowHint());
         challengeRepository.save(challengeEntity);
-        if(challengeDTO.getMarkingType().equals("auto")) {
-            autoAnswerEntity.setTeamId(autoAnswerDTO.getTeamId());
-            autoAnswerEntity.setChallengeId(id);
-            autoAnswerEntity.setAnswer(autoAnswerDTO.getAnswer());
-            this.autoAnswerRepository.save(autoAnswerEntity);
-        }
         return challengeEntity;
     }
 

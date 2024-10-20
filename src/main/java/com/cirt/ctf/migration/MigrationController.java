@@ -14,16 +14,30 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/migrations")
+@RequestMapping("/from-excel")
 @RequiredArgsConstructor
 public class MigrationController {
 
     private final MigrationService migrationService;
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/load")
+    @GetMapping("/register")
     public ResponseEntity<?> loadUser(Model model, Principal principal, final RedirectAttributes redirectAttributes){
         int count=migrationService.loadUser();
+        return new ResponseEntity<>("inserted rows:"+count, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/auto-challenge-add")
+    public ResponseEntity<?> loadAnswerTable(Model model, Principal principal, final RedirectAttributes redirectAttributes){
+        int count=migrationService.loadChallenges();
+        return new ResponseEntity<>("inserted rows:"+count, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/auto-answer-update")
+    public ResponseEntity<?> updateAnswerTable(Model model, Principal principal, final RedirectAttributes redirectAttributes){
+        int count=migrationService.loadChallenges();
         return new ResponseEntity<>("inserted rows:"+count, HttpStatus.OK);
     }
 
