@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 public class User implements UserDetails, CredentialsContainer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
