@@ -59,7 +59,7 @@ public class SubmissionController {
     @PostMapping
     public String saveSubmission(@Valid @ModelAttribute("submission") SubmissionDTO submissionDTO, BindingResult result, Model model, Principal principal, final RedirectAttributes redirectAttributes)
     {
-        SubmissionEntity returnedEntity = null;
+
         User user= userService.findUserByEmail(principal.getName()).orElseThrow();
         String role = user.getRole().toString();
         ChallengeEntity challengeEntity = challengeService.getChallengeById(submissionDTO.getChallengeID());
@@ -95,14 +95,17 @@ public class SubmissionController {
         submissionDTO.setSubmissionTime( LocalDateTime.now() );
         submissionDTO.setChallenge(challengeEntity);
         submissionDTO.setMarkingType(challengeEntity.getMarkingType());
-        ResultDTO resultDTO = new ResultDTO();
+
         // check for auto/manual marking type
+
+        SubmissionEntity submissionEntity = submissionService.createSubmission(submissionDTO);
+
         if(challengeEntity.getMarkingType().equals("auto")) {
-            // generate verdict 
+            ResultDTO resultDTO = new ResultDTO();
             resultDTO.setMarkingTime(LocalDateTime.now());
             Long teamId = user.getTeam().getId();
             String answer = autoAnswerService.getAutoAnswerForJudge(challengeEntity.getId(), teamId);
-            String submittedAnswer = submissionDTO.getDocumentID();     // for auto type, doc ID holds the 
+            String submittedAnswer = submissionDTO.getDocumentID();     // for auto type, doc ID holds the
             String verdict = generateAutoVerdict(answer, submittedAnswer);
             resultDTO.setComments(verdict);
             if(verdict.equals("ACCEPTED")) {
@@ -110,11 +113,7 @@ public class SubmissionController {
             } else {
                 resultDTO.setScore(0);
             }
-        }
-        returnedEntity = submissionService.createSubmission(submissionDTO);
-
-        if(challengeEntity.getMarkingType().equals("auto")) {
-            resultDTO.setSubmissionID(returnedEntity.getId());
+            resultDTO.setSubmissionID(submissionEntity.getId());
             submissionService.giveMark(resultDTO);
         }
         

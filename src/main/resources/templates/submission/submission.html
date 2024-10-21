@@ -47,7 +47,7 @@
             <th>SL</th>
             <th>Challenge</th>
             <th>Category</th>
-            <th>Team</th>
+            <th sec:authorize="hasAuthority('ADMIN')">Team</th>
             <th>User</th>
             <th>Submission Time</th>
 
@@ -69,7 +69,7 @@
             </td>
             <td th:text="${sub.challenge?.category}" />
 
-            <td>
+            <td sec:authorize="hasAuthority('ADMIN')">
                 <a th:href="@{'/teams/'+${sub.team?.id}}"><span th:text="${sub.team?.teamName}"></span></a>
             </td>
 

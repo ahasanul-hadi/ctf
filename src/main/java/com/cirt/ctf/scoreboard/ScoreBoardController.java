@@ -40,7 +40,7 @@ public class ScoreBoardController {
             List<ScoreSummary> scoreList= scoreBoardService.getScoreboardV2();
             log.info("scoreList size:"+scoreList.size());
             model.addAttribute("scoreboard",scoreList);
-            model.addAttribute("top10",scoreBoardService.getTop10());
+            model.addAttribute("top10",scoreBoardService.getTop10FromScoreboard(scoreList));
             return "scoreboard/scoreboard";
         }
         

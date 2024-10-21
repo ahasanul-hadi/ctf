@@ -33,10 +33,10 @@ public class UserController {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public String getUsers(Model model, Principal principal){
         List<User> users= userService.findAll();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<UserDTO> dtos= users.stream().map(user -> modelMapper.map(user,UserDTO.class)).toList();
         model.addAttribute("users",dtos);
 

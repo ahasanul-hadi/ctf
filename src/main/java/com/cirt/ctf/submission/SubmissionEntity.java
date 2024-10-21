@@ -56,6 +56,9 @@ public class SubmissionEntity {
     @Column(name = "score")
     private Integer score;
 
+    @Column(name = "attempt_count", columnDefinition = "integer default 0")
+    private int attemptCount;
+
     @OneToOne(mappedBy = "submission",  cascade = CascadeType.ALL, orphanRemoval = true)
     private ResultEntity result;
 

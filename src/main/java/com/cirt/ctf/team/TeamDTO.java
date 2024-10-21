@@ -30,6 +30,8 @@ public class TeamDTO {
     @NotEmpty(message = "Please enter valid Payment Email")
     private String paymentEmail;
 
+    private boolean isDisplayed=true;
+
     private List<SubmissionEntity> submissions;
 
     @JsonIgnore

@@ -70,23 +70,24 @@ public class SubmissionService {
 
     public void giveMark(ResultDTO resultDTO){
         SubmissionEntity submissionEntity= submissionRepository.findById(resultDTO.getSubmissionID()).orElseThrow();
-        ResultEntity resultEntity= ResultEntity.builder()
-                .score(resultDTO.getScore())
-                .comments(resultDTO.getComments())
-                .examiner(resultDTO.getExaminer())
-                .markingTime(resultDTO.getMarkingTime())
-                .submission(submissionEntity).build();
-
+        ResultEntity resultEntity= submissionEntity.getResult();
+        if(resultEntity==null)
+            resultEntity= new ResultEntity();
+        resultEntity.setScore(resultDTO.getScore());
+        resultEntity.setComments(resultDTO.getComments());
+        resultEntity.setExaminer(resultDTO.getExaminer());
+        resultEntity.setMarkingTime(resultDTO.getMarkingTime());
+        resultEntity.setSubmission(submissionEntity);
         submissionEntity.setResult(resultEntity);
 
-        Integer hintPenalty = teamHintsRepository.findByTeamIdAndHintId(submissionEntity.getTeam().getId(), submissionEntity.getChallenge().getId()).map(e->e.getHint().getDeductMark()).orElse(0);
-        submissionEntity.setMark(resultDTO.getScore());
-        submissionEntity.setPenalty(hintPenalty);
-        submissionEntity.setScore(submissionEntity.getMark() - submissionEntity.getPenalty());
 
+        submissionEntity.setMark(resultDTO.getScore());
+        //Integer hintPenalty = teamHintsRepository.findByTeamIdAndHintId(submissionEntity.getTeam().getId(), submissionEntity.getChallenge().getId()).map(e->e.getHint().getDeductMark()).orElse(0);
+        //submissionEntity.setPenalty(hintPenalty);
+        int penalty= submissionEntity.getPenalty()==null? 0: submissionEntity.getPenalty();
+        submissionEntity.setScore(submissionEntity.getMark() - penalty);
 
         //only verified when score is published
-        //submissionEntity.setPublished(true);
         if(submissionEntity.getChallenge().isScoreboardPublished()){
             submissionEntity.setPublished(true);
         }
@@ -95,31 +96,26 @@ public class SubmissionService {
     }
 
     public SubmissionEntity createSubmission(SubmissionDTO submissionDTO){
-        SubmissionEntity submissionEntity = new SubmissionEntity();
+        Optional<SubmissionEntity> optionalSubmission= submissionRepository.getSubmissionByTeamAndChallenge(submissionDTO.getTeam().getId(), submissionDTO.getChallenge().getId());
+        SubmissionEntity submissionEntity = optionalSubmission.orElse(new SubmissionEntity());
         submissionEntity.setChallenge(submissionDTO.getChallenge());
         submissionEntity.setSolver(submissionDTO.getSolver());
         submissionEntity.setTeam(submissionDTO.getTeam());
         submissionEntity.setSubmissionTime(submissionDTO.getSubmissionTime());
-        if((submissionDTO.getFile() != null && submissionDTO.getFile().getSize() > 0) || submissionDTO.getChallenge().getMarkingType().equals("manual")) {
-            try {
-                DocumentEntity documentEntity = documentService.saveDocument(submissionDTO.getFile());
-                submissionEntity.setDocumentID(documentEntity.getId());
-            } catch (Exception ignored){}
+        submissionEntity.setAttemptCount(submissionEntity.getAttemptCount()+1);
+        if((submissionDTO.getFile() != null && submissionDTO.getFile().getSize() > 0) && submissionDTO.getChallenge().getMarkingType().equals("manual")) {
+            DocumentEntity documentEntity = documentService.saveDocument(submissionDTO.getFile());
+            submissionEntity.setDocumentID(documentEntity.getId());
         } else {
             submissionEntity.setDocumentID(submissionDTO.getDocumentID());
         }
-        SubmissionEntity returned;
-        try {
-            returned = submissionRepository.save(submissionEntity);
-        } catch(Exception e) {
-            throw e;
-        }
-
-        return returned;
+        return submissionRepository.save(submissionEntity);
     }
 
     public Integer getSubmissionCount(Long teamID, Long challengeID){
-        return submissionRepository.getSubmissionListByChallengeAndTeam(teamID,challengeID).size();
+        //return submissionRepository.getSubmissionListByChallengeAndTeam(teamID,challengeID).size();
+        Optional<SubmissionEntity> optionalSubmissionEntity = submissionRepository.getSubmissionByTeamAndChallenge(teamID, challengeID);
+        return optionalSubmissionEntity.map(SubmissionEntity::getAttemptCount).orElse(0);
     }
 
     public boolean anySubmissionAccepted(Long teamID, Long challengeID) {
@@ -163,6 +159,14 @@ public class SubmissionService {
             entity.setMark(null);
             return entity;
         });
+        ResultEntity resultEntity = submissionEntity.getResult() ==null? new ResultEntity() : submissionEntity.getResult();
+        resultEntity.setSubmission(submissionEntity);
+        resultEntity.setMarkingTime(LocalDateTime.now());
+        resultEntity.setScore(hint.getDeductMark()*-1);
+        resultEntity.setComments("PENALTY");
+        submissionEntity.setResult(resultEntity);
+
+
         int mark= submissionEntity.getMark()==null? 0: submissionEntity.getMark();
         submissionEntity.setPenalty(hint.getDeductMark());
         submissionEntity.setScore(mark - submissionEntity.getPenalty());

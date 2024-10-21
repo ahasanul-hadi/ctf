@@ -26,8 +26,8 @@ public interface SubmissionRepository extends JpaRepository<SubmissionEntity,Lon
     List<SubmissionEntity> findByChallengeId(Long challengeID);
 
     @Query(value = """
-            SELECT t.id as id, t.team_name as teamName, t.team_organization as teamOrganization, sum(s.score) as score, max(submission_time) as maxSubmissionTime 
-            FROM teams t LEFT JOIN  submissions s ON s.team_id=t.id AND s.is_published=true
+            SELECT t.id as id, t.team_name as teamName, t.team_organization as teamOrganization, sum(IFNULL(s.score,0)) as score, max(submission_time) as maxSubmissionTime 
+            FROM teams t LEFT JOIN  submissions s ON s.team_id=t.id AND s.is_published=true AND s.score != 0
             where t.is_displayed = true
             GROUP BY t.id ORDER BY score DESC, maxSubmissionTime ASC, id ASC
             """,nativeQuery = true)

@@ -116,7 +116,7 @@ public class User implements UserDetails, CredentialsContainer {
                 if(!sub.isPublished())
                     return 0;
                 else
-                    return sub.getResult().getScore();
+                    return sub.getScore();
             }).sum();
     }
 }
