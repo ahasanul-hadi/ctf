@@ -123,7 +123,7 @@ public class SubmissionService {
         List<SubmissionEntity> submissionEntities = submissionRepository.getSubmissionListByChallengeAndTeam(teamID, challengeID);
 
         for(SubmissionEntity submissionEntity: submissionEntities) {
-            if(submissionEntity.getResult() !=null && submissionEntity.getResult().getComments().equals("ACCEPTED")) {
+            if(submissionEntity.getMark()!=null && submissionEntity.getMark()>0) {
                 isACCEPTED = true;
                 break;
             }
