@@ -3,11 +3,14 @@ package com.cirt.ctf.challenge;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import com.cirt.ctf.hints.HintsDTO;
@@ -98,12 +101,10 @@ public class ChallengeService {
     }
 
     public ChallengeEntity saveChallengeFromExcel(ChallengeDTO challengeDTO) {
-        Date date = null;
-        try {
-            date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeDTO.getDeadline());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        LocalDateTime formattedDeadline = LocalDateTime.parse(challengeDTO.getDeadline(), formatter);
+        System.out.println(formattedDeadline + formattedDeadline.toString());
         ChallengeEntity challengeEntity = new ChallengeEntity();
         challengeEntity.setId(challengeDTO.getId());
         challengeEntity.setTitle(challengeDTO.getTitle());
@@ -111,7 +112,7 @@ public class ChallengeService {
         challengeEntity.setTotalMark(challengeDTO.getTotalMark());
         challengeEntity.setVisibility(challengeDTO.getVisibility());
         challengeEntity.setMarkingType(challengeDTO.getMarkingType());
-        challengeEntity.setDeadline(date.toInstant().atZone(ZoneId.of("Asia/Dhaka")).toLocalDateTime());
+        challengeEntity.setDeadline(formattedDeadline);
         challengeEntity.setAttempts(challengeDTO.getAttempts());
         challengeEntity.setDescription(challengeDTO.getDescription());
         challengeEntity.setScoreboardPublished(challengeDTO.getMarkingType().equals("auto") ? true : false);
@@ -121,9 +122,11 @@ public class ChallengeService {
         challengeEntity.setHint(hint);
 
         try {
-            challengeEntity = this.challengeRepository.save(challengeEntity);
+            System.out.println(challengeEntity.getId());
+            challengeEntity = this.challengeRepository.saveAndFlush(challengeEntity);
         } catch (Exception e) {
-            throw e;
+            e.printStackTrace();
+            //throw e;
         }
         return challengeEntity;
     }
