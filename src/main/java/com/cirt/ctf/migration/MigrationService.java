@@ -6,6 +6,7 @@ import com.cirt.ctf.challenge.AutoAnswerEntity;
 import com.cirt.ctf.challenge.ChallengeDTO;
 import com.cirt.ctf.challenge.ChallengeService;
 import com.cirt.ctf.enums.Role;
+import com.cirt.ctf.hints.HintsDTO;
 import com.cirt.ctf.team.TeamDTO;
 import com.cirt.ctf.team.TeamEntity;
 import com.cirt.ctf.team.TeamService;
@@ -13,6 +14,8 @@ import com.cirt.ctf.user.UserDTO;
 import com.cirt.ctf.user.UserService;
 import com.cirt.ctf.util.Utils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +38,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MigrationService {
 
     @Value("${document.upload.directory:/uploads}")
@@ -163,8 +167,6 @@ public class MigrationService {
             absPath= root.resolve(TEAMWISE_ANSWER_FILE_NAME).toAbsolutePath().toString();
         }catch(Exception e){}
 
-        int count=0;
-
         try {
             File file=null;
             try{
@@ -202,9 +204,9 @@ public class MigrationService {
                 }
                 for(int i=0; i<columnCount; i++) {
                     String currentColumn = revColumnMap[i];
-                    
+                    log.info(currentColumn);
                     switch (currentColumn) {
-                        case "title":
+                        case "question_title":
                             challengeDTO.setTitle(currentRow.getCell(i).getStringCellValue().trim());
                             break;
                         case "category":
@@ -240,13 +242,16 @@ public class MigrationService {
                             autoAnswerEntity.setChallengeId(challenge_id);
                             break;
                         case "team_id":
-                            autoAnswerEntity.setTeamId(Long.parseLong(currentRow.getCell(i).getStringCellValue().trim()));
+                            autoAnswerEntity.setTeamId((long) currentRow.getCell(i).getNumericCellValue());
                             break;
                         default:
                             break;
                     }
                 }
                 if(!challengeIds.contains(challengeDTO.getId())) {
+                    challengeIds.add(challengeDTO.getId());
+                    log.info("New Challenge "+challengeDTO.getTitle());
+                    challengeDTO.setHint(new HintsDTO());
                     this.challengeService.saveChallengeFromExcel(challengeDTO);
                 }
                 if(challengeDTO.getMarkingType().equals("auto")) {
@@ -254,11 +259,14 @@ public class MigrationService {
                 }    
             }
             autoAnswerService.addAllRecords(autoAnswerEntities);
+            return autoAnswerEntities.size();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return -1;
         } catch (IOException e) {
             e.printStackTrace();
+            return -1;
         }
-        return count;
+        
     }
 }

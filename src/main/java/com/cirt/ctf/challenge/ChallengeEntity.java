@@ -23,7 +23,7 @@ import lombok.Data;
 public class ChallengeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "category", nullable = false, length = 20)
