@@ -31,6 +31,7 @@ public class SubmissionDTO {
     private Integer mark;
     private Integer penalty;
     private Integer score;
+    private int attemptCount;
     private ResultEntity result;
     private MultipartFile file;
     private long challengeID;

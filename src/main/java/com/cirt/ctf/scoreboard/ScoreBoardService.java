@@ -30,8 +30,8 @@ public class ScoreBoardService {
     private final TeamService teamService;
     private final ChallengeService challengeService;
 
+    /*
     public List<TeamDTO> getScoreboard(){
-
         List<TeamDTO> scoreboard= new ArrayList<>(teamService.findWithoutAdminTeam());
         scoreboard.sort(new Comparator<TeamDTO>() {
             public int compare(TeamDTO first, TeamDTO second) {
@@ -56,8 +56,8 @@ public class ScoreBoardService {
             }
         });
         return scoreboard;
-
     }
+     */
 
     public List<ScoreSummary> getScoreboardV2(){
         return submissionRepository.getScoreboardV2();
@@ -72,6 +72,7 @@ public class ScoreBoardService {
         return "-";
     }
 
+    /*
     public List<Top10Graph> getTop10(){
         List<TeamDTO>  top10= getScoreboard().stream().limit(10).toList();
         return top10.stream().map(dto->{
@@ -84,6 +85,8 @@ public class ScoreBoardService {
 
         }).toList();
     }
+    */
+
 
     public List<Top10Graph> getTop10FromScoreboard( List<ScoreSummary> scoreList){
         List<Long>  top10Ids= scoreList.stream().map(ScoreSummary::getId).limit(10).toList();
