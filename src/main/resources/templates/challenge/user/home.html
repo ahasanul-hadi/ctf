@@ -59,7 +59,7 @@
                 <div class="col-sm-4" th:each="challenge,iterator: ${challenges}" style="margin-top: 20px;">
                     <div class="card text-white bg-success" th:if="${challenge.attemptsDone} > 0">
                         <div class="card-body">
-                            <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
+                            <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)<strong th:text="'Attempts: '${challenge.attemptsDone}+'/'+${challenge.attempts}"></strong></h5>
                             <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
                             <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
                             <button class="btn btn-primary" data-bs-toggle="modal"
@@ -139,7 +139,7 @@
                                                style="margin: 10px; width:-webkit-fill-available;"></input>
                                         <input type="text" th:if="${challenge.markingType == 'auto'}" class="col-sm-6 form-control" required
                                             style="margin: 10px;width:-webkit-fill-available;" th:field="*{documentID}"
-                                            placeholder="Paste your solution text here"></input>
+                                            placeholder="Answer"></input>
                                         <strong class="text-center"><i style="color: red;" th:text="${challenge.attemptsDone}+'/'+${challenge.attempts}+ ' Attempts Done'"></i></strong>
                                         <div class="text-center"><button type="submit"
                                                 class="btn btn-success col-sm-4">Submit Solution</button></div>
