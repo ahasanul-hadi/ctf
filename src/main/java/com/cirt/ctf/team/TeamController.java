@@ -3,6 +3,7 @@ package com.cirt.ctf.team;
 import com.cirt.ctf.email.MailService;
 import com.cirt.ctf.payload.*;
 import com.cirt.ctf.scoreboard.ScoreBoardService;
+import com.cirt.ctf.submission.SubmissionService;
 import com.cirt.ctf.user.User;
 import com.cirt.ctf.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,6 +31,7 @@ public class TeamController {
     private final UserService userService;
     private final MailService mailService;
     private final ScoreBoardService scoreBoardService;
+    private final SubmissionService submissionService;
 
     @PostMapping("/registration")
     public String addTeam(@Valid @ModelAttribute("team") TeamRegistration team, BindingResult result, Model model, final RedirectAttributes redirectAttributes){
@@ -88,6 +90,7 @@ public class TeamController {
         TeamDTO teamDTO = teamService.findById(user.getTeam().getId());
         model.addAttribute("team", teamDTO);
         model.addAttribute("place",scoreBoardService.getPlace(teamDTO.getId()));
+        //model.addAttribute("submissions", submissionService.getSubmissionSummary(teamDTO.getId()));
         return "team/myTeam";
     }
 

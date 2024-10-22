@@ -88,10 +88,10 @@
             <td th:text="${(sub.isPublished==true)?sub.score:'-'}" />
 
 
-            <td sec:authorize="hasAuthority('ADMIN')" th:if="${sub.result!=null}">
+            <td sec:authorize="hasAuthority('ADMIN')" th:unless="${sub.challenge?.markingType == 'manual' && sub.mark==null}">
                 <span id="boot-icon" class="bi bi-check" style="font-size: 1.5rem;color: rgb(0, 128, 55);"></span>
             </td>
-            <td sec:authorize="hasAuthority('ADMIN')" th:unless="${sub.result!=null}">
+            <td sec:authorize="hasAuthority('ADMIN')" th:if="${sub.challenge?.markingType == 'manual' && sub.mark==null}">
                 <a th:href="@{'/marking/submissions/'+${sub.id}}" class="btn btn-success" role="button">Assess</a>
             </td>
 

@@ -19,8 +19,11 @@ public interface SubmissionRepository extends JpaRepository<SubmissionEntity,Lon
     @Query("SELECT s FROM SubmissionEntity s WHERE s.team.id=?1 and s.challenge.id=?2" )
     List<SubmissionEntity> getSubmissionListByChallengeAndTeam(Long teamID, Long challengeID);
 
-    @Query("SELECT s FROM SubmissionEntity s WHERE s.team.id=?1 and s.challenge.id=?2" )
-    Optional<SubmissionEntity> getSubmissionByTeamAndChallenge(Long teamID, Long challengeID);
+    @Query("SELECT count(id) FROM SubmissionEntity s WHERE s.team.id=?1 and s.challenge.id=?2 and s.submissionType=1")
+    int getAttemptCountByTeamAndChallenge(Long teamID, Long challengeID);
+
+    //@Query("SELECT s FROM SubmissionEntity s WHERE s.team.id=?1 and s.challenge.id=?2" )
+    //Optional<SubmissionEntity> getSubmissionByTeamAndChallenge(Long teamID, Long challengeID);
 
     @Query("SELECT s FROM SubmissionEntity s LEFT JOIN FETCH s.challenge c LEFT JOIN FETCH s.team t LEFT JOIN fetch s.solver solver LEFT JOIN fetch s.takenBy examiner WHERE s.challenge.id=?1" )
     List<SubmissionEntity> findByChallengeId(Long challengeID);

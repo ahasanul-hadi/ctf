@@ -92,11 +92,11 @@
                     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h3 class="modal-title">Hint</h3>
+                                <h3 class="modal-title">Hint Warning!!!</h3>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body" >
-                                You will be deducted <span id="deduct"></span> marks (Only for first time).
+                                <span style="color:red;">You will be deducted <b id="deduct"></b> marks! </span> (Penalty will occur only for 1st time. If you have already opened this hint, then it's not applicable.).
                                 <br/>Are you sure you want to see Hint? <a id="link" href="#link" class="btn btn-info" role="button">See</a>
                             </div>
                             <div class="modal-footer">
@@ -117,7 +117,7 @@
                                 <h3 class="modal-title" id="staticBackdropLabel" th:text="${challenge.title}">Modal
                                     title</h3>
 
-                                <span th:if="${challenge.hint?.showHint==true}" style="float:right"> <button class="btn btn-primary" th:onclick='myHintModal([[${challenge.hint?.deductMark}]], [[${challenge.id}]],  [[${challenge.hint?.id}]]);'>Hint</button></span>
+                                <span th:if="${challenge.hint?.showHint==true}" style="padding-left:50px;"> <button class="btn btn-primary" th:onclick='myHintModal([[${challenge.hint?.deductMark}]], [[${challenge.id}]],  [[${challenge.hint?.id}]]);'>Show Hint</button></span>
 
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
