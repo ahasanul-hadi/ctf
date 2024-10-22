@@ -20,8 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -82,11 +81,7 @@ public class SubmissionService {
 
 
         submissionEntity.setMark(resultDTO.getScore());
-        //Integer hintPenalty = teamHintsRepository.findByTeamIdAndHintId(submissionEntity.getTeam().getId(), submissionEntity.getChallenge().getId()).map(e->e.getHint().getDeductMark()).orElse(0);
-        //submissionEntity.setPenalty(hintPenalty);
-        int penalty= submissionEntity.getPenalty()==null? 0: submissionEntity.getPenalty();
-        submissionEntity.setScore(submissionEntity.getMark() - penalty);
-
+        submissionEntity.setScore(resultDTO.getScore());
         //only verified when score is published
         if(submissionEntity.getChallenge().isScoreboardPublished()){
             submissionEntity.setPublished(true);
@@ -96,13 +91,12 @@ public class SubmissionService {
     }
 
     public SubmissionEntity createSubmission(SubmissionDTO submissionDTO){
-        Optional<SubmissionEntity> optionalSubmission= submissionRepository.getSubmissionByTeamAndChallenge(submissionDTO.getTeam().getId(), submissionDTO.getChallenge().getId());
-        SubmissionEntity submissionEntity = optionalSubmission.orElse(new SubmissionEntity());
+        SubmissionEntity submissionEntity = new SubmissionEntity();
         submissionEntity.setChallenge(submissionDTO.getChallenge());
         submissionEntity.setSolver(submissionDTO.getSolver());
         submissionEntity.setTeam(submissionDTO.getTeam());
         submissionEntity.setSubmissionTime(submissionDTO.getSubmissionTime());
-        submissionEntity.setAttemptCount(submissionEntity.getAttemptCount()+1);
+        submissionEntity.setSubmissionType(submissionDTO.getSubmissionType());
         if((submissionDTO.getFile() != null && submissionDTO.getFile().getSize() > 0) && submissionDTO.getChallenge().getMarkingType().equals("manual")) {
             DocumentEntity documentEntity = documentService.saveDocument(submissionDTO.getFile());
             submissionEntity.setDocumentID(documentEntity.getId());
@@ -113,22 +107,19 @@ public class SubmissionService {
     }
 
     public Integer getSubmissionCount(Long teamID, Long challengeID){
-        //return submissionRepository.getSubmissionListByChallengeAndTeam(teamID,challengeID).size();
-        Optional<SubmissionEntity> optionalSubmissionEntity = submissionRepository.getSubmissionByTeamAndChallenge(teamID, challengeID);
-        return optionalSubmissionEntity.map(SubmissionEntity::getAttemptCount).orElse(0);
+        return submissionRepository.getAttemptCountByTeamAndChallenge(teamID,challengeID);
+        //Optional<SubmissionEntity> optionalSubmissionEntity = submissionRepository.getSubmissionByTeamAndChallenge(teamID, challengeID);
+        //return optionalSubmissionEntity.map(SubmissionEntity::getAttemptCount).orElse(0);
     }
 
     public boolean anySubmissionAccepted(Long teamID, Long challengeID) {
-        boolean isACCEPTED = false;
         List<SubmissionEntity> submissionEntities = submissionRepository.getSubmissionListByChallengeAndTeam(teamID, challengeID);
-
         for(SubmissionEntity submissionEntity: submissionEntities) {
             if(submissionEntity.getMark()!=null && submissionEntity.getMark()>0) {
-                isACCEPTED = true;
-                break;
+                return true;
             }
         }
-        return isACCEPTED;
+        return false;
     }
 
     public SubmissionDTO mapToDTO(SubmissionEntity entity){
@@ -147,30 +138,41 @@ public class SubmissionService {
     }
 
     public void submitPenalty(Long teamID, User requester, HintsEntity hint) {
-        Optional<SubmissionEntity> optionalSubmissionEntity =submissionRepository.getSubmissionByTeamAndChallenge(teamID, hint.getChallenge().getId());
-        SubmissionEntity submissionEntity= optionalSubmissionEntity.orElseGet(()->{
-            SubmissionEntity entity= new SubmissionEntity();
-            entity.setTeam(teamRepository.getReferenceById(teamID));
-            entity.setChallenge(hint.getChallenge());
-            entity.setSubmissionTime(LocalDateTime.now());
-            entity.setSolver(requester);
-            if(hint.getChallenge().isScoreboardPublished())
-                entity.setPublished(true);
-            entity.setMark(null);
-            return entity;
-        });
-        ResultEntity resultEntity = submissionEntity.getResult() ==null? new ResultEntity() : submissionEntity.getResult();
+        SubmissionEntity submissionEntity= new SubmissionEntity();
+        submissionEntity.setTeam(teamRepository.getReferenceById(teamID));
+        submissionEntity.setChallenge(hint.getChallenge());
+        submissionEntity.setSubmissionTime(LocalDateTime.now());
+        submissionEntity.setSolver(requester);
+        if(hint.getChallenge().isScoreboardPublished())
+            submissionEntity.setPublished(true);
+        submissionEntity.setPenalty(hint.getDeductMark());
+        submissionEntity.setMark(null);
+        submissionEntity.setScore(hint.getDeductMark()*-1);
+
+
+        ResultEntity resultEntity = new ResultEntity();
         resultEntity.setSubmission(submissionEntity);
         resultEntity.setMarkingTime(LocalDateTime.now());
         resultEntity.setScore(hint.getDeductMark()*-1);
         resultEntity.setComments("PENALTY");
         submissionEntity.setResult(resultEntity);
 
-
-        int mark= submissionEntity.getMark()==null? 0: submissionEntity.getMark();
-        submissionEntity.setPenalty(hint.getDeductMark());
-        submissionEntity.setScore(mark - submissionEntity.getPenalty());
-
         submissionRepository.save(submissionEntity);
     }
+
+    public List<SubmissionDTO> getSubmissionSummary(Long teamID){
+        List<SubmissionEntity> submissions= submissionRepository.findByTeam(teamID).stream().sorted(Comparator.comparing(SubmissionEntity::getSubmissionTime).reversed()).toList();
+        Map<Long, SubmissionDTO> map= new HashMap<>();
+        submissions.forEach(e->{
+            SubmissionDTO dto= map.get(e.getChallenge().getId());
+            if(dto==null) {
+                dto = modelMapper.map(e, SubmissionDTO.class);
+                dto.setScore(0);
+                map.put(e.getChallenge().getId(), dto);
+            }
+            dto.setScore(dto.getScore() + e.getScore());
+        });
+        return map.values().stream().toList();
+    }
+
 }

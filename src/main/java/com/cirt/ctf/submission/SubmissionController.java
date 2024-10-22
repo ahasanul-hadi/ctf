@@ -97,7 +97,7 @@ public class SubmissionController {
         submissionDTO.setSubmissionTime( LocalDateTime.now() );
         submissionDTO.setChallenge(challengeEntity);
         submissionDTO.setMarkingType(challengeEntity.getMarkingType());
-
+        submissionDTO.setSubmissionType(1); //attempt
         // check for auto/manual marking type
 
         SubmissionEntity submissionEntity = submissionService.createSubmission(submissionDTO);
