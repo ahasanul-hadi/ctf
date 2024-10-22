@@ -43,6 +43,7 @@
             <!-- <h3 class="categoryContainer">Incident Handling Challenges</h3>
             <hr /> -->
             <h3> Scenario </h3>
+            <span id="timer" hidden> </span>
             <p>HR admin of FINCII corporation recently attended a conference and meet with a new fellow, Mr. Jack Shake. They delved into a discussion about the significance of data security and the rise of cyber threats.  Mr. Jack shared a USB drive containing the valuable cyber security related files and documents, urging HR admin to read it at his convenience.
                 <br/>
                 After returning to office, HR admin checked the files and documents from the pendrive from his workstation.
@@ -57,31 +58,47 @@
             </p>
             <div class="row">
                 <div class="col-sm-4" th:each="challenge,iterator: ${challenges}" style="margin-top: 20px;">
-                    <div class="card text-white bg-success" th:if="${challenge.attemptsDone} > 0">
+                    <div class="card text-white bg-dark" th:if="${challenge.displayColor} == 'black'" th:id="'card-'+${challenge.id}">
                         <div class="card-body">
-                            <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)<strong th:text="'Attempts: '${challenge.attemptsDone}+'/'+${challenge.attempts}"></strong></h5>
+                            <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
+                            <span th:text="'Attempts: '+${challenge.attemptsDone}+'/'+${challenge.attempts}"></span>
                             <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
                             <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
                             <button class="btn btn-primary" data-bs-toggle="modal"
                                     th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
                         </div>
                     </div>
-                    <div class="card text-white bg-danger" th:if="${challenge.attemptsDone} <= 0 and ${challenge.deadlineStatus} == 'over'">
+
+                    <div class="card text-white bg-success" th:if="${challenge.displayColor} == 'green'" th:id="'card-'+${challenge.id}">
                         <div class="card-body">
                             <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
+                            <span th:text="'Attempts: '+${challenge.attemptsDone}+'/'+${challenge.attempts}"></span>
+                            <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
+                            <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
+                            <button class="btn btn-primary" data-bs-toggle="modal"
+                                    th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
+                        </div>
+                    </div>
+
+                    <div class="card text-white" style="background-color: coral;" th:if="${challenge.displayColor} == 'orange'" th:id="'card-'+${challenge.id}">
+                        <div class="card-body">
+                            <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
+                            <span th:text="'Attempts: '+${challenge.attemptsDone}+'/'+${challenge.attempts}"></span>
                             <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
                             <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
                             <button class="btn btn-primary" data-bs-toggle="modal"
                                 th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
                         </div>
                     </div>
-                    <div class="card text-white bg-dark" th:if="${challenge.attemptsDone} <= 0 and ${challenge.deadlineStatus} != 'over'">
+                    
+                    <div class="card text-white bg-danger" th:if="${challenge.displayColor} == 'red'" th:id="'card-'+${challenge.id}">
                         <div class="card-body">
                             <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
+                            <span th:text="'Attempts: '+${challenge.attemptsDone}+'/'+${challenge.attempts}"></span>
                             <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
                             <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
                             <button class="btn btn-primary" data-bs-toggle="modal"
-                                    th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
+                                th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
                         </div>
                     </div>
                 </div>
@@ -128,9 +145,10 @@
                             <div class="modal-footer" style="justify-content: center; background-color: antiquewhite;">
                                 <form th:action="@{/submissions}" method="post" enctype="multipart/form-data"
                                     class="form-inline" th:object="${submission}">
+                                    <strong class="text-center" th:if="${challenge.displayColor} == 'green' and ${challenge.markingType == 'auto'}"><i style="color: green;">"Submission is already ACCEPTED for this challenge"</i></strong>
                                     <strong class="text-center" th:if="${challenge.deadlineStatus} == 'over'"><i style="color: red;">"Time is over for this challenge"</i></strong>
-                                    <strong class="text-center" th:if="${challenge.attemptStatus} == 'over'"><i style="color: red;" th:text="${challenge.attemptsDone}+'/'+${challenge.attempts}+ ' Attempts Done'"></i></strong>
-                                    <div class="row" th:unless="${challenge.attemptStatus} == 'over' or ${challenge.deadlineStatus} == 'over'">
+                                    <strong class="text-center" th:if="${challenge.attemptStatus} == 'over' and ${challenge.markingType != 'auto'}"><i style="color: red;" th:text="${challenge.attemptsDone}+'/'+${challenge.attempts}+ ' Attempts Done'"></i></strong>
+                                    <div class="row" th:id="'answerForm-'+${challenge.id}" th:unless="${challenge.attemptStatus} == 'over' or ${challenge.deadlineStatus} == 'over' or ${challenge.displayColor} == 'green'">
                                         <input hidden type="number" name="challengeID" th:value="${challenge.id}" ></input>
                                         
                                         <span style="color: red;" th:if="${challenge.markingType == 'manual'}"> * Submit only PDF files (Max size 10MB) </span>
@@ -180,7 +198,15 @@
             var timeString = $(element).text();
             showTimer(timeString, `timer-${ID}`);
         });
-        console.log(l);
+        //console.log(l);
+        $(".card").click(function(element) {
+            var cardId = $(this).attr("id");
+            var chId = cardId.split("-").pop();
+            if($("#timer-"+chId).text().trim() === "Time Over!") {
+                console.log($("#timer-"+chId).text().trim());
+                $("#answerForm-"+chId).text("Time is Over for this challenge!");
+            }
+        })
         function showTimer(timeString, elementID) {
             var countDownDate = new Date(timeString).getTime();
 

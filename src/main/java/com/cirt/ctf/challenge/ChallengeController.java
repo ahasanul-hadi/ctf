@@ -68,6 +68,16 @@ public class ChallengeController{
                 challengeDTO.setAttemptsDone(attemptsDone);
                 String attemptStatus = challengeDTO.getAttemptsDone() >= challengeDTO.getAttempts() ? "over" : "remains";
 
+                if(attemptsDone <= 0) challengeDTO.setDisplayColor("black");
+                else if(challengeDTO.getMarkingType().equals("manual") && challengeDTO.getAttemptsDone() > 0) challengeDTO.setDisplayColor("green");
+                else if(challengeDTO.getMarkingType().equals("auto")) {
+                    boolean accepted = submissionService.anySubmissionAccepted(tId, challengeDTO.getId());
+                    if(accepted) challengeDTO.setDisplayColor("green");
+                    else if(!accepted && attemptStatus.equals("over")) challengeDTO.setDisplayColor("red");
+                    else if(!accepted && attemptStatus.equals("remains")) challengeDTO.setDisplayColor("orange");
+                }
+                
+
                 Date date = null;
                 try {
                     date = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")).parse(challengeDTO.getDeadline());
