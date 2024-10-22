@@ -13,6 +13,7 @@ import com.cirt.ctf.user.User;
 import com.cirt.ctf.user.UserService;
 
 import com.cirt.ctf.util.Utils;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -57,6 +58,7 @@ public class SubmissionController {
 
 
     @PostMapping
+    @Transactional
     public String saveSubmission(@Valid @ModelAttribute("submission") SubmissionDTO submissionDTO, BindingResult result, Model model, Principal principal, final RedirectAttributes redirectAttributes)
     {
 
