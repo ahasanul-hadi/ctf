@@ -124,7 +124,12 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#example').DataTable({"pageLength": 50});
-
+        $('.dataTables_filter input')
+            .off()
+            .on('keyup', function() {
+            console.log('^' + this.value.trim() + '$')
+            $('#example').DataTable().search('\\b' + this.value.trim() + '\\b', true, false).draw();
+       });
     } );
 </script>
 
