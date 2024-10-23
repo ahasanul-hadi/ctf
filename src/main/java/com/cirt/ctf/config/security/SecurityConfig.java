@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 //.sessionManagement(se->se.maximumSessions(1).maxSessionsPreventsLogin(true).sessionRegistry(sessionRegistry()))
                 //.exceptionHandling(exp->exp.authenticationEntryPoint(appAuthEntryPoint).accessDeniedHandler(accessDeniedHandler))
-                .formLogin(form->form.loginPage("/login").defaultSuccessUrl("/",true).permitAll())
+                .formLogin(form->form.loginPage("/login").defaultSuccessUrl("/challenges",true).permitAll())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests( authorize -> authorize
                         .requestMatchers("/actuator/**").permitAll()
