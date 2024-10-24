@@ -52,7 +52,7 @@
             <tr th:each="team, iterator: ${scoreboard}">
                 <td th:text="${iterator.index+1}" />
                 <td>
-                    <a th:href="@{'/teams/'+${team.id}}"><span th:text="${team.teamName}"></span></a>
+                    <span th:text="${team.teamName}"></span>
                 </td>
                 <td th:text="${team.getTeamOrganization()}" />
                 <td style="text-align:center" th:if="${team.getScore()==null}" th:text="${'-'}" />

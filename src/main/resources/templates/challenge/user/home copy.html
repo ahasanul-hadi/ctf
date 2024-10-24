@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/static/favicon.ico}" />
+    <title> Challenges Dashboard </title>
+    <link th:href="@{/assets/img/favicon.png}" rel="icon">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Vendor CSS Files -->
+    <link th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor/boxicons/css/boxicons.min.css}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet">
+
+</head>
+
+<body class="bg-body-tertiary">
+
+
+    <div th:replace="~{fragments/header :: header}"> </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="container payload">
+        <div class="mt-6 text-center">
+            <h1> Challenges </h1>
+        </div>
+        <hr />
+        <h3 id="demo" th:if="${pageVisibility} == 'hidden'"><span>Cyberdrill is going to start in </span><span id="timer" th:text="${settings.startTime}"> </span> </h3>
+        <h3 th:if="${pageVisibility} == 'hidden'">Drill is not started yet. You can see challenges only when the drill is running.</h3>
+        <div class="row" th:unless="${pageVisibility} == 'hidden'">
+            <div th:insert="~{fragments/flush :: flushMessage}">Action status message</div>
+            <!-- <h3 class="categoryContainer">Incident Handling Challenges</h3>
+            <hr /> -->
+            <h3> Scenario </h3>
+            <span id="timer" hidden> </span>
+            <p>HR admin of FINCII corporation recently attended a conference and meet with a new fellow, Mr. Jack Shake. They delved into a discussion about the significance of data security and the rise of cyber threats.  Mr. Jack shared a USB drive containing the valuable cyber security related files and documents, urging HR admin to read it at his convenience.
+                <br/>
+                After returning to office, HR admin checked the files and documents from the pendrive from his workstation.
+                <br/>
+                A few days later, HR admin received a message. A threat actor claimed to have infiltrated their organization's systems, encrypting the entire data on their backup server.
+                <br/>
+                The victim organization reached out to local CIRT team for assistance.
+                <br/>
+                As a member of CIRT team, you are requested to analyze the artifact (provided to you with a pen drive). This may help the victim organization to identify the attack path and to recover encrypted data if possible.
+                <br/><br/>
+                <strong>You can find the Network Diagram <a href="https://drive.egovcloud.gov.bd/index.php/s/SUUXhMWpf8GPInN/download"> here </a></strong>
+            </p>
+            <div class="row">
+                <div class="col-sm-4" th:each="challenge,iterator: ${challenges}" style="margin-top: 20px;">
+                    <div class="card text-white bg-dark" th:if="${challenge.displayColor} == 'black'" th:id="'card-'+${challenge.id}">
+                        <div class="card-body">
+                            <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
+                            <span th:text="'Attempts: '+${challenge.attemptsDone}+'/'+${challenge.attempts}"></span>
+                            <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
+                            <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
+                            <button class="btn btn-primary" data-bs-toggle="modal"
+                                    th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
+                        </div>
+                    </div>
+
+                    <div class="card text-white bg-success" th:if="${challenge.displayColor} == 'green'" th:id="'card-'+${challenge.id}">
+                        <div class="card-body">
+                            <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
+                            <span th:text="'Attempts: '+${challenge.attemptsDone}+'/'+${challenge.attempts}"></span>
+                            <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
+                            <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
+                            <button class="btn btn-primary" data-bs-toggle="modal"
+                                    th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
+                        </div>
+                    </div>
+
+                    <div class="card text-white" style="background-color: coral;" th:if="${challenge.displayColor} == 'orange'" th:id="'card-'+${challenge.id}">
+                        <div class="card-body">
+                            <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
+                            <span th:text="'Attempts: '+${challenge.attemptsDone}+'/'+${challenge.attempts}"></span>
+                            <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
+                            <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
+                            <button class="btn btn-primary" data-bs-toggle="modal"
+                                th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card text-white bg-danger" th:if="${challenge.displayColor} == 'red'" th:id="'card-'+${challenge.id}">
+                        <div class="card-body">
+                            <h5 class="card-title"><span th:text="${challenge.title}"> </span> (<span th:text="${challenge.totalMark}"> </span>)</h5>
+                            <span th:text="'Attempts: '+${challenge.attemptsDone}+'/'+${challenge.attempts}"></span>
+                            <p class="card-text timeString" th:id="${challenge.id}" th:text="${challenge.deadline}" hidden></p>
+                            <p class="card-text"  th:id="'timer-'+ ${challenge.id}"></p>
+                            <button class="btn btn-primary" data-bs-toggle="modal"
+                                th:attr="data-bs-target='#modal-'+${challenge.id }">Description</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modals">
+                <div class="modal fade" id="hintModal" role="dialog" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Hint Warning!!!</h3>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" >
+                                <span style="color:red;">You will be deducted <b id="deduct"></b> marks! </span> (Penalty will occur only for 1st time. If you have already opened this hint, then it's not applicable.).
+                                <br/>Are you sure you want to see Hint? <a id="link" href="#link" class="btn btn-info" role="button">See</a>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modals">
+                <!-- Vertically centered scrollable modal -->
+                <div class="modal fade" th:each="challenge,iterator: ${challenges}" th:id="'modal-'+${challenge.id}"
+                    role="dialog" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title" id="staticBackdropLabel" th:text="${challenge.title}">Modal
+                                    title</h3>
+
+                                <span th:if="${challenge.hint?.showHint==true}" style="padding-left:50px;"> <button class="btn btn-primary" th:onclick='myHintModal([[${challenge.hint?.deductMark}]], [[${challenge.id}]],  [[${challenge.hint?.id}]]);'>Show Hint</button></span>
+
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" th:utext="${challenge.description}">
+                                ...
+                            </div>
+                            <div class="modal-footer" style="justify-content: center; background-color: antiquewhite;">
+                                <form th:action="@{/submissions}" method="post" enctype="multipart/form-data"
+                                    class="form-inline" th:object="${submission}">
+                                    <strong class="text-center" th:if="${challenge.displayColor} == 'green' and ${challenge.markingType == 'auto'}"><i style="color: green;">"Submission is already ACCEPTED for this challenge"</i></strong>
+                                    <strong class="text-center" th:if="${challenge.deadlineStatus} == 'over'"><i style="color: red;">"Time is over for this challenge"</i></strong>
+                                    <strong class="text-center" th:if="${challenge.attemptStatus} == 'over' and ${challenge.markingType == 'manual'}"><i style="color: red;">"All Attempts are already used!"</i></strong>
+                                    <strong class="text-center" th:if="${challenge.displayColor} == 'red'"><i style="color: red;">"All Attempts are already used!"</i></strong>
+                                    <div class="row" th:id="'answerForm-'+${challenge.id}" th:unless="${challenge.attemptStatus} == 'over' or ${challenge.deadlineStatus} == 'over' or ${challenge.displayColor} == 'green'">
+                                        <input hidden type="number" name="challengeID" th:value="${challenge.id}" ></input>
+                                        
+                                        <span style="color: red;" th:if="${challenge.markingType == 'manual'}"> * Submit only PDF files (Max size 10MB) </span>
+                                        <input type="file" th:if="${challenge.markingType == 'manual'}" accept="application/pdf"
+                                            class="col-sm-6 form-control" th:field="*{file}" required
+                                               style="margin: 10px; width:-webkit-fill-available;"></input>
+                                        <input type="text" th:if="${challenge.markingType == 'auto'}" class="col-sm-6 form-control" required
+                                            style="margin: 10px;width:-webkit-fill-available;" th:field="*{documentID}"
+                                            placeholder="Answer"></input>
+                                        <strong class="text-center"><i style="color: red;" th:text="${challenge.attemptsDone}+'/'+${challenge.attempts}+ ' Attempts Done'"></i></strong>
+                                        <div class="text-center"><button type="submit"
+                                                class="btn btn-success col-sm-4">Submit Solution</button></div>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2"></div>
+        </div>
+    </main>
+
+    <!-- END MAIN CONTENT -->
+
+
+    <!-- BEGIN FOOTER -->
+    <div th:replace="~{fragments/footer :: footer}">Footer</div>
+    <!-- END FOOTER -->
+
+
+
+    <script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/assets/vendor/glightbox/js/glightbox.min.js}"></script>
+    <!-- Template Main JS File -->
+    <script th:src="@{/assets/js/main.js}"></script>
+    <script type="text/javascript">
+        var startTimeStr = $("#timer").html();
+        showTimer(startTimeStr, "timer");
+        var l = $(".timeString").each( function (index, element) {
+            var ID = $(element).attr("id");
+            var timeString = $(element).text();
+            showTimer(timeString, `timer-${ID}`);
+        });
+        //console.log(l);
+        $(".card").click(function(element) {
+            var cardId = $(this).attr("id");
+            var chId = cardId.split("-").pop();
+            if($("#timer-"+chId).text().trim() === "Time Over!") {
+                console.log($("#timer-"+chId).text().trim());
+                $("#answerForm-"+chId).text("Time is Over for this challenge!");
+            }
+        })
+        function showTimer(timeString, elementID) {
+            var countDownDate = new Date(timeString).getTime();
+
+            // Update the count down every 1 second
+            var x = setInterval(function () {
+
+                // Get today's date and time
+                var now = new Date().getTime();
+
+                // Find the distance between now and the count down date
+                var distance = countDownDate - now;
+
+                // Time calculations for days, hours, minutes and seconds
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                var fullTimeStr = days+"d "+hours + "h " + minutes + "m " + seconds + "s ";
+                if(days == 0) fullTimeStr = hours + "h " + minutes + "m " + seconds + "s ";
+                document.getElementById(elementID).innerHTML =  fullTimeStr;
+                // If the count down is finished, write some text
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById(elementID).innerHTML = "Time Over!";
+                }
+            }, 1000);
+        }
+
+        function myHintModal( mark, challengeID,  hintID){
+            console.log("mark:"+mark+" hintID:"+hintID);
+            $('#deduct').text(mark);
+            $("#link").attr("href", '../hints/fetch/'+hintID);
+            $('#modal-'+challengeID).modal('hide');
+            $('#hintModal').modal('show');
+        }
+
+    </script>
+
+</body>
+
+</html>

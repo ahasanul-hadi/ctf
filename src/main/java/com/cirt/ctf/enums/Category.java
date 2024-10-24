@@ -1,10 +1,11 @@
 package com.cirt.ctf.enums;
 
 public enum Category {
-    Web_Challenge,
-    Forensic,
+    Web,
+    Digital_Forensics,
     Network,
     OSINT,
-    Crypto,
-    MISC
+    Threat_Intel,
+    Boot_To_Root,
+    Steganography
 }

@@ -213,13 +213,14 @@ public class MigrationService {
                             challengeDTO.setCategory(currentRow.getCell(i).getStringCellValue().trim());
                             break;
                         case "description":
-                            challengeDTO.setDescription(currentRow.getCell(i).getStringCellValue().trim());
+                            if(currentRow.getCell(i) == null)  challengeDTO.setDescription("");
+                            else challengeDTO.setDescription(currentRow.getCell(i).getStringCellValue().trim());
                             break;
                         case "deadline":
                             challengeDTO.setDeadline(currentRow.getCell(i).getStringCellValue().trim());
                             break;
                         case "visibility":
-                            challengeDTO.setVisibility(currentRow.getCell(i).getStringCellValue().trim());
+                            challengeDTO.setVisibility(currentRow.getCell(i).getStringCellValue().trim().toLowerCase());
                             break;
                         case "marking_type":
                             challengeDTO.setMarkingType(currentRow.getCell(i).getStringCellValue().trim());
