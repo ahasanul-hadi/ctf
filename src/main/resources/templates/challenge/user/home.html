@@ -43,8 +43,10 @@
             <!-- <h3 class="categoryContainer">Incident Handling Challenges</h3>
             <hr /> -->
             <h3 style="margin-top: 20px;"> Network </h3>
-            <p>HR admin of FINCII corporation recently attended a conference and meet with a new fellow, Mr. Jack Shake. They delved into a discussion about the significance of data security and the rise of cyber threats.  Mr. Jack shared a USB drive containing the valuable cyber security related files and documents, urging HR admin to read it at his convenience.
-                <br/>  
+            <p>
+                • For questions 1 and 2, you need to analyze this <a href="https://drive.egovcloud.gov.bd/index.php/s/tU13w0tJyr1ZRCu/download">pcap file</a><br/>
+                • For questions 3 to 8, you need to analyze this <a href="https://drive.egovcloud.gov.bd/index.php/s/WUh8mzHu0rWL4bH/download">pcap file</a><br/> 
+                • For questions 9 and 10, you need to analyze this <a href="https://drive.egovcloud.gov.bd/index.php/s/lz2UnGiNYIzhGza/download">pcap file</a> and consult with the <a href="https://unit42.paloaltonetworks.com/cve-2024-3400/" target="_blank">article</a> <br/>
             </p>
             <div class="row">
                 <div class="col-sm-4"  th:each="challenge,iterator: ${challenges}" th:if="${challenge.category} == 'Network'" style="margin-top: 10px;">
@@ -148,8 +150,15 @@
             </div>
 
             <h3 style="margin-top: 20px;"> OSINT </h3>
-            <p>HR admin of FINCII corporation recently attended a conference and meet with a new fellow, Mr. Jack Shake. They delved into a discussion about the significance of data security and the rise of cyber threats.  Mr. Jack shared a USB drive containing the valuable cyber security related files and documents, urging HR admin to read it at his convenience.
-                <br/>
+            <p>
+                <strong>Fantasy <a href="https://drive.egovcloud.gov.bd/index.php/s/bfyrBDbG47XkpA2/download">Artifact</a> (for challenges Fantasy 1 to Fantasy 3): </strong> <br/><br/>
+
+                <strong>Scam Scenario (for challenges Scam 1 to Scam 5): </strong><br/>
+                A cyber security service provider company named CyberABCLab, came across a fake recruiter scam by a country in East Asia and a report has been published on 9 October, 2024 in a well-known cybersecurity research organization.
+                CyberABCLab analyst try to collect as much information as possible using OSINT techniques.<br/><br/>
+
+                <strong>Malvertising Scenario (for challenges Malvertising 1 to Malvertising 5): </strong><br/>
+                A cyber security service provider company named CyberABCLab, received a file from their client and they think it is malicious. Find out more details about it.<br/><br/>
             </p>
             <div class="row">
                 <div class="col-sm-4"  th:each="challenge,iterator: ${challenges}" th:if="${challenge.category} == 'OSINT'" style="margin-top: 10px;">
@@ -201,8 +210,14 @@
             </div>
 
             <h3 style="margin-top: 20px;"> Digital Forensics </h3>
-            <p>HR admin of FINCII corporation recently attended a conference and meet with a new fellow, Mr. Jack Shake. They delved into a discussion about the significance of data security and the rise of cyber threats.  Mr. Jack shared a USB drive containing the valuable cyber security related files and documents, urging HR admin to read it at his convenience.
-                <br/>
+            <p>
+                Download link for Digital Forensics Image:<br/>
+                <a href="https://drive.egovcloud.gov.bd/index.php/s/cmaeVDFxojFjRQi">Download Link 1</a><br/>
+                <a href="https://drive.egovcloud.gov.bd/index.php/s/9LKAdz8qsvLWiGh">Download Link 2</a><br/>
+                <a href="https://drive.google.com/file/d/1zlCp33FIQBTH8_2HA1Q5HqUl5IdGXY1l/view?usp=sharing">Download Link 3</a><br/>
+                <a href="https://drive.egovcloud.gov.bd/index.php/s/bw2lehcmXnxPpV0">Download Link 4</a><br/><br/>
+                <strong>zip sha-1 hash: </strong>d99844d32bb1657b39405e23654c32b6bb69d3ba<br/>
+                <strong>Unzip password: </strong>4defdc00047bd069a28d4e<br/>
             </p>
             <div class="row">
                 <div class="col-sm-4"  th:each="challenge,iterator: ${challenges}" th:if="${challenge.category} == 'Digital Forensics'" style="margin-top: 10px;">
@@ -305,8 +320,27 @@
             </div>
 
             <h3 style="margin-top: 20px;"> Boot To Root </h3>
-            <p>HR admin of FINCII corporation recently attended a conference and meet with a new fellow, Mr. Jack Shake. They delved into a discussion about the significance of data security and the rise of cyber threats.  Mr. Jack shared a USB drive containing the valuable cyber security related files and documents, urging HR admin to read it at his convenience.
-                <br/>
+            <p>
+                Your organization has a critical server managed by the IT department, hosting several important services. Management has tasked you with identifying any potential security flaws on this server. As a member of the cybersecurity team, your objective is to gain access to the server and attempt to escalate privileges, despite having no prior knowledge of the system. During the process, you are expected to get 05 (five) different flags.
+                <br/><br/>
+                <strong>N.B.: </strong><br/>
+                • No login credentials will be provided to access the VM.<br/>
+                • Run the vm using VirtualBox 6 or later versions.<br/>
+                • If you are using Kali VM, please be ensured that both the vm (kali and the provided drill VM) should be in same network. Ensure that in your kali machine, host only network adapter is enabled.<br/>
+                • You will find most of the flags in the home directory of the users. You may need to search the flags in some other places as well.<br/>
+                • You may find flags in a different order (i.e. you may get flag2 before flag1) depending on your methodologies.<br/>
+                • If you encounter any kind of trouble to run the vm, kindly follow the instructions to run the VM.<br/><br/>
+
+                <strong>Artifact: </strong>
+                The VM required for this challenge has been provided previously via email. You can also download it from here.<br/>
+                Download link for VM Artifact:<br/><br/>
+                <a href="https://drive.egovcloud.gov.bd/index.php/s/v6YcVfoFslf976C/download">Download link1</a><br/>
+                <a href="https://drive.egovcloud.gov.bd/index.php/s/rQnDnAFbAOQVv4E">Download link2</a><br/>
+                <a href="https://drive.google.com/file/d/1oTD2MSILEDCQSaLQ4kxkIyFplwle04c2/view?usp=sharing">Download link3</a><br/>
+                <a href="https://drive.egovcloud.gov.bd/index.php/s/2rPfszXjegzS0GS">Download link4</a><br/><br/>
+
+                <strong>SHA1 hash of FinCII24.zip: </strong>eda7ce605619b309773d5b32d5e8fb595f8cd51b<br/>
+                <strong>Unzip password: </strong>5d8bfa86274fbf1e5b05521bee21e81d
             </p>
             <div class="row">
                 <div class="col-sm-4"  th:each="challenge,iterator: ${challenges}" th:if="${challenge.category} == 'Boot To Root'" style="margin-top: 10px;">
@@ -357,8 +391,7 @@
                 </div>
             </div>
             <h3 style="margin-top: 20px;"> Steganography </h3>
-            <p>HR admin of FINCII corporation recently attended a conference and meet with a new fellow, Mr. Jack Shake. They delved into a discussion about the significance of data security and the rise of cyber threats.  Mr. Jack shared a USB drive containing the valuable cyber security related files and documents, urging HR admin to read it at his convenience.
-                <br/>
+            <p>
             </p>
             <div class="row">
                 <div class="col-sm-4"  th:each="challenge,iterator: ${challenges}" th:if="${challenge.category} == 'Steganography'" style="margin-top: 10px;">
