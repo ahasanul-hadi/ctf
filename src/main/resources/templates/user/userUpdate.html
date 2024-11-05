@@ -43,7 +43,7 @@
 
         <div class="mb-3 image d-flex flex-column justify-content-center align-items-center"> <button class="btn btn-secondary">
             <img th:if="${userDTO.avatarID!=null && userDTO.avatarID.length>0}" th:src="@{'/api/document/preview/'+${userDTO.avatarID}}"  height="100" width="100" />
-            <img th:unless="${userDTO.avatarID!=null && userDTO.avatarID.length>0}" src="/assets/img/team/team-3.jpg" height="100" width="100" />
+            <img th:unless="${userDTO.avatarID!=null && userDTO.avatarID.length>0}" src="/assets/img/portfolio/portfolio-4.jpg" height="100" width="100" />
             </button>
         </div>
 

@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.cirt.ctf.enums.Category;
 import com.cirt.ctf.enums.Role;
 import com.cirt.ctf.submission.SubmissionDTO;
 import com.cirt.ctf.submission.SubmissionService;
@@ -49,7 +48,8 @@ public class ChallengeController{
     private final SettingsService settingsService;
     private final TeamService teamService;
     private final AutoAnswerControllerService autoAnswerService;
-
+    String[] categories = {"Web", "Digital Forensics", "Network", "OSINT", 
+                            "Threat Intel", "Boot To Root", "Steganography"};
     @GetMapping
     public String getChallengesPage(Model model, Principal principal) {
         User user= userService.findUserByEmail(principal.getName()).orElseThrow();
@@ -88,6 +88,7 @@ public class ChallengeController{
                 challengeDTO.setAttemptStatus(attemptStatus);
                 challengeDTO.setDeadlineStatus(deadlineStatus);
             }
+            model.addAttribute("categories", categories);
             model.addAttribute("settings", settingsEntity);
             model.addAttribute("pageVisibility", pageVisibility);
             model.addAttribute("challenges", challengeDTOs);
@@ -113,7 +114,7 @@ public class ChallengeController{
 
         List<TeamDTO> teamList = teamService.getTeams();
         String role = user.getRole().toString();
-        model.addAttribute("categories", Category.values());
+        model.addAttribute("categories", categories);
         ChallengeDTO challengeDTO = new ChallengeDTO();
         challengeDTO.setTitle("Challenge ");
         challengeDTO.setTotalMark(150);
@@ -155,7 +156,7 @@ public class ChallengeController{
         String deadline = String.join(":", deadlineTokens[0], deadlineTokens[1]);
         challengeDTO.setDeadline(deadline);
         model.addAttribute("challenge", challengeDTO);
-        model.addAttribute("categories", Category.values());
+        model.addAttribute("categories", categories);
         if(!role.equals(Role.ADMIN.toString()) ) {
             return "redirect:/challenges";
         }
