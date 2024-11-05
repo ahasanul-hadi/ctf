@@ -11,7 +11,7 @@
 	<groupId>com.cirt</groupId>
 	<artifactId>ctf</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<name>ctf</name>
 	<description>CIRT CTF Project</description>
 	<properties>
